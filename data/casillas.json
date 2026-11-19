@@ -1,0 +1,144 @@
+[
+  {
+    "n": "Comisaría",
+    "t": "salida",
+    "f": "comisaria"
+  },
+  {
+    "n": "Sol",
+    "t": "CE",
+    "f": "sol"
+  },
+  {
+    "n": "Gran Vía",
+    "t": "EAM",
+    "f": "granvia"
+  },
+  {
+    "n": "Salida del túnel de la M30",
+    "c": "Salida M30",
+    "t": "salidatunel",
+    "f": "saltunel"
+  },
+  {
+    "n": "Chamberí",
+    "t": "LRBRL",
+    "f": "chamberi"
+  },
+  {
+    "n": "Tetuán",
+    "t": "sancion",
+    "f": "tetuan"
+  },
+  {
+    "n": "4 Caminos",
+    "t": "CE",
+    "f": "ccaminos"
+  },
+  {
+    "n": "El Retiro",
+    "t": "descanso",
+    "f": "retiro"
+  },
+  {
+    "n": "Chamartín",
+    "t": "EAM",
+    "f": "chamartin"
+  },
+  {
+    "n": "Salamanca",
+    "t": "regalo",
+    "f": "salamanca"
+  },
+  {
+    "n": "Cibeles",
+    "t": "accion",
+    "f": "cibeles"
+  },
+  {
+    "n": "C. Lineal",
+    "t": "LRBRL",
+    "f": "clineal"
+  },
+  {
+    "n": "Fuencarral",
+    "t": "sancion",
+    "f": "fuencarral"
+  },
+  {
+    "n": "Hortaleza",
+    "t": "CE",
+    "f": "hortaleza"
+  },
+  {
+    "n": "Jefatura",
+    "t": "jefatura",
+    "f": "jefatura"
+  },
+  {
+    "n": "Barajas",
+    "t": "EAM",
+    "f": "barajas"
+  },
+  {
+    "n": "San Blas",
+    "t": "sancion",
+    "f": "sanblas"
+  },
+  {
+    "n": "Vallecas",
+    "t": "CE",
+    "f": "vallecas"
+  },
+  {
+    "n": "Vicálvaro",
+    "t": "accion",
+    "f": "vicalvaro"
+  },
+  {
+    "n": "Villaverde",
+    "t": "LRBRL",
+    "f": "villaverde"
+  },
+  {
+    "n": "Usera",
+    "t": "CE",
+    "f": "usera"
+  },
+  {
+    "n": "Juzgado",
+    "t": "juzgado",
+    "f": "juzgado"
+  },
+  {
+    "n": "Carabanchel",
+    "t": "EAM",
+    "f": "carabanchel"
+  },
+  {
+    "n": "La Latina",
+    "t": "regalo",
+    "f": "latina"
+  },
+  {
+    "n": "Moncloa",
+    "t": "accion",
+    "f": "moncloa"
+  },
+  {
+    "n": "Moratalaz",
+    "t": "sancion",
+    "f": "moratalaz"
+  },
+  {
+    "n": "Arganzuela",
+    "t": "LRBRL",
+    "f": "arganzuela"
+  },
+  {
+    "n": "Túneles de la M30",
+    "c": "Túneles M30",
+    "t": "tunel",
+    "f": "tunel"
+  }
+]

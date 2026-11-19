@@ -1,0 +1,51 @@
+[
+  {
+    "n": "Policía",
+    "corto": "Policía",
+    "m": 1,
+    "req": 0,
+    "grupo": "C1"
+  },
+  {
+    "n": "Oficial",
+    "corto": "Oficial",
+    "m": 1.1,
+    "req": 3,
+    "grupo": "C1"
+  },
+  {
+    "n": "Subinspector",
+    "corto": "Subinsp.",
+    "m": 1.2,
+    "req": 7,
+    "grupo": "A2"
+  },
+  {
+    "n": "Inspector",
+    "corto": "Inspector",
+    "m": 1.3,
+    "req": 12,
+    "grupo": "A2"
+  },
+  {
+    "n": "Intendente",
+    "corto": "Intendente",
+    "m": 1.4,
+    "req": 18,
+    "grupo": "A1"
+  },
+  {
+    "n": "Comisario",
+    "corto": "Comisario",
+    "m": 1.5,
+    "req": 25,
+    "grupo": "A1"
+  },
+  {
+    "n": "Comisario Principal",
+    "corto": "C. Ppal.",
+    "m": 1.6,
+    "req": 33,
+    "grupo": "A1"
+  }
+]
