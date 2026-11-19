@@ -2,11 +2,11 @@
 
 Juego de preguntas y tablero para opositores a Policía Municipal de Madrid, en la línea de Preguntados y Monopoly. Cada jugador contesta test del temario, tira el dado y avanza por un plano de Madrid para ganar puntos, ascender en el escalafón y reclutar efectivos.
 
-Es un prototipo jugable de las mecánicas. Las preguntas son provisionales y los rivales, la liga y los amigos están simulados.
+Es un prototipo jugable de las mecánicas. Incluye el banco real del bloque legislativo (1292 preguntas activas). Los rivales, la liga y los amigos están simulados.
 
 ## Cómo se abre
 
-Todo el juego está en un único archivo: `patrulla-092-v14.html` (en el repositorio, `index.html`).
+Todo el juego está en un único archivo: `index.html`.
 
 1. Descarga el archivo.
 2. Ábrelo con cualquier navegador moderno (Chrome, Edge, Safari, Firefox).
@@ -25,19 +25,53 @@ No hace falta instalar nada ni tener conexión, salvo para cargar la tipografía
 
 ## Estructura del proyecto
 
-- `patrulla-092-v14.html`: juego completo (HTML, CSS y JavaScript en un solo archivo, sin dependencias).
-- `README.md`: este documento.
+```
+OpoQuiz092/
+├── index.html              ← el juego (un solo archivo, se abre sin servidor)
+├── README.md
+├── CHANGELOG.md            ← qué cambió en cada versión
+├── data/                   ← datos del juego, fuente de verdad
+│   ├── preguntas/          ← un archivo por bloque del temario
+│   │   ├── bloque-legislativo.json   (1307 preguntas)
+│   │   └── …policial, tráfico, penal, ordenanzas, social (pendientes)
+│   ├── categorias.json     ← nombre, color y orden de cada categoría (CE, EAM, LRBRL…)
+│   ├── cartas-evento.json
+│   ├── casillas.json
+│   └── escalafon.json
+├── assets/                 ← vehiculos/, edificios/, avatar/, logo/, audio/
+├── docs/
+│   ├── reglas.md
+│   ├── guia-preguntas.md   ← cómo escribir una pregunta
+│   ├── fuentes.md          ← versión del BOE consultada y fecha
+│   └── politica-privacidad.md
+├── tools/                  ← validador de preguntas y build
+├── tests/                  ← tests de datos y partidas simuladas
+├── store/                  ← textos, capturas e icono para Play
+└── .github/workflows/      ← validación automática
+```
 
-Los gráficos (logo, vehículos, edificios y avatar) están incrustados en el propio archivo como imágenes en base64 y SVG.
+Los gráficos siguen incrustados en `index.html` como base64 y SVG (ver `assets/README.md`).
+
+## Editar preguntas y datos
+
+Los datos se editan en `data/`, nunca dentro de `index.html`. Después hay que copiarlos al juego (requiere Node.js 18 o superior):
+
+```
+node tools/validar.mjs           # revisa preguntas y datos, muestra la tabla por bloque y nivel
+node tools/build.mjs             # copia data/ dentro de index.html
+node --test tests/*.test.mjs     # tests
+```
+
+`build` reescribe solo el tramo entre las marcas `@DATOS` de `index.html`, así el juego sigue funcionando con doble clic. El formato de las preguntas está en [docs/guia-preguntas.md](docs/guia-preguntas.md).
 
 ## Estado y pendientes
 
-- Versión actual: v14. Incluye la identidad de PROPOLIS en la pantalla de inicio.
+- Versión actual: v14.2 (banco de preguntas del bloque legislativo, ver [CHANGELOG.md](CHANGELOG.md)).
 - Avatar: imitación vectorial del estilo de referencia, no ilustración pintada.
 - Los edificios del tablero conservan algunos restos de la peana en los bordes.
 - Pruebas: se han jugado partidas simuladas completas en escritorio y móvil emulado. Falta probar en un móvil real el arrastre con el dedo y el zoom.
 - Pendiente: el nombre definitivo de la academia y el dominio, para sustituir el sello provisional en `MARCA` (al principio del bloque de la pantalla de inicio).
-- Pendiente: sustituir las preguntas de prueba por la base de datos real del temario.
+- Pendiente: los bloques policial, tráfico, penal, ordenanzas y social, y revisar las 15 preguntas marcadas `revisar` del legislativo.
 
 ## Marca
 

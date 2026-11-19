@@ -1,0 +1,20 @@
+[
+  {
+    "clave": "CE",
+    "nombre": "Constitución",
+    "color": "var(--cas-ce)",
+    "norma": "Constitución Española de 1978"
+  },
+  {
+    "clave": "EAM",
+    "nombre": "Estatuto CM",
+    "color": "var(--cas-eam)",
+    "norma": "Ley Orgánica 3/1983, de 25 de febrero, de Estatuto de Autonomía de la Comunidad de Madrid"
+  },
+  {
+    "clave": "LRBRL",
+    "nombre": "Régimen local",
+    "color": "var(--cas-lrbrl)",
+    "norma": "Ley 7/1985 (LRBRL); en el bloque legislativo incluye también el Tema 4 (Derecho Administrativo) y el Tema 7 (ROGA)"
+  }
+]

@@ -1,0 +1,174 @@
+[
+  {
+    "tipo": "ascenso",
+    "u": "Jefatura",
+    "peso": 28,
+    "t": "Convocatoria de ascenso",
+    "x": "Se publican en el BOAM las bases del proceso de promoción interna. Quien reúna los méritos exigidos puede presentarse al examen de su categoría."
+  },
+  {
+    "tipo": "nada",
+    "u": "Sala del 092",
+    "peso": 9,
+    "t": "Sin novedad",
+    "x": "Turno tranquilo. El parte de servicio sale limpio."
+  },
+  {
+    "tipo": "nada",
+    "u": "Sala del 092",
+    "peso": 9,
+    "t": "Relevo sin incidencias",
+    "x": "Se entrega el turno sin nada reseñable que anotar."
+  },
+  {
+    "tipo": "nada",
+    "u": "Meteorología",
+    "peso": 8,
+    "t": "Lluvia en Madrid",
+    "x": "Cae agua toda la mañana y la ciudad se queda en casa. Poco que hacer."
+  },
+  {
+    "tipo": "nivel",
+    "n": 1,
+    "u": "Academia",
+    "peso": 4,
+    "t": "Repaso de bases",
+    "x": "Sesión de repaso elemental. Esta ronda todas las preguntas son de nivel 1: fáciles, pero valen poco."
+  },
+  {
+    "tipo": "nivel",
+    "n": 3,
+    "u": "Academia",
+    "peso": 4,
+    "t": "Monográfico de nivel 3",
+    "x": "Formación intermedia para toda la plantilla. Esta ronda todas las preguntas son de nivel 3, sea cual sea tu categoría."
+  },
+  {
+    "tipo": "nivel",
+    "n": 5,
+    "u": "Academia",
+    "peso": 4,
+    "t": "Curso avanzado",
+    "x": "Seminario de mandos abierto a todos. Esta ronda todas las preguntas son de nivel 5: duras, pero pagan bien."
+  },
+  {
+    "tipo": "nivel",
+    "n": 6,
+    "u": "Academia",
+    "peso": 2,
+    "t": "Jornadas de alta dirección",
+    "x": "Ponencias de nivel 6 para toda la plantilla. Al que le pille preparado, se forra."
+  },
+  {
+    "tipo": "efecto",
+    "u": "Policía Judicial",
+    "peso": 3,
+    "t": "Atestado impecable",
+    "x": "El grupo de investigación cierra un caso con un atestado modélico.",
+    "efecto": "atestado-impecable"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Policía Judicial",
+    "peso": 3,
+    "t": "Diligencias a prevención",
+    "x": "A quien va primero le cae el papeleo del caso. Horas de despacho en lugar de calle.",
+    "efecto": "diligencias-a-prevencion"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Policía Judicial",
+    "peso": 3,
+    "t": "Cadena de custodia",
+    "x": "Una prueba mal precintada obliga a repetir el procedimiento entero. Quien tenga escudo salva la racha.",
+    "efecto": "cadena-de-custodia"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Unidad de Tráfico",
+    "peso": 3,
+    "t": "Control de alcoholemia",
+    "x": "Dispositivo conjunto en todos los accesos. La ronda se paga a doble.",
+    "efecto": "control-de-alcoholemia"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Unidad de Tráfico",
+    "peso": 3,
+    "t": "Atasco en la M-30",
+    "x": "Un camión cruzado colapsa la circunvalación y nadie llega a tiempo a ningún sitio.",
+    "efecto": "atasco-en-la-m-30"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Unidad de Tráfico",
+    "peso": 3,
+    "t": "Radar móvil operativo",
+    "x": "Se estrena cinemómetro y alguien se lleva el mérito de la instalación.",
+    "efecto": "radar-movil-operativo"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Coordinación Judicial",
+    "peso": 3,
+    "t": "Señalamiento en el juzgado",
+    "x": "Citación como testigo en un juicio que se alarga toda la mañana.",
+    "efecto": "senalamiento-en-el-juzgado"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Coordinación Judicial",
+    "peso": 3,
+    "t": "Declaración impecable",
+    "x": "Una comparecencia bien preparada sostiene la acusación.",
+    "efecto": "declaracion-impecable"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Unidad Canina",
+    "peso": 3,
+    "t": "Rastreo con éxito",
+    "x": "El binomio guía-perro localiza a una persona desaparecida. Portada en la prensa local.",
+    "efecto": "rastreo-con-exito"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Unidad Canina",
+    "peso": 3,
+    "t": "Detección en el intercambiador",
+    "x": "Marcaje positivo en un control rutinario. Intervención limpia y rápida.",
+    "efecto": "deteccion-en-el-intercambiador"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Unidad Canina",
+    "peso": 2,
+    "t": "Baja del guía canino",
+    "x": "Lesión en el adiestramiento. La unidad se queda corta de efectivos.",
+    "efecto": "baja-del-guia-canino"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Medio Ambiente",
+    "peso": 3,
+    "t": "Vertido en el Manzanares",
+    "x": "Todos los recursos se van al río. Servicio ordinario paralizado.",
+    "efecto": "vertido-en-el-manzanares"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Medio Ambiente",
+    "peso": 3,
+    "t": "Campaña contra el ruido",
+    "x": "Se refuerza a las unidades con menos carga para la campaña nocturna.",
+    "efecto": "campana-contra-el-ruido"
+  },
+  {
+    "tipo": "efecto",
+    "u": "Medio Ambiente",
+    "peso": 2,
+    "t": "Reparto de material",
+    "x": "Llega una partida de equipos de protección para toda la plantilla.",
+    "efecto": "reparto-de-material"
+  }
+]
