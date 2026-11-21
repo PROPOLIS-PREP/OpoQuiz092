@@ -20,12 +20,12 @@ node tools/build.mjs       # copia data/ dentro de index.html
 
 Hace falta Node.js 18 o superior. Si hay errores, `build` no toca `index.html`. Las subcarpetas de `data/preguntas/` no se cargan.
 
-## Bloque y categoría
+## Bloque y materia
 
-- **Bloque**: la parte del temario de la que sale el archivo (legislativo, policial, tráfico…). Es el campo `bloque` del archivo.
-- **Categoría**: lo que ve el jugador en el tablero, la ruleta y la cabecera de la pregunta (Constitución, Estatuto CM, Régimen local). Es el campo `b` de cada pregunta y debe existir en `data/categorias.json`.
+- **Bloque**: la parte del temario de la que sale el archivo. Es lo que ve el jugador en la ruleta, en las casillas del tablero y en la cabecera de la pregunta. Es el campo `bloque` del archivo y debe ser una de las claves de `data/categorias.json`: `legislativo`, `policial`, `trafico`, `penal`, `ordenanzas` o `social`.
+- **Materia**: el campo `b` de cada pregunta. Es informativo y no llega al juego. El legislativo usa tres: `CE` (temas 1 a 3), `EAM` (tema 5) y `LRBRL` (temas 4, 6 y 7).
 
-Un bloque puede repartir sus preguntas en varias categorías. El legislativo usa tres: `CE` (temas 1 a 3), `EAM` (tema 5) y `LRBRL` (temas 4, 6 y 7).
+Los seis bloques ya están en la ruleta y tienen dos casillas cada uno. Mientras un bloque no tenga preguntas, la ruleta lo avisa y sale una pregunta de otro bloque.
 
 ## Formato del archivo
 
@@ -55,21 +55,24 @@ Un bloque puede repartir sus preguntas en varias categorías. El legislativo usa
 | Campo | Obligatorio | Qué es |
 |---|---|---|
 | `id` | Recomendado | Identificador único en todos los archivos (`LEG-T1-001`). El validador da error si se repite. |
-| `b` | Sí | Categoría del juego. Si todas las preguntas del archivo son de la misma, puede ponerse una vez arriba como `"categoria"`. |
+| `bloque` (del archivo) | Sí | Bloque del temario: decide el sector de la ruleta y las casillas. Una pregunta suelta puede llevar su propio `bloque`, que manda sobre el del archivo. Si el archivo es una lista sin cabecera, el bloque sale del nombre (`bloque-trafico.json` → `trafico`). |
+| `b` | No | Materia dentro del bloque (CE, EAM, LRBRL…). Informativa. |
 | `n` | Sí | Nivel de 1 a 7 (1 = Policía … 7 = Comisario Principal). Cuanto más alta la categoría del jugador, más niveles altos le salen. |
 | `q` | Sí | Enunciado. |
 | `o` | Sí | 3 o 4 opciones, sin repetir. |
 | `a` | Sí | Posición de la correcta, **empezando en 0** (0 = primera). |
 | `d` | Recomendado | Explicación que aparece tras responder. |
-| `tema`, `fuente`, `origen`, `bloque` | No | Informativos. No llegan al juego. |
+| `gemela` | No | `id` de otra pregunta que pregunta lo mismo con otras palabras (por ejemplo, la misma pregunta en dos tests). En una partida solo sale una de cada grupo de gemelas, y el validador no avisa de que repitan enunciado. Las preguntas con enunciado idéntico también se tratan como gemelas en la partida. |
+| `tema`, `fuente`, `origen` | No | Informativos. No llegan al juego. |
 | `revisar` | No | Motivo por el que la pregunta tiene un problema. **Mientras tenga este campo no entra en el juego.** Al corregirla, borra el campo. |
 
 ## Añadir un bloque nuevo
 
-1. Guarda el archivo como `data/preguntas/bloque-<nombre>.json` con el formato de arriba.
-2. Si sus preguntas usan categorías nuevas (por ejemplo `TRAF`), añádelas a `data/categorias.json` con `clave`, `nombre` y `color`. El orden de esa lista es el orden de la ruleta.
-3. Ejecuta `node tools/validar.mjs` y después `node tools/build.mjs`.
-4. Una categoría nueva sale enseguida en la ruleta y en las preguntas de turno. Para que tenga casillas propias, cambia el `t` de alguna casilla de temario en `data/casillas.json` a la clave nueva.
+1. Guarda el archivo como `data/preguntas/bloque-<clave>.json` con `"bloque": "<clave>"` (por ejemplo `bloque-trafico.json` con `"bloque": "trafico"`).
+2. Ejecuta `node tools/validar.mjs` y después `node tools/build.mjs`.
+3. No hace falta tocar nada más: el bloque ya tiene su sector en la ruleta y sus dos casillas, y desde ese momento sus preguntas sustituyen a las de relleno. También aparece solo su objetivo diario ("Acierta 3 de …").
+
+Nombre, color, icono y orden de la ruleta de cada bloque están en `data/categorias.json`; las casillas, en el campo `t` de `data/casillas.json`.
 
 ## Criterios de calidad
 

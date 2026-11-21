@@ -1,4 +1,4 @@
-// Tests de datos y de coherencia del build.  Ejecutar: node --test tests/
+// Tests de datos y de coherencia del build.  Ejecutar: node --test tests/*.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
@@ -21,9 +21,16 @@ test("el tablero tiene 28 casillas y una sola salida y un solo juzgado", () => {
   assert.equal(d.casillas.filter(c => c.t === "juzgado").length, 1);
 });
 
-test("cada bloque con casillas en el tablero tiene preguntas de todos los niveles", () => {
-  const enTablero = new Set(d.casillas.map(c => c.t).filter(t => d.categorias[t]));
-  for (const b of enTablero)
+test("la ruleta tiene los seis bloques del temario y cada uno tiene 2 casillas en el tablero", () => {
+  assert.deepEqual(Object.keys(d.categorias), ["legislativo", "policial", "trafico", "penal", "ordenanzas", "social"]);
+  for (const b of Object.keys(d.categorias))
+    assert.equal(d.casillas.filter(c => c.t === b).length, 2, `${b} no tiene 2 casillas`);
+});
+
+test("cada bloque que ya tiene preguntas las tiene de todos los niveles", () => {
+  const conPreguntas = new Set(d.activas.map(q => q.b));
+  assert.ok(conPreguntas.size > 0);
+  for (const b of conPreguntas)
     for (let n = 1; n <= NIVELES; n++)
       assert.ok(d.activas.some(q => q.b === b && q.n === n), `${b} sin preguntas de nivel ${n}`);
 });
@@ -57,8 +64,30 @@ test("partidas simuladas: nunca falta pregunta para ningún bloque y nivel", () 
   }
 });
 
+test("cada 'gemela' apunta a una pregunta que existe y del mismo bloque", () => {
+  const porId = new Map(d.todas.map(q => [q.id, q]));
+  for (const q of d.todas.filter(q => q.gemela)) {
+    assert.ok(porId.has(q.gemela), `${q.id}: gemela ${q.gemela} no existe`);
+    assert.equal(porId.get(q.gemela).b, q.b, `${q.id}: su gemela es de otro bloque`);
+  }
+});
+
 test("las preguntas marcadas 'revisar' no llegan al juego", () => {
   assert.ok(d.activas.every(q => !q.revisar));
   assert.equal(d.activas.length, d.todas.filter(q => !q.revisar).length);
 });
 
+
+// Avatar: cada pieza del catálogo de la taquilla (ACC en index.html) debe tener su imagen.
+test("cada pieza del avatar tiene imagen", async () => {
+  const fs = await import("node:fs");
+  const html = fs.readFileSync(path.join(RAIZ, "index.html"), "utf8");
+  const m = html.match(/const ACC=(\{[\s\S]*?\n\});/);
+  assert.ok(m, "no encuentro el catálogo ACC");
+  const ACC = new Function("return " + m[1])();
+  const web = path.join(RAIZ, "assets", "avatar", "web");
+  const faltan = Object.entries(ACC)
+    .filter(([k, a]) => ["agente", "fondo", "gorra", "extra", "marco", "base"].includes(a.s) && k !== "nada")
+    .filter(([k]) => !fs.existsSync(path.join(web, k + ".webp"))).map(([k]) => k);
+  assert.deepEqual(faltan, []);
+});

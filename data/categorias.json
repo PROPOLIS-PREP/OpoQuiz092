@@ -1,20 +1,8 @@
 [
-  {
-    "clave": "CE",
-    "nombre": "Constitución",
-    "color": "var(--cas-ce)",
-    "norma": "Constitución Española de 1978"
-  },
-  {
-    "clave": "EAM",
-    "nombre": "Estatuto CM",
-    "color": "var(--cas-eam)",
-    "norma": "Ley Orgánica 3/1983, de 25 de febrero, de Estatuto de Autonomía de la Comunidad de Madrid"
-  },
-  {
-    "clave": "LRBRL",
-    "nombre": "Régimen local",
-    "color": "var(--cas-lrbrl)",
-    "norma": "Ley 7/1985 (LRBRL); en el bloque legislativo incluye también el Tema 4 (Derecho Administrativo) y el Tema 7 (ROGA)"
-  }
+  { "clave": "legislativo", "nombre": "Legislativo", "ico": "libro",    "color": "var(--cas-legislativo)", "norma": "Constitución, Estatuto de Autonomía de la Comunidad de Madrid, Derecho Administrativo, LRBRL y ROGA" },
+  { "clave": "policial",    "nombre": "Policial",    "ico": "sirena",   "color": "var(--cas-policial)" },
+  { "clave": "trafico",     "nombre": "Tráfico",     "ico": "semaforo", "color": "var(--cas-trafico)" },
+  { "clave": "penal",       "nombre": "Penal",       "ico": "juzgado",  "color": "var(--cas-penal)" },
+  { "clave": "ordenanzas",  "nombre": "Ordenanzas",  "ico": "jefatura", "color": "var(--cas-ordenanzas)" },
+  { "clave": "social",      "nombre": "Social",      "ico": "social",   "color": "var(--cas-social)" }
 ]

@@ -1,0 +1,22 @@
+{
+  "nota": "Composición del avatar. Coordenadas de 'lienzo' en un cuadrado de 384 px. Las piezas de gorra y extra se colocan en el espacio del dibujo del agente (también 384 px): [x, y, ancho] de la imagen recortada; el alto sale de su proporción. 'completo' es el retrato sobre su peana: peana [x, y, ancho], retrato [x, y, lado] y altura de la chapa del rango.",
+  "lienzo": 384,
+  "hueco": {"x":191,"y":189,"r":116},
+  "agente": {"x":57,"y":40,"escala":0.7},
+  "agentes": {"agente_f":{"gorraPropia":"boina"},"agente_m":{"gorraPropia":"plato"}},
+  "completo": {"ancho":384,"alto":480,"peana":[22,268,340],"retrato":[0,0,384],"chapa":420},
+  "piezas": {
+    "boina"        : {"agente_f":null,"agente_m":[88,4,222]},
+    "plato"        : {"agente_f":[76,0,222],"agente_m":null},
+    "lana"         : {"agente_f":[80,-36,210],"agente_m":[98,-38,208]},
+    "casco_bici"   : {"agente_f":[70,-22,230],"agente_m":[88,-24,228]},
+    "casco_moto"   : {"agente_f":[64,-50,246],"agente_m":[82,-52,246]},
+    "intervencion" : {"agente_f":[64,-44,246],"agente_m":[82,-46,246]},
+    "gafas"        : {"agente_f":[156,122,128],"agente_m":[150,122,128]},
+    "bigote"       : {"agente_f":[186,176,76],"agente_m":[180,176,76]},
+    "pinganillo"   : {"agente_f":[112,146,46],"agente_m":[112,150,46]},
+    "bufanda"      : {"agente_f":[120,214,160],"agente_m":[116,214,160]},
+    "silbato"      : {"agente_f":[74,258,112],"agente_m":[70,258,112]},
+    "radio"        : {"agente_f":[250,222,84],"agente_m":[256,222,84]}
+  }
+}

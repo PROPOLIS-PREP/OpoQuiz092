@@ -10,8 +10,8 @@ const breve = process.argv.includes("--breve");
 
 console.log("Archivos de preguntas:");
 for (const [f, x] of Object.entries(d.porArchivo)) console.log(`  ${f.padEnd(28)} bloque "${x.bloque}", ${x.total} preguntas`);
-console.log(`\nPreguntas activas por categoría y nivel (las marcadas "revisar" no cuentan):`);
-console.log("  categoría".padEnd(14) + Array.from({ length: NIVELES }, (_, i) => `n${i + 1}`.padStart(5)).join("") + "  total");
+console.log(`\nPreguntas activas por bloque y nivel (las marcadas "revisar" no cuentan):`);
+console.log("  bloque".padEnd(14) + Array.from({ length: NIVELES }, (_, i) => `n${i + 1}`.padStart(5)).join("") + "  total");
 for (const [k, c] of Object.entries(d.categorias)) {
   const de = d.activas.filter(q => q.b === k);
   const fila = Array.from({ length: NIVELES }, (_, i) => String(de.filter(q => q.n === i + 1).length).padStart(5)).join("");

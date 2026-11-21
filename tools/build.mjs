@@ -6,7 +6,7 @@
 //   node tools/build.mjs --check   falla si index.html no está al día con data/ (para CI)
 import fs from "node:fs";
 import path from "node:path";
-import { RAIZ, cargarTodo } from "./lib/datos.mjs";
+import { RAIZ, cargarTodo, cargarAvatar } from "./lib/datos.mjs";
 
 const INI = "/*@DATOS:inicio";
 const FIN = "/*@DATOS:fin*/";
@@ -14,6 +14,7 @@ const HTML = path.join(RAIZ, "index.html");
 const check = process.argv.includes("--check");
 
 const d = cargarTodo();
+const av = cargarAvatar(d.errores);
 if (d.errores.length) {
   d.errores.forEach(e => console.error("ERROR:", e));
   console.error(`\n${d.errores.length} error(es). index.html no se ha tocado.`);
@@ -23,15 +24,21 @@ if (d.avisos.length) console.warn(`${d.avisos.length} aviso(s). Para verlos: nod
 
 const J = v => JSON.stringify(v);
 const lista = arr => "[\n" + arr.map(J).join(",\n") + "\n]";
-// Todas las categorías (para poder nombrarlas siempre); en la ruleta solo las que tienen preguntas.
-const todasCat = Object.entries(d.categorias).sort((a, b) => a[1].orden - b[1].orden).map(([k]) => k);
-const conPreguntas = new Set(d.activas.map(q => q.b));
-const orden = todasCat.filter(k => conPreguntas.has(k));
-const bloques = Object.fromEntries(todasCat.map(k => [k, { nombre: d.categorias[k].nombre, color: d.categorias[k].color }]));
+// Los bloques del temario, en el orden de la ruleta. Todos salen en la ruleta y en el tablero;
+// "n" es cuántas preguntas tiene cada uno (con 0, el juego saca una pregunta de otro bloque).
+const orden = Object.entries(d.categorias).sort((a, b) => a[1].orden - b[1].orden).map(([k]) => k);
+const bloques = Object.fromEntries(orden.map(k => [k, { nombre: d.categorias[k].nombre, color: d.categorias[k].color,
+  ico: d.categorias[k].ico, n: d.activas.filter(q => q.b === k).length }]));
+// Grupos de gemelas (o de enunciado idéntico) entre las activas: "g" numera solo los de 2 o más.
+const tam = new Map();
+d.activas.forEach(q => tam.set(q._grupo, (tam.get(q._grupo) || 0) + 1));
+const numGrupo = new Map();
+for (const [k, n] of tam) if (n > 1) numGrupo.set(k, numGrupo.size + 1);
 // Al juego solo llegan los campos que usa (más el id, para estadísticas futuras).
 const preguntas = d.activas
   .slice().sort((a, b) => a.n - b.n || orden.indexOf(a.b) - orden.indexOf(b.b))
-  .map(({ id, b, n, q, o, a, d }) => Object.assign(id ? { id } : {}, { b, n, q, o, a }, d ? { d } : {}));
+  .map(({ id, b, n, q, o, a, d, _grupo }) => Object.assign(id ? { id } : {}, { b, n, q, o, a }, d ? { d } : {},
+    numGrupo.has(_grupo) ? { g: numGrupo.get(_grupo) } : {}));
 
 const generado = [
   `const PREGUNTAS=${lista(preguntas)};`,
@@ -39,7 +46,9 @@ const generado = [
   `const CLAVES_BLOQUE=${J(orden)};`,
   `const ESCALAFON=${lista(d.escalafon)};`,
   `const TABLERO=${lista(d.casillas)};`,
-  `const EVENTOS_DATOS=${lista(d.eventos)};`
+  `const EVENTOS_DATOS=${lista(d.eventos)};`,
+  `const AV_LAYOUT=${J(av.layout)};`,
+  "const AV_IMG={\n" + Object.entries(av.imagenes).map(([k, v]) => `${J(k)}:${J(v)}`).join(",\n") + "\n};"
 ].join("\n");
 
 // Se trabaja siempre en LF; al guardar se respeta el fin de línea que ya tuviera el archivo.
@@ -52,8 +61,8 @@ const cab = src.slice(i, src.indexOf("*/", i) + 2);
 const nuevo = (src.slice(0, i) + cab + "\n" + generado + "\n" + src.slice(f)).replace(/\n/g, eol);
 
 const fuera = d.todas.length - d.activas.length;
-const resumen = `${preguntas.length} preguntas (${orden.map(k => `${k}: ${preguntas.filter(q => q.b === k).length}`).join(", ")})` +
-  (fuera ? `, ${fuera} pendientes de revisar fuera del juego` : "") + ` · ${d.casillas.length} casillas · ${d.eventos.length} cartas de evento`;
+const resumen = `${preguntas.length} preguntas (${orden.map(k => `${k}: ${bloques[k].n}`).join(", ")})` +
+  (fuera ? `, ${fuera} pendientes de revisar fuera del juego` : "") + ` · ${d.casillas.length} casillas · ${d.eventos.length} cartas de evento · ${Object.keys(av.imagenes).length} imágenes de avatar (${Math.round(av.bytes / 1024)} KB)`;
 if (check) {
   if (nuevo !== bruto) { console.error("ERROR: index.html no está al día con data/. Ejecuta: node tools/build.mjs"); process.exit(1); }
   console.log("OK, index.html al día ·", resumen);

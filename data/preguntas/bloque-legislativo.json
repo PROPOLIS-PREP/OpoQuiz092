@@ -2437,16 +2437,16 @@
    "tema": 1,
    "b": "CE",
    "n": 2,
-   "q": "¿Cuántas veces ha sido reformada la Constitución?",
+   "q": "Hasta la reforma de mayo de 2026 inclusive, ¿cuántas veces se ha reformado la Constitución Española?",
    "o": [
     "Tres",
     "Una",
     "Cuatro",
     "Dos"
    ],
-   "a": 0,
-   "d": "Reformas de 1992 (art. 13.2), 2011 (art. 135) y 2024 (art. 49).",
-   "fuente": "Tema 1",
+   "a": 2,
+   "d": "Reformas de 1992 (art. 13.2), 2011 (art. 135), 2024 (art. 49) y 2026 (art. 69.3).",
+   "fuente": "BOE-A-1978-31229 y BOE-A-2026-10881",
    "origen": "generada"
   },
   {
@@ -2941,7 +2941,7 @@
    "tema": 1,
    "b": "CE",
    "n": 3,
-   "q": "¿Qué procedimiento se siguió en las tres reformas de la Constitución?",
+   "q": "¿Qué procedimiento se siguió en las reformas constitucionales de 1992, 2011, 2024 y 2026?",
    "o": [
     "La reforma agravada",
     "La reforma ordinaria",
@@ -2949,8 +2949,8 @@
     "La reforma por referéndum directo"
    ],
    "a": 1,
-   "d": "Las tres reformas se tramitaron por el procedimiento ordinario.",
-   "fuente": "Tema 1",
+   "d": "Las cuatro reformas se tramitaron por el procedimiento ordinario del artículo 167 CE.",
+   "fuente": "CE art. 167 y BOE-A-2026-10881",
    "origen": "generada"
   },
   {
@@ -9079,16 +9079,16 @@
    "tema": 3,
    "b": "CE",
    "n": 3,
-   "q": "¿Cuántos Senadores elige cada isla o agrupación menor (Ibiza-Formentera, Menorca, Lanzarote…)?",
+   "q": "Según el artículo 69.3 de la Constitución, ¿cuántos senadores eligen Ibiza y Formentera en total?",
    "o": [
-    "Dos",
+    "Cuatro",
     "Tres",
-    "Uno",
-    "Ninguno"
+    "Dos",
+    "Uno"
    ],
    "a": 2,
-   "d": "Art. 69.3 CE.",
-   "fuente": "CE art. 69",
+   "d": "Desde la reforma de 2026, Ibiza y Formentera son circunscripciones separadas y cada isla elige un senador.",
+   "fuente": "CE art. 69.3 y BOE-A-2026-10881",
    "origen": "generada"
   },
   {
@@ -11150,16 +11150,16 @@
    "tema": 3,
    "b": "CE",
    "n": 5,
-   "q": "¿Cuál de estas es una agrupación o isla que elige un Senador?",
+   "q": "Según el artículo 69.3 de la Constitución, ¿cuál de estas islas elige un solo senador?",
    "o": [
     "Gran Canaria",
     "Mallorca",
     "Tenerife",
-    "Ibiza-Formentera"
+    "Formentera"
    ],
    "a": 3,
-   "d": "Art. 69.3 CE.",
-   "fuente": "CE art. 69",
+   "d": "Formentera elige un senador propio tras la reforma de 2026. Gran Canaria, Mallorca y Tenerife eligen tres cada una.",
+   "fuente": "CE art. 69.3 y BOE-A-2026-10881",
    "origen": "generada"
   },
   {

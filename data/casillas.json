@@ -6,12 +6,12 @@
   },
   {
     "n": "Sol",
-    "t": "CE",
+    "t": "legislativo",
     "f": "sol"
   },
   {
     "n": "Gran Vía",
-    "t": "EAM",
+    "t": "policial",
     "f": "granvia"
   },
   {
@@ -22,7 +22,7 @@
   },
   {
     "n": "Chamberí",
-    "t": "LRBRL",
+    "t": "accion",
     "f": "chamberi"
   },
   {
@@ -32,7 +32,7 @@
   },
   {
     "n": "4 Caminos",
-    "t": "CE",
+    "t": "trafico",
     "f": "ccaminos"
   },
   {
@@ -42,7 +42,7 @@
   },
   {
     "n": "Chamartín",
-    "t": "EAM",
+    "t": "penal",
     "f": "chamartin"
   },
   {
@@ -57,7 +57,7 @@
   },
   {
     "n": "C. Lineal",
-    "t": "LRBRL",
+    "t": "ordenanzas",
     "f": "clineal"
   },
   {
@@ -67,7 +67,7 @@
   },
   {
     "n": "Hortaleza",
-    "t": "CE",
+    "t": "social",
     "f": "hortaleza"
   },
   {
@@ -77,7 +77,7 @@
   },
   {
     "n": "Barajas",
-    "t": "EAM",
+    "t": "legislativo",
     "f": "barajas"
   },
   {
@@ -87,7 +87,7 @@
   },
   {
     "n": "Vallecas",
-    "t": "CE",
+    "t": "policial",
     "f": "vallecas"
   },
   {
@@ -97,12 +97,12 @@
   },
   {
     "n": "Villaverde",
-    "t": "LRBRL",
+    "t": "trafico",
     "f": "villaverde"
   },
   {
     "n": "Usera",
-    "t": "CE",
+    "t": "penal",
     "f": "usera"
   },
   {
@@ -112,7 +112,7 @@
   },
   {
     "n": "Carabanchel",
-    "t": "EAM",
+    "t": "ordenanzas",
     "f": "carabanchel"
   },
   {
@@ -132,7 +132,7 @@
   },
   {
     "n": "Arganzuela",
-    "t": "LRBRL",
+    "t": "social",
     "f": "arganzuela"
   },
   {
