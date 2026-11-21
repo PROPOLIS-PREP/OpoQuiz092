@@ -2,7 +2,7 @@
 
 Juego de preguntas y tablero para opositores a Policía Municipal de Madrid, en la línea de Preguntados y Monopoly. Cada jugador contesta test del temario, tira el dado y avanza por un plano de Madrid para ganar puntos, ascender en el escalafón y reclutar efectivos.
 
-Es un prototipo jugable de las mecánicas. Incluye los bancos reales de los bloques legislativo (1292 preguntas activas) y policial (1245). Los rivales, la liga y los amigos están simulados.
+Es un prototipo jugable de las mecánicas. Incluye los bancos reales de los bloques legislativo (1292 preguntas activas), policial (1245) y penal (1374). Los rivales, la liga y los amigos están simulados.
 
 ## Cómo se abre
 
@@ -16,12 +16,13 @@ No hace falta instalar nada ni tener conexión, salvo para cargar la tipografía
 
 ## Cómo se juega
 
-- Eliges entre 2 y 5 jugadores y entre 5, 10, 15 o 20 turnos.
+- Eliges entre 2 y 5 jugadores y dos modos de juego.
 - Cada turno empieza con una pregunta obligatoria. Solo si aciertas tiras el dado y resuelves la casilla.
 - La ruleta y el tablero tienen los seis bloques del temario (legislativo, policial, tráfico, penal, ordenanzas y social, dos casillas cada uno). Mientras un bloque no tenga preguntas, sale una de otro. Hay además casillas de acción, sanción, regalo y túneles, y cartas de evento.
 - Al pasar por Comisaría puedes optar al examen de ascenso (2, 3 o 4 preguntas según la categoría). Los multiplicadores de puntuación suben con cada categoría.
 - Los efectivos a tu cargo se despliegan arrastrándolos desde el borde del tablero hasta la casilla que quieras.
-- Gana quien más puntos tenga al final de los turnos.
+- En **Por puntos**, gana quien tenga más puntos al cabo de 5, 10, 15 o 20 turnos.
+- En **Carrera de ascenso**, gana el primero que llegue a la categoría elegida. Puedes elegir Subinspector, Inspector, Intendente, Comisario o Comisario Principal. Los turnos son ilimitados.
 
 ## Estructura del proyecto
 
@@ -34,7 +35,8 @@ OpoQuiz092/
 │   ├── preguntas/          ← un archivo por bloque del temario
 │   │   ├── bloque-legislativo.json   (1307 preguntas)
 │   │   ├── bloque-policial.json      (1253 preguntas)
-│   │   └── …tráfico, penal, ordenanzas, social (pendientes)
+│   │   ├── bloque-penal.json         (1394 preguntas)
+│   │   └── …tráfico, ordenanzas, social (pendientes)
 │   ├── categorias.json     ← los 6 bloques de la ruleta: nombre, color, icono y orden
 │   ├── cartas-evento.json
 │   ├── casillas.json
@@ -60,6 +62,7 @@ Los datos se editan en `data/`, nunca dentro de `index.html`. Después hay que c
 ```
 node tools/validar.mjs           # revisa preguntas y datos, muestra la tabla por bloque y nivel
 node tools/build.mjs             # copia data/ dentro de index.html
+node tools/citar-ley.mjs         # añade a los enunciados la ley a la que se refieren (--escribir para aplicarlo)
 node --test tests/*.test.mjs     # tests
 ```
 
@@ -72,7 +75,7 @@ node --test tests/*.test.mjs     # tests
 - Los edificios del tablero conservan algunos restos de la peana en los bordes.
 - Pruebas: se han jugado partidas simuladas completas en escritorio y móvil emulado. Falta probar en un móvil real el arrastre con el dedo y el zoom.
 - Pendiente: el nombre definitivo de la academia y el dominio, para sustituir el sello provisional en `MARCA` (al principio del bloque de la pantalla de inicio).
-- Pendiente: los bloques tráfico, penal, ordenanzas y social, y revisar las 23 preguntas marcadas `revisar` (15 del legislativo y 8 del policial).
+- Pendiente: los bloques tráfico, ordenanzas y social, y revisar las 43 preguntas marcadas `revisar` (15 del legislativo, 8 del policial y 20 del penal).
 
 ## Marca
 

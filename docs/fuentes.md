@@ -57,6 +57,34 @@ Versión 1, generada el 20/11/2026. 1253 preguntas: 100 de dos tests de referenc
 
 8 preguntas llevan el campo `revisar` y no entran en el juego: tres con una clave discutible y cinco con datos que pueden cambiar (policías autonómicas, unidades adscritas, dependencia de las FCSE, uso de imágenes de agentes).
 
+## Bloque penal (`data/preguntas/bloque-penal.json`)
+
+Versión 1, generada el 21/11/2026. 1394 preguntas: 407 de exámenes de referencia (`origen: examen`) y 987 elaboradas a partir del temario (`origen: generada`). 6 están marcadas como `gemela` de otra.
+
+| Tema | Contenido | Materia (`b`) | Normas principales |
+|---|---|---|---|
+| 20 | Poder Judicial y proceso penal: LOPJ, Tribunales de Instancia, competencia, LECrim, procedimientos, habeas corpus y medidas cautelares | PROC | CE, LO 6/1985 (LOPJ), LO 1/2025, LECrim, LO 5/1995, LO 6/1984, LO 5/2000, Ley 4/1985 |
+| 21 | Código Penal (I): garantías, infracción penal, autoría, responsabilidad y circunstancias (arts. 1-31 quinquies) | CPGEN | LO 10/1995 (CP) |
+| 22 | Código Penal (II): penas, aplicación, suspensión, medidas de seguridad, extinción y cancelación | PENAS | CP, LECrim |
+| 23 | Código Penal (III): homicidio, lesiones, libertad, integridad moral y trata | PERSONAS | CP |
+| 24 | Código Penal (IV): libertad sexual, hurto, robo, extorsión, uso de vehículos y usurpación | SEXPAT | CP, LO 10/2022 |
+| 25 | Código Penal (V): salud pública (arts. 359-378) | DROGAS | CP |
+| 26 | Código Penal (VI): seguridad vial (arts. 379-385 ter) | VIAL | CP |
+| 27 | Código Penal (VII): Administración Pública y delitos con ocasión del ejercicio de derechos fundamentales | ADMIN | CP |
+| 0 | Anexo PMM: derecho penal especial aplicado al servicio | PMM | CP |
+
+| Norma | Publicación | Versión consolidada consultada | Fecha de revisión |
+|---|---|---|---|
+| LO 10/1995, del Código Penal | _pendiente_ | _pendiente_ | _pendiente_ |
+| LO 6/1985, del Poder Judicial | _pendiente_ | _pendiente_ | _pendiente_ |
+| LO 1/2025, de eficiencia del Servicio Público de Justicia | _pendiente_ | _pendiente_ | _pendiente_ |
+| Ley de Enjuiciamiento Criminal | _pendiente_ | _pendiente_ | _pendiente_ |
+| LO 5/1995, del Tribunal del Jurado | _pendiente_ | _pendiente_ | _pendiente_ |
+| LO 6/1984, de habeas corpus | _pendiente_ | _pendiente_ | _pendiente_ |
+| LO 5/2000, de responsabilidad penal de los menores | _pendiente_ | _pendiente_ | _pendiente_ |
+
+20 preguntas llevan el campo `revisar` y no entran en el juego: todas son de la organización judicial reformada por la LO 1/2025, cuya implantación es escalonada (2025-2026). Hay que comprobarlas contra el texto vigente antes de cada convocatoria.
+
 ## Cómo anotar una revisión
 
 1. Abre la norma en el BOE y anota la fecha de la última actualización del texto consolidado.

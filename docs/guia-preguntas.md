@@ -16,6 +16,7 @@ El juego no lee estos archivos directamente: después de editarlos hay que copia
 ```
 node tools/validar.mjs     # revisa las preguntas y muestra la tabla por categoría y nivel
 node tools/build.mjs       # copia data/ dentro de index.html
+node tools/citar-ley.mjs   # añade a los enunciados la ley a la que se refieren
 ```
 
 Hace falta Node.js 18 o superior. Si hay errores, `build` no toca `index.html`. Las subcarpetas de `data/preguntas/` no se cargan.
@@ -69,13 +70,15 @@ Los seis bloques ya están en la ruleta y tienen dos casillas cada uno. Mientras
 ## Añadir un bloque nuevo
 
 1. Guarda el archivo como `data/preguntas/bloque-<clave>.json` con `"bloque": "<clave>"` (por ejemplo `bloque-trafico.json` con `"bloque": "trafico"`).
-2. Ejecuta `node tools/validar.mjs` y después `node tools/build.mjs`.
+2. Ejecuta `node tools/citar-ley.mjs` para ver qué enunciados no citan la ley y, si está bien, `node tools/citar-ley.mjs --escribir`. Si el bloque usa normas nuevas, añádelas antes a la lista `LEYES` del script.
+3. Ejecuta `node tools/validar.mjs` y después `node tools/build.mjs`.
 3. No hace falta tocar nada más: el bloque ya tiene su sector en la ruleta y sus dos casillas, y desde ese momento sus preguntas sustituyen a las de relleno. También aparece solo su objetivo diario ("Acierta 3 de …").
 
 Nombre, color, icono y orden de la ruleta de cada bloque están en `data/categorias.json`; las casillas, en el campo `t` de `data/casillas.json`.
 
 ## Criterios de calidad
 
+- El enunciado dice de qué norma se pregunta: «Según la LO 4/2010, de régimen disciplinario del CNP, ¿qué…?». La excepción son las preguntas cuya respuesta es la propia norma («¿Qué ley regula…?»), donde citarla daría la respuesta. `tools/citar-ley.mjs` lo hace a partir del campo `fuente`, que debe empezar por la norma (`LO 4/2010 art. 7`, no `Tema 9`).
 - Una sola respuesta correcta según la letra de la norma. Si hay dos defendibles, marca la pregunta con `revisar`.
 - Distractores verosímiles: plazos cercanos, órganos parecidos, artículos vecinos.
 - Evita "todas las anteriores" y "ninguna de las anteriores".

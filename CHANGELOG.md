@@ -1,5 +1,19 @@
 # Cambios
 
+## v14.7 · 2026-11-21 · Banco de preguntas del bloque penal
+
+- Nuevo `data/preguntas/bloque-penal.json`: 1394 preguntas de los temas 20 a 27 y del Anexo PMM (Poder Judicial y proceso penal, y Código Penal). Entran 1374 en el juego; las 20 marcadas `revisar` (organización judicial de la LO 1/2025) quedan fuera.
+- El sector Penal de la ruleta y sus casillas (Chamartín y Usera) ya sacan preguntas propias. Aparece el objetivo diario «Acierta 3 de Penal».
+- 1230 enunciados penales citan ahora la norma (Código Penal, LOPJ, LECrim, LO del Jurado, de habeas corpus, de menores…); 113 ya la citaban. No se cita en 11 preguntas cuya respuesta es la propia norma ni en 40 de doctrina o sin norma concreta.
+- `tools/citar-ley.mjs` reconoce las normas penales, las fuentes de examen («Examen PROPOLIS · Tema N · …») y los temas que son siempre de una misma norma.
+
+## v14.6 · 2026-11-21 · Los enunciados citan la ley
+
+- Botón «Impugnar pregunta» en el panel de resultado, tras acertar o fallar. Pide el motivo y lo envía sin salir del juego a la función `impugnar` de Supabase (proyecto App PROPOLIS), que lo guarda en la tabla `impugnaciones` y lo manda a oposicionesmunicipal@gmail.com con Resend: motivo, id, bloque, nivel, enunciado, opciones (con la correcta y la marcada) y explicación. Si no hay conexión, abre el correo del jugador con el mensaje escrito. Detalles en `docs/impugnaciones.md`.
+- 1754 enunciados de los bloques legislativo y policial dicen ahora la norma a la que se refieren («Según la LOPSC (LO 4/2015), …», «Según el temario de la LOTC (LO 2/1979), …»). 552 ya la citaban.
+- No se cita en 64 preguntas cuya respuesta es la propia norma o un artículo suyo, para no darla, ni en 190 cuya fuente es genérica (sobre todo de los temas 3, 4, 6 y 7) y no consta una norma concreta. Para verlas: `node tools/citar-ley.mjs`.
+- Nueva herramienta `tools/citar-ley.mjs`, para aplicar lo mismo a los próximos bloques.
+
 ## v14.5 · 2026-11-20 · Banco de preguntas del bloque policial
 
 - Las preguntas de casilla (distrito, Juzgado y cartas de acción) tienen nivel al azar, del 1 al 7. Solo la pregunta obligatoria del turno depende de la categoría del jugador (y el examen, de la categoría a la que se opta). Si no quedan preguntas del nivel sorteado en el bloque de la casilla, sale el nivel más cercano.
