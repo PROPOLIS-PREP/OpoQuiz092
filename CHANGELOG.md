@@ -1,5 +1,9 @@
 # Cambios
 
+## v14.11 · 2026-11-22 · Logo de la pantalla de inicio
+
+- El logo antiguo (placa con dado y tablero) de la pantalla de inicio se sustituye por la ficha azul con gorra de policía. Se elimina del juego.
+
 ## v14.10 · 2026-11-22 · Nuevo icono
 
 - Icono de la app, favicon y `store/icono-512.png`: ahora la ficha azul con gorra de policía sobre fondo azul.
