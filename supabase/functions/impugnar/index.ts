@@ -74,12 +74,29 @@ Deno.serve(async (req) => {
 
   // correo
   let correo = false;
+  const L = "ABCD";
+  const lineas = opciones.map((o, i) => `${L[i]}) ${o}${i === fila.correcta ? "   ← correcta según el juego" : ""}${i === fila.marcada && i !== fila.correcta ? "   ← marcada" : ""}`);
+  const cuerpo = `Motivo de la impugnación:\n${motivo}\n\n— Datos de la pregunta —\nId: ${pregunta_id}\nBloque: ${fila.bloque ?? "?"} · Nivel ${fila.nivel ?? "?"}\n\n${fila.enunciado ?? ""}\n\n${lineas.join("\n")}\n\n` +
+    `Respuesta marcada: ${fila.marcada !== null && fila.marcada >= 0 ? L[fila.marcada] : "ninguna (se acabó el tiempo)"}\nExplicación del juego: ${fila.explicacion ?? "(sin explicación)"}\n\nImpugnación n.º ${data.id} · guardada en la tabla impugnaciones de App PROPOLIS.`;
+  const asunto = `Impugnación de pregunta ${pregunta_id}`;
+
+  // Opción A: Make (escenario con Gmail). MAKE_WEBHOOK_URL = URL del webhook; el correo sale de la propia cuenta de Gmail.
+  const make = Deno.env.get("MAKE_WEBHOOK_URL");
+  if (make) {
+    try {
+      const r = await fetch(make, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ para: Deno.env.get("IMPUGNAR_A") || "oposicionesmunicipal@gmail.com", asunto, html: `<pre style="font-family:system-ui,sans-serif;white-space:pre-wrap;font-size:14px">${esc(cuerpo)}</pre>` }),
+      });
+      correo = r.ok;
+      if (!r.ok) console.error("make", r.status, await r.text());
+    } catch (e) { console.error("make", e); }
+    if (correo) await db.from("impugnaciones").update({ correo_enviado: true }).eq("id", data.id);
+  }
+
+  // Opción B: Resend (sin ella ni Make, la impugnación solo se guarda)
   const clave = Deno.env.get("RESEND_API_KEY");
-  if (clave) {
-    const L = "ABCD";
-    const lineas = opciones.map((o, i) => `${L[i]}) ${o}${i === fila.correcta ? "   ← correcta según el juego" : ""}${i === fila.marcada && i !== fila.correcta ? "   ← marcada" : ""}`);
-    const cuerpo = `Motivo de la impugnación:\n${motivo}\n\n— Datos de la pregunta —\nId: ${pregunta_id}\nBloque: ${fila.bloque ?? "?"} · Nivel ${fila.nivel ?? "?"}\n\n${fila.enunciado ?? ""}\n\n${lineas.join("\n")}\n\n` +
-      `Respuesta marcada: ${fila.marcada !== null && fila.marcada >= 0 ? L[fila.marcada] : "ninguna (se acabó el tiempo)"}\nExplicación del juego: ${fila.explicacion ?? "(sin explicación)"}\n\nImpugnación n.º ${data.id} · guardada en la tabla impugnaciones de App PROPOLIS.`;
+  if (!correo && clave) {
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: { Authorization: `Bearer ${clave}`, "Content-Type": "application/json" },

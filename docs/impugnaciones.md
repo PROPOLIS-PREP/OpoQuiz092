@@ -21,6 +21,14 @@ El código está en el repositorio:
 - Límites: 5 impugnaciones por hora desde el mismo origen y 60 por hora en total. No se guarda la IP, solo una huella anónima.
 - Longitudes máximas en cada campo, comprobadas en la función y en la tabla.
 
+## Activar el correo con Make + Gmail (recomendado)
+
+La función avisa a un webhook de Make y un escenario envía el correo desde la propia cuenta de Gmail (sin dominio ni Resend).
+
+1. En Make hay un webhook «Patrulla 092 - impugnaciones» y un escenario que lo recibe y envía el correo con Gmail. Requiere conectar la cuenta de Gmail en Make.
+2. En Supabase: **App PROPOLIS → Edge Functions → Secrets → Add new secret**: `MAKE_WEBHOOK_URL` = la URL del webhook (empieza por `https://hook.eu1.make.com/`).
+3. Listo. Si Make falla y existe `RESEND_API_KEY`, se intenta con Resend.
+
 ## Activar el correo (Resend)
 
 Hasta que se configure, las impugnaciones **se guardan en la tabla pero no llega correo** (`correo_enviado = false`).
