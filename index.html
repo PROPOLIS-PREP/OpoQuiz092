@@ -829,6 +829,8 @@ body.en-cuartel .top{max-width:910px;gap:clamp(5px,1.5vw,14px);padding-top:calc(
 .pant-cuartel .cromo{border-color:#e7b749;box-shadow:0 0 0 1px #113966,0 4px 0 #041f4b;color:#09275d;min-width:0}
 .pant-cuartel .cromo:not(.falta):not(.r2):not(.r3){background:linear-gradient(#fffaf2,#f0ddc4)}
 .pant-cuartel .cromo.falta{background:linear-gradient(#e1ecf7,#b5cbe5)}
+/* los paneles emergentes (cromo, cartas…) tienen fondo crema: el texto no puede heredar el blanco del Cuartel */
+body.en-cuartel .panel{color:var(--tinta)}
 .pant-cuartel .liga-placa[aria-current]{border-color:#bd7a09;background:#ffe4a1}
 .pant-cuartel .fila-r.yo{border-color:#cc8b19;background:linear-gradient(#fff4cb,#ffdf85)}
 .pant-cuartel .nota{color:#f4f9ff;text-shadow:0 1px 3px #031432}
@@ -9715,7 +9717,7 @@ function turnoBot(){
    se abre el correo del jugador con el mensaje ya escrito (enlace mailto). ---- */
 const IMPUGNAR_A="oposicionesmunicipal@gmail.com";
 const IMPUGNAR_URL="https://auuotygakkegogssmaoy.supabase.co/functions/v1/impugnar";
-const VERSION_APP="v14.11";
+const VERSION_APP="v14.12";
 async function enviarImpugnacion(q,idx,nivel,motivo,trampa){
   const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),9000);
   try{

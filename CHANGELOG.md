@@ -1,5 +1,9 @@
 # Cambios
 
+## v14.12 · 2026-11-22 · Texto legible en los cromos del álbum
+
+- Al abrir un emblema del álbum, el texto salía en blanco sobre el panel crema. Ahora los paneles emergentes usan el color de tinta oscuro dentro del Cuartel.
+
 ## v14.11 · 2026-11-22 · Logo de la pantalla de inicio
 
 - El logo antiguo (placa con dado y tablero) de la pantalla de inicio se sustituye por la ficha azul con gorra de policía. Se elimina del juego.
