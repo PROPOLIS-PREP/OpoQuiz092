@@ -90,4 +90,11 @@ test("cada pieza del avatar tiene imagen", async () => {
     .filter(([k, a]) => ["agente", "fondo", "gorra", "extra", "marco", "base"].includes(a.s) && k !== "nada")
     .filter(([k]) => !fs.existsSync(path.join(web, k + ".webp"))).map(([k]) => k);
   assert.deepEqual(faltan, []);
+  const { agentes } = JSON.parse(fs.readFileSync(path.join(RAIZ, "data", "avatar.json"), "utf8"));
+  const gorras = Object.keys(ACC).filter(k => ACC[k].s === "gorra").sort();
+  for (const [agente, { retratos }] of Object.entries(agentes)) {
+    assert.deepEqual(Object.keys(retratos).sort(), gorras, agente);
+    assert.equal(new Set(Object.values(retratos)).size, gorras.length, agente);
+    for (const id of Object.values(retratos)) assert.ok(fs.existsSync(path.join(web, id + ".webp")), id);
+  }
 });

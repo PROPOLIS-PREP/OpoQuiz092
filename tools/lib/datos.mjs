@@ -184,5 +184,8 @@ export function cargarAvatar(errores) {
   for (const [k, pos] of Object.entries(layout.piezas || {}))
     for (const ag of Object.keys(layout.agentes || {}))
       if (!(ag in pos)) errores.push(`avatar.json: la pieza "${k}" no dice dónde va en "${ag}" (usa null si no se pinta)`);
+  for (const [agente, config] of Object.entries(layout.agentes || {}))
+    for (const [gorra, retrato] of Object.entries(config.retratos || {}))
+      if (!imagenes[retrato] || !layout.cajas[retrato]) errores.push(`avatar.json: falta el retrato de ${agente} con ${gorra}`);
   return { layout, imagenes, bytes };
 }

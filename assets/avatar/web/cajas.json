@@ -190,5 +190,77 @@
   78,
   372,
   305
+ ],
+ "agente_f_boina": [
+  51,
+  11,
+  332,
+  370
+ ],
+ "agente_f_casco_bici": [
+  40,
+  0,
+  344,
+  383
+ ],
+ "agente_f_casco_moto": [
+  57,
+  7,
+  322,
+  378
+ ],
+ "agente_f_intervencion": [
+  56,
+  7,
+  327,
+  376
+ ],
+ "agente_f_lana": [
+  45,
+  5,
+  338,
+  379
+ ],
+ "agente_f_plato": [
+  49,
+  14,
+  333,
+  374
+ ],
+ "agente_m_boina": [
+  38,
+  10,
+  338,
+  376
+ ],
+ "agente_m_casco_bici": [
+  35,
+  2,
+  345,
+  378
+ ],
+ "agente_m_casco_moto": [
+  38,
+  13,
+  339,
+  376
+ ],
+ "agente_m_intervencion": [
+  38,
+  11,
+  340,
+  379
+ ],
+ "agente_m_lana": [
+  34,
+  13,
+  345,
+  379
+ ],
+ "agente_m_plato": [
+  34,
+  9,
+  345,
+  379
  ]
 }

@@ -33,6 +33,11 @@ def optimizar():
     for png in sorted(ORIG.glob("*/*.png")):
         hueco, ident = png.parent.name, png.stem
         im = Image.open(png).convert("RGBA")
+        if hueco == "retratos":
+            im.thumbnail((384, 384), Image.LANCZOS)
+            original = Image.new("RGBA", (384, 384))
+            original.alpha_composite(im, ((384 - im.width) // 2, (384 - im.height) // 2))
+            im = original
         if hueco == "fondos":
             out = recortar_fondo(im)
             cajas[ident] = [0, 0, 384, 384]
@@ -64,19 +69,21 @@ def componer(av, L):
     f = cargar(av["fondo"]).resize((2 * h["r"] + 4, 2 * h["r"] + 4), Image.LANCZOS)
     capa = Image.new("RGBA", (S, S), (0, 0, 0, 0)); capa.paste(f, (h["x"] - h["r"] - 2, h["y"] - h["r"] - 2), f)
     lienzo.alpha_composite(Image.composite(capa, Image.new("RGBA", (S, S)), circ))
-    # agente + gorra + extra, en el espacio del dibujo (384) y luego escalado al lienzo
+    # Retrato preparado con la gorra y accesorio independiente.
     ag = L["agente"]
     dib = Image.new("RGBA", (384, 384), (0, 0, 0, 0))
-    base = cargar(av["agente"]); caja = json.loads((WEB / "cajas.json").read_text())[av["agente"]]
+    agente = av["agente"]
+    ident = L["agentes"][agente]["retratos"].get(av.get("gorra"), agente)
+    base = cargar(ident)
+    caja = L["cajas"][ident]
     dib.alpha_composite(base.resize((caja[2] - caja[0], caja[3] - caja[1]), Image.LANCZOS), (caja[0], caja[1]))
-    for hueco in ("extra", "gorra"):
-        ident = av.get(hueco)
-        pos = (L["piezas"].get(ident) or {}).get(av["agente"]) if ident else None
-        if pos:
-            im = cargar(ident); w = pos[2]; hgt = round(im.size[1] * w / im.size[0])
-            pieza = im.resize((w, hgt), Image.LANCZOS)
-            tmp = Image.new("RGBA", (384, 384), (0, 0, 0, 0)); tmp.paste(pieza, (pos[0], pos[1]), pieza)
-            dib.alpha_composite(tmp)
+    extra = av.get("extra")
+    pos = L["piezas"].get(extra, {}).get(agente)
+    if pos:
+        im = cargar(extra)
+        w = pos[2]
+        hgt = round(im.height * w / im.width)
+        dib.alpha_composite(im.resize((w, hgt), Image.LANCZOS), (pos[0], pos[1]))
     k = ag["escala"]; dib = dib.resize((round(384 * k), round(384 * k)), Image.LANCZOS)
     capa = Image.new("RGBA", (S, S), (0, 0, 0, 0)); capa.paste(dib, (ag["x"], ag["y"]), dib)
     # recorte: círculo en la mitad de abajo, libre por arriba (la cabeza asoma sobre el marco)
@@ -91,7 +98,8 @@ def componer(av, L):
 
 def muestra(destino):
     L = json.loads((RAIZ / "data" / "avatar.json").read_text(encoding="utf-8"))
-    gorras = ["boina", "plato", "lana", "casco_bici", "casco_moto", "intervencion"]
+    L["cajas"] = json.loads((WEB / "cajas.json").read_text(encoding="utf-8"))
+    gorras = list(L["agentes"]["agente_m"]["retratos"])
     extras = ["nada", "gafas", "bigote", "pinganillo", "bufanda", "silbato", "radio"]
     filas = []
     for ag in ("agente_f", "agente_m"):
