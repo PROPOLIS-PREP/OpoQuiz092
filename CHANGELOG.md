@@ -1,5 +1,9 @@
 # Cambios
 
+## v14.10 · 2026-11-22 · Nuevo icono
+
+- Icono de la app, favicon y `store/icono-512.png`: ahora la ficha azul con gorra de policía sobre fondo azul.
+
 ## v14.9 · 2026-11-22 · App instalable en el móvil
 
 - Nuevos `manifest.webmanifest`, `sw.js` (service worker, también permite abrir sin conexión lo ya visitado) e `icons/` (192, 512, maskable y apple-touch). Con ello Chrome ofrece «Instalar app» en lugar de solo «Añadir acceso directo», y Safari usa el icono propio al añadir a la pantalla de inicio.

@@ -1,7 +1,7 @@
 // Service worker de Patrulla 092: hace la app instalable y la deja abrir sin conexión.
 // Estrategia: la página y los iconos se sirven de la red y se guardan; sin red, se usa lo guardado.
 // Si cambias algo que deba renovarse a la fuerza, sube VERSION.
-const VERSION = "v14.9";
+const VERSION = "v14.10";
 const CACHE = "patrulla092-" + VERSION;
 const BASE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
 
