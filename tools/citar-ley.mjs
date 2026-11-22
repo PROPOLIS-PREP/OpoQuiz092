@@ -14,7 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { RAIZ } from "./lib/datos.mjs";
-import { BLOQUES_NORMAS, normaDeFuente } from "./lib/normas.mjs";
+import { BLOQUES_NORMAS, normaDeFuente, normaDeId } from "./lib/normas.mjs";
 
 const escribir = process.argv.includes("--escribir"), todo = process.argv.includes("--todo");
 const DIR = path.join(RAIZ, "data", "preguntas");
@@ -134,7 +134,7 @@ function leyDe(q, bloque) {
   if (typeof caso === "string") return LEYES[caso];
   if (caso && caso.ley) return caso.ley;
   const fuente = (q.fuente || "").trim();
-  if (BLOQUES_NORMAS.has(bloque)) { const n = normaDeFuente(fuente); if (n) return n; }
+  if (BLOQUES_NORMAS.has(bloque)) { const n = normaDeId(q.id) || normaDeFuente(fuente); if (n) return n; }
   // cada parte de la fuente: una ley conocida, algo genérico ("Tema 4") o algo desconocido
   const partes = fuente.split(" / ").map(s => s.trim()).filter(Boolean)
     .map(p => Object.keys(LEYES).find(k => LEYES[k].fuente.test(p)) || (GENERICA.test(p) ? null : "?"));

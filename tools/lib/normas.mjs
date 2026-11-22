@@ -68,3 +68,27 @@ export function normaDeFuente(fuente) {
   }
   return null;
 }
+
+// Tráfico: preguntas de los tests y de los temas cuya fuente es genérica ("Test 2 Bloque Tráfico · Tema 30")
+// pero cuya norma está clara por la materia. Las de doctrina (física del accidente, tipos de accidente,
+// farmacología del alcohol, terminología de semáforos…) no se asignan: no hay una norma que citar.
+const porNombre = parte => NORMAS.find(n => n.nom.includes(parte));
+const LSV = porNombre("Ley de Tráfico y Seguridad Vial"), RGCIR = porNombre("Reglamento General de Circulación"),
+  RGCON = porNombre("Reglamento General de Conductores"), RGV = porNombre("Reglamento General de Vehículos"),
+  CP = porNombre("Código Penal");
+const ITV = { art: "el", nom: "RD 920/2017, de inspección técnica de vehículos", f: /RD 920\/2017/ };
+const ids = (pref, ...n) => n.map(x => `TRA-${pref}-${String(x).padStart(2, "0")}`);
+const rango = (pref, a, b) => Array.from({ length: b - a + 1 }, (_, i) => a + i).map(x => `TRA-${pref}-${String(x).padStart(2, "0")}`);
+const tema = (...n) => n.map(x => `TRA-T${Math.floor(x / 1000)}-${String(x % 1000).padStart(3, "0")}`);
+const ASIGNADAS = new Map();
+const asignar = (norma, lista) => lista.forEach(id => ASIGNADAS.set(id, norma));
+asignar(LSV, [...rango("TEST1", 3, 10), ...rango("TEST1", 15, 20), ...ids("TEST1", 25, 35, 38, 40, 43, 44),
+  ...ids("TEST2", 4, 10, 11, 12, 16, 17, 18, 19, 37, 42, 43, 44, 45, 46, 47), ...rango("TEST3", 1, 5), ...rango("TEST3", 9, 12),
+  ...rango("TEST3", 15, 25), ...ids("TEST3", 33, 37, 45, 48, 49, 50), ...tema(28002, 28003, 30001, 30002, 30003, 30032)]);
+asignar(RGCON, ids("TEST2", 7, 8, 9, 49));
+asignar(ITV, [...ids("TEST1", 11, 12), ...ids("TEST2", 14, 50)]);
+asignar(RGV, [...ids("TEST1", 13, 14), ...ids("TEST2", 13)]);
+asignar(RGCIR, [...ids("TEST1", 21, 22, 24, 32, 33, 48, 49), ...ids("TEST2", 21, 22, 23, 24, 32), ...ids("TEST3", 27, 28, 29),
+  ...tema(29011, 29012, 29013, 29057, 29058, 29059, 29060, 29061, 29062, 29063)]);
+asignar(CP, ids("TEST1", 39).concat(ids("TEST3", 36)));
+export const normaDeId = id => ASIGNADAS.get(id) || null;
