@@ -1,5 +1,9 @@
 # Cambios
 
+## v14.13 · 2026-11-22 · Descripciones de las unidades del álbum
+
+- 17 emblemas que tenían una descripción de una línea («Emblema de…») pasan a tener 20-30 palabras con las funciones de la unidad, basadas en la memoria CAF 2018 de la Dirección General de la Policía Municipal, el anexo de funciones FE-PM 02-2024 y la revista del Cuerpo. Grupo Cosmos, Respuesta Temprana, Relaciones Internacionales y la Unidad Móvil no aparecen descritos en esas fuentes: su texto es genérico y conviene revisarlo.
+
 ## v14.12 · 2026-11-22 · Texto legible en los cromos del álbum
 
 - Al abrir un emblema del álbum, el texto salía en blanco sobre el panel crema. Ahora los paneles emergentes usan el color de tinta oscuro dentro del Cuartel.
