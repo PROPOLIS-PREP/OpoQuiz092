@@ -1,5 +1,10 @@
 # Cambios
 
+## v14.9 · 2026-11-22 · App instalable en el móvil
+
+- Nuevos `manifest.webmanifest`, `sw.js` (service worker, también permite abrir sin conexión lo ya visitado) e `icons/` (192, 512, maskable y apple-touch). Con ello Chrome ofrece «Instalar app» en lugar de solo «Añadir acceso directo», y Safari usa el icono propio al añadir a la pantalla de inicio.
+- Para forzar la renovación de lo guardado en los móviles, sube `VERSION` en `sw.js`.
+
 ## v14.8 · 2026-11-22 · Bancos de tráfico, ordenanzas y social, y correo de impugnaciones
 
 - Nuevos bancos: `bloque-trafico.json` (773 activas, temas 28 a 32), `bloque-ordenanzas.json` (885, temas 13 a 19) y `bloque-social.json` (685, temas 35 a 40). Los seis bloques de la ruleta tienen ya preguntas: 6254 activas en total. Las casillas de Ordenanzas y Social dejan de usar preguntas de otro bloque.
