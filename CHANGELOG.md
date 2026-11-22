@@ -1,5 +1,12 @@
 # Cambios
 
+## v14.8 · 2026-11-22 · Bancos de tráfico, ordenanzas y social, y correo de impugnaciones
+
+- Nuevos bancos: `bloque-trafico.json` (773 activas, temas 28 a 32), `bloque-ordenanzas.json` (885, temas 13 a 19) y `bloque-social.json` (685, temas 35 a 40). Los seis bloques de la ruleta tienen ya preguntas: 6254 activas en total. Las casillas de Ordenanzas y Social dejan de usar preguntas de otro bloque.
+- 1691 enunciados de tráfico, ordenanzas y social citan ahora la norma («Según la Ordenanza del Taxi, …», «Según la LPRL (Ley 31/1995…), …»). Las normas están en `tools/lib/normas.mjs`. Quedan sin cita 405 preguntas de contenido de estudio sin una norma única (tipos de accidente, fisiología del alcohol, conceptos de Derecho Administrativo…).
+- 110 preguntas marcadas `revisar` quedan fuera del juego hasta revisarlas (15 legislativo, 8 policial, 8 tráfico, 20 penal, 7 ordenanzas y 52 social).
+- Las impugnaciones llegan por correo: la función `impugnar` avisa a un webhook de Make y un escenario envía el correo desde la cuenta de Gmail de la academia. Resend queda como alternativa.
+
 ## v14.7 · 2026-11-21 · Banco de preguntas del bloque penal
 
 - Nuevo `data/preguntas/bloque-penal.json`: 1394 preguntas de los temas 20 a 27 y del Anexo PMM (Poder Judicial y proceso penal, y Código Penal). Entran 1374 en el juego; las 20 marcadas `revisar` (organización judicial de la LO 1/2025) quedan fuera.

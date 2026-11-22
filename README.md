@@ -2,7 +2,7 @@
 
 Juego de preguntas y tablero para opositores a Policía Municipal de Madrid, en la línea de Preguntados y Monopoly. Cada jugador contesta test del temario, tira el dado y avanza por un plano de Madrid para ganar puntos, ascender en el escalafón y reclutar efectivos.
 
-Es un prototipo jugable de las mecánicas. Incluye los bancos reales de los bloques legislativo (1292 preguntas activas), policial (1245) y penal (1374). Los rivales, la liga y los amigos están simulados.
+Es un prototipo jugable de las mecánicas. Incluye los bancos reales de los seis bloques: legislativo (1292 preguntas activas), policial (1245), tráfico (773), penal (1374), ordenanzas (885) y social (685). Los rivales, la liga y los amigos están simulados.
 
 ## Cómo se abre
 
@@ -36,7 +36,9 @@ OpoQuiz092/
 │   │   ├── bloque-legislativo.json   (1307 preguntas)
 │   │   ├── bloque-policial.json      (1253 preguntas)
 │   │   ├── bloque-penal.json         (1394 preguntas)
-│   │   └── …tráfico, ordenanzas, social (pendientes)
+│   │   ├── bloque-trafico.json       (781 preguntas)
+│   ├── bloque-ordenanzas.json    (892 preguntas)
+│   └── bloque-social.json        (737 preguntas)
 │   ├── categorias.json     ← los 6 bloques de la ruleta: nombre, color, icono y orden
 │   ├── cartas-evento.json
 │   ├── casillas.json
@@ -70,12 +72,12 @@ node --test tests/*.test.mjs     # tests
 
 ## Estado y pendientes
 
-- Versión actual: v14.2 (banco de preguntas del bloque legislativo, ver [CHANGELOG.md](CHANGELOG.md)).
+- Versión actual: v14.8 (bancos de tráfico, ordenanzas y social y correo de impugnaciones, ver [CHANGELOG.md](CHANGELOG.md)).
 - Avatar: imitación vectorial del estilo de referencia, no ilustración pintada.
 - Los edificios del tablero conservan algunos restos de la peana en los bordes.
 - Pruebas: se han jugado partidas simuladas completas en escritorio y móvil emulado. Falta probar en un móvil real el arrastre con el dedo y el zoom.
 - Pendiente: el nombre definitivo de la academia y el dominio, para sustituir el sello provisional en `MARCA` (al principio del bloque de la pantalla de inicio).
-- Pendiente: los bloques tráfico, ordenanzas y social, y revisar las 43 preguntas marcadas `revisar` (15 del legislativo, 8 del policial y 20 del penal).
+- Pendiente: revisar las 110 preguntas marcadas `revisar` (15 legislativo, 8 policial, 8 tráfico, 20 penal, 7 ordenanzas y 52 social) y anotar las fechas del BOE en `docs/fuentes.md`.
 
 ## Marca
 

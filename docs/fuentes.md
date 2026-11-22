@@ -85,6 +85,47 @@ Versión 1, generada el 21/11/2026. 1394 preguntas: 407 de exámenes de referenc
 
 20 preguntas llevan el campo `revisar` y no entran en el juego: todas son de la organización judicial reformada por la LO 1/2025, cuya implantación es escalonada (2025-2026). Hay que comprobarlas contra el texto vigente antes de cada convocatoria.
 
+## Bloque tráfico (`data/preguntas/bloque-trafico.json`)
+
+Temas 28 a 32: normas de circulación, competencias y requisitos de conductores y vehículos; señalización; denuncias y procedimiento; accidentes; alcoholemia y drogas.
+
+| Norma | Publicación | Versión consolidada consultada | Fecha de revisión |
+|---|---|---|---|
+| RDLeg 6/2015, Ley de Tráfico y Seguridad Vial (LSV) | _pendiente_ | _pendiente_ | _pendiente_ |
+| RD 1428/2003, Reglamento General de Circulación (RGCir) | _pendiente_ | _pendiente_ | _pendiente_ |
+| RD 818/2009, Reglamento General de Conductores (RGCon) | _pendiente_ | _pendiente_ | _pendiente_ |
+| RD 2822/1998, Reglamento General de Vehículos (RGV) | _pendiente_ | _pendiente_ | _pendiente_ |
+| RD 320/1994, procedimiento sancionador de tráfico | _pendiente_ | _pendiente_ | _pendiente_ |
+| RD 920/2017, inspección técnica de vehículos | _pendiente_ | _pendiente_ | _pendiente_ |
+| Orden INT/2223/2014 y registro de víctimas (RNVAT) | _pendiente_ | _pendiente_ | _pendiente_ |
+
+## Bloque ordenanzas (`data/preguntas/bloque-ordenanzas.json`)
+
+Temas 13 a 19: Taxi, zonas verdes (Libro IV de la OPMAU), limpieza y salubridad, movilidad sostenible, contaminación acústica, venta ambulante y espectáculos (LEPAR).
+
+| Norma | Publicación | Versión consolidada consultada | Fecha de revisión |
+|---|---|---|---|
+| Ordenanza del Taxi (28-11-2012), mod. Ordenanza 4/2025 | _pendiente_ | _pendiente_ | _pendiente_ |
+| OPMAU (24-07-1985), Libro IV | _pendiente_ | _pendiente_ | _pendiente_ |
+| Ordenanza 12/2022 de Limpieza y Ordenanza de Salubridad Pública | _pendiente_ | _pendiente_ | _pendiente_ |
+| Ordenanza de Movilidad Sostenible (05-10-2018), mod. 10/2021 | _pendiente_ | _pendiente_ | _pendiente_ |
+| Ordenanza de Contaminación Acústica y Térmica (25-02-2011) | _pendiente_ | _pendiente_ | _pendiente_ |
+| Ordenanza de Venta Ambulante (27-03-2003) | _pendiente_ | _pendiente_ | _pendiente_ |
+| Ley 17/1997 (LEPAR), Decreto 184/1998 y Orden de 21-04-2022 | _pendiente_ | _pendiente_ | _pendiente_ |
+
+## Bloque social (`data/preguntas/bloque-social.json`)
+
+Temas 35 a 40: extranjería, drogodependencias, violencia de género, igualdad, derechos LGTBI y prevención de riesgos laborales.
+
+| Norma | Publicación | Versión consolidada consultada | Fecha de revisión |
+|---|---|---|---|
+| LO 4/2000 (LOEx), mod. RDL 2/2025 | BOE núm. 10, de 12/01/2000 | _pendiente_ | _pendiente_ |
+| Ley 5/2002 de la Comunidad de Madrid | BOCM núm. 160, de 08/07/2002 | _pendiente_ | _pendiente_ |
+| LO 1/2004 y Ley 27/2003 | BOE núm. 313, de 29/12/2004 | _pendiente_ | _pendiente_ |
+| LO 3/2007 y III Plan de Igualdad del Ayuntamiento | BOE núm. 71, de 23/03/2007 | _pendiente_ | _pendiente_ |
+| Ley 4/2023 | BOE núm. 51, de 01/03/2023 | _pendiente_ | _pendiente_ |
+| Ley 31/1995 (LPRL) y Acuerdo-Convenio del Ayuntamiento 2019-2022 | BOE núm. 269, de 10/11/1995 | _pendiente_ | _pendiente_ |
+
 ## Cómo anotar una revisión
 
 1. Abre la norma en el BOE y anota la fecha de la última actualización del texto consolidado.
