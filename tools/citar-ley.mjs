@@ -14,6 +14,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { RAIZ } from "./lib/datos.mjs";
+import { BLOQUES_NORMAS, normaDeFuente } from "./lib/normas.mjs";
 
 const escribir = process.argv.includes("--escribir"), todo = process.argv.includes("--todo");
 const DIR = path.join(RAIZ, "data", "preguntas");
@@ -119,7 +120,7 @@ for (const id of [...ex(1, 8, 9, 10, 11, 65, 87, 92, 96, 97, 98, 128, 129, 135, 
   CASOS[id] = { omitir: "doctrina o norma no concreta" };
 
 // el enunciado ya nombra una norma ("ley" o "reglamento" en minúscula son conceptos, no citas)
-const CITA = /\b(LO|L\.O\.|Ley|Leyes|Real Decreto|RD|RDLeg|Decreto|LOFCS|LOPSC|LRBRL|LOREG|LOTC|TRRL|TREBEP|ROF|Reglamento|Constituci[oó]n|CE|Estatuto|EACM|EAM|ROGA|PLATERCAM|PEMAM|C[oó]digo|LCPLCM|RM|LECrim|CP|LOPJ|LOTJ|LORPM)\b/;
+const CITA = /\b(LO|L\.O\.|Ley|Leyes|Real Decreto|RD|RDLeg|Decreto|LOFCS|LOPSC|LRBRL|LOREG|LOTC|TRRL|TREBEP|ROF|Reglamento|Constituci[oó]n|CE|Estatuto|EACM|EAM|ROGA|PLATERCAM|PEMAM|C[oó]digo|LCPLCM|RM|LECrim|CP|LOPJ|LOTJ|LORPM|Ordenanza|Ordenanzas|OPMAU|LEPAR|LOEx|LPRL|LTSV|LSV|RDL|Orden de|Orden INT|Directiva|Acuerdo-Convenio|Plan de Igualdad|Protocolo|RGCir|RGCon|RGV|RSOA|Estatuto de los Trabajadores)\b/;
 // una opción nombra una norma concreta: la pregunta trata de qué norma es
 const NORMA_CONCRETA = /\b(LO|Ley|RD|Real Decreto|Decreto|RDLeg)\s+\d+\/\d{4}|\b(LOFCS|LOPSC|LRBRL|LOREG|LOTC|TRRL|TREBEP|ROGA|EACM|PLATERCAM|PEMAM|LOPJ|LECrim|LOTJ|LORPM)\b/;
 const GENERICA = /^(Tema|Tarjetas|Tabla|Hoja|Examen PROPOLIS)\b/;
@@ -133,6 +134,7 @@ function leyDe(q, bloque) {
   if (typeof caso === "string") return LEYES[caso];
   if (caso && caso.ley) return caso.ley;
   const fuente = (q.fuente || "").trim();
+  if (BLOQUES_NORMAS.has(bloque)) { const n = normaDeFuente(fuente); if (n) return n; }
   // cada parte de la fuente: una ley conocida, algo genérico ("Tema 4") o algo desconocido
   const partes = fuente.split(" / ").map(s => s.trim()).filter(Boolean)
     .map(p => Object.keys(LEYES).find(k => LEYES[k].fuente.test(p)) || (GENERICA.test(p) ? null : "?"));
@@ -179,7 +181,7 @@ for (const f of fs.readdirSync(DIR).filter(f => f.endsWith(".json")).sort()) {
     if (CITA.test(q.q)) { res.yaCitan++; continue; }
     const l = leyDe(q, v.bloque || f.replace(/.json$/, "").replace(/^bloque-/, ""));
     if (!l) { res.sinLey++; sinLey.push(`${q.id} [${q.fuente || "sin fuente"}] ${q.q}`); continue; }
-    if (q.o.some(o => (l.d && l.d.test(o)) || NORMA_CONCRETA.test(o))) { res.enOpciones++; enOpciones.push(`${q.id} ${q.q}`); continue; }
+    if (q.o.some(o => (l.d && l.d.test(o)) || (l.f && l.f.test(o)) || NORMA_CONCRETA.test(o))) { res.enOpciones++; enOpciones.push(`${q.id} ${q.q}`); continue; }
     const nuevo = citar(q.q, l);
     cambios.push([q.id, q.q, nuevo]); q.q = nuevo; tocadas++; res.citadas++;
   }

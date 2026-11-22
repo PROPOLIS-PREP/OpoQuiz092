@@ -12,12 +12,12 @@
   "7": "Comisario Principal"
  },
  "temas": {
+  "0": "Otras preguntas incluidas en los tests del bloque",
   "28": "Normas de circulación, textos legales, organismos y competencias; requisitos de conductores y vehículos",
   "29": "Señalización: normas generales, tipos, significado y control automático del tráfico",
   "30": "Denuncias por infracciones de circulación: procedimiento, recursos, ejecución, inmovilización y retirada",
   "31": "Accidentes de tráfico: concepto, clases, RNVAT, seguridad vial y actuación policial",
-  "32": "Alcoholemia y drogas: tasas, pruebas, etilómetros y actuación policial",
-  "0": "Otras preguntas incluidas en los tests del bloque"
+  "32": "Alcoholemia y drogas: tasas, pruebas, etilómetros y actuación policial"
  },
  "categorias": {
   "NORMAS": "Normas, conductores y vehículos",
@@ -2598,7 +2598,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 1,
-   "q": "¿Qué Administración tiene la competencia exclusiva sobre tráfico y circulación de vehículos a motor?",
+   "q": "Según la Constitución, ¿qué Administración tiene la competencia exclusiva sobre tráfico y circulación de vehículos a motor?",
    "o": [
     "El Estado",
     "Las comunidades autónomas",
@@ -3593,7 +3593,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 1,
-   "q": "¿Qué tipo de órgano es el Consejo Superior de Tráfico y Seguridad Vial?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué tipo de órgano es el Consejo Superior de Tráfico y Seguridad Vial?",
    "o": [
     "De consulta y participación",
     "De cooperación",
@@ -3611,7 +3611,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 1,
-   "q": "¿Quién preside el Consejo Superior de Tráfico y Seguridad Vial?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién preside el Consejo Superior de Tráfico y Seguridad Vial?",
    "o": [
     "El Presidente del Gobierno",
     "El Ministro del Interior",
@@ -3629,7 +3629,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Cómo funciona el Consejo Superior de Tráfico y Seguridad Vial?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cómo funciona el Consejo Superior de Tráfico y Seguridad Vial?",
    "o": [
     "En Pleno y Junta de Gobierno, sin comisiones",
     "En Pleno, Comisión Permanente, Comisiones y Grupos de Trabajo",
@@ -3647,7 +3647,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Son vinculantes las propuestas de planes de actuación del Consejo Superior de Tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿son vinculantes las propuestas de planes de actuación del Consejo Superior de Tráfico?",
    "o": [
     "Sí",
     "No",
@@ -3665,7 +3665,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Existe una Comisión del Consejo Superior para el tráfico en vías urbanas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿existe una Comisión del Consejo Superior para el tráfico en vías urbanas?",
    "o": [
     "Solo en Ceuta y Melilla",
     "No",
@@ -3683,7 +3683,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Cuál de estas es una función del Consejo Superior de Tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuál de estas es una función del Consejo Superior de Tráfico?",
    "o": [
     "Expedir los permisos de conducción profesionales",
     "Sancionar las infracciones graves y muy graves",
@@ -3701,7 +3701,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué tipo de órgano es la Conferencia Sectorial de Tráfico y Seguridad Vial?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué tipo de órgano es la Conferencia Sectorial de Tráfico y Seguridad Vial?",
    "o": [
     "De consulta y participación",
     "De inspección",
@@ -3719,7 +3719,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Entre qué Administraciones coopera la Conferencia Sectorial de Tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿entre qué Administraciones coopera la Conferencia Sectorial de Tráfico?",
    "o": [
     "La Dirección General de Tráfico y la Guardia Civil",
     "Todas las comunidades autónomas entre sí, sin el Estado",
@@ -3756,7 +3756,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿A quién corresponde la determinación de las drogas que pueden afectar a la conducción?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la determinación de las drogas que pueden afectar a la conducción?",
    "o": [
     "A las Jefaturas Provinciales de Tráfico",
     "A la Administración General del Estado",
@@ -3774,7 +3774,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿A quién corresponde la regulación del vehículo automatizado?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la regulación del vehículo automatizado?",
    "o": [
     "A la Administración General del Estado",
     "A las comunidades autónomas",
@@ -3792,7 +3792,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿A quién corresponde la expedición de los permisos y licencias de conducción?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la expedición de los permisos y licencias de conducción?",
    "o": [
     "A las comunidades autónomas",
     "A los municipios",
@@ -3810,7 +3810,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿A quién corresponde la matriculación de los vehículos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la matriculación de los vehículos?",
    "o": [
     "A los municipios",
     "Al Ministerio del Interior",
@@ -3828,7 +3828,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿A quién corresponde la retirada de vehículos de la vía fuera de poblado?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la retirada de vehículos de la vía fuera de poblado?",
    "o": [
     "A las comunidades autónomas",
     "Al Ministerio del Interior",
@@ -3846,7 +3846,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Quién vigila el tráfico en travesías cuando no existe policía local?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién vigila el tráfico en travesías cuando no existe policía local?",
    "o": [
     "El Ministerio del Interior",
     "Nadie",
@@ -3864,7 +3864,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Quién autoriza las pruebas deportivas que utilizan carreteras estatales o travesías?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién autoriza las pruebas deportivas que utilizan carreteras estatales o travesías?",
    "o": [
     "El alcalde",
     "La comunidad autónoma",
@@ -3882,7 +3882,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Quién puede cerrar a la circulación carreteras por razones de seguridad o fluidez?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién puede cerrar a la circulación carreteras por razones de seguridad o fluidez?",
    "o": [
     "El alcalde de cualquier municipio",
     "La Guardia Civil por sí sola",
@@ -3900,7 +3900,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Quién sanciona la falta de inspección técnica de vehículos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién sanciona la falta de inspección técnica de vehículos?",
    "o": [
     "Las estaciones de ITV",
     "El Ministerio del Interior",
@@ -3918,7 +3918,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿A quién corresponde determinar los cursos de conducción segura y eficiente que permiten recuperar o bonificar puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde determinar los cursos de conducción segura y eficiente que permiten recuperar o bonificar puntos?",
    "o": [
     "Al Ministerio del Interior",
     "A las comunidades autónomas",
@@ -3954,7 +3954,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué cuerpo actúa en la vigilancia del tráfico interurbano dependiendo de la Jefatura Central de Tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué cuerpo actúa en la vigilancia del tráfico interurbano dependiendo de la Jefatura Central de Tráfico?",
    "o": [
     "La Guardia Civil, especialmente su Agrupación de Tráfico",
     "La Policía Nacional, a través de su Unidad de Tráfico",
@@ -3972,7 +3972,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 1,
-   "q": "¿A quién corresponde la vigilancia y disciplina del tráfico en las vías urbanas de titularidad municipal?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la vigilancia y disciplina del tráfico en las vías urbanas de titularidad municipal?",
    "o": [
     "Al Ministerio del Interior, por la Guardia Civil",
     "A los municipios, por medio de agentes propios",
@@ -3990,7 +3990,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Mediante qué instrumento regulan los municipios los usos de las vías urbanas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿mediante qué instrumento regulan los municipios los usos de las vías urbanas?",
    "o": [
     "Mediante ordenanza municipal de circulación",
     "Mediante ley de la comunidad autónoma",
@@ -4008,7 +4008,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Hasta cuándo puede inmovilizarse un vehículo en zona de estacionamiento limitado sin título habilitante?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿hasta cuándo puede inmovilizarse un vehículo en zona de estacionamiento limitado sin título habilitante?",
    "o": [
     "Hasta el día siguiente a la denuncia",
     "Hasta que se logre la identificación de su conductor",
@@ -4026,7 +4026,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Cuándo pueden retirarse las bicicletas y llevarse al depósito?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo pueden retirarse las bicicletas y llevarse al depósito?",
    "o": [
     "Si están abandonadas o, amarradas, dificultan el paso o dañan el mobiliario",
     "Si llevan más de 24 horas estacionadas en el mismo lugar",
@@ -4044,7 +4044,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Quién autoriza las pruebas deportivas que discurren íntegra y exclusivamente por el casco urbano, salvo travesías?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién autoriza las pruebas deportivas que discurren íntegra y exclusivamente por el casco urbano, salvo travesías?",
    "o": [
     "La comunidad autónoma",
     "El municipio",
@@ -4062,7 +4062,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Pueden los municipios restringir la circulación de determinados vehículos en vías urbanas por motivos medioambientales?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿pueden los municipios restringir la circulación de determinados vehículos en vías urbanas por motivos medioambientales?",
    "o": [
     "No, corresponde al Estado",
     "Sí",
@@ -4098,7 +4098,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Sobre qué travesías ejerce competencias de tráfico el Ayuntamiento de Madrid?",
+   "q": "Según la Ley 22/2006, de Capitalidad y Régimen Especial de Madrid, ¿sobre qué travesías ejerce competencias de tráfico el Ayuntamiento de Madrid?",
    "o": [
     "Solo sobre las autonómicas",
     "Sobre las declaradas vías urbanas",
@@ -4116,7 +4116,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué plazo se concede al titular para subsanar deficiencias tras la inmovilización por molestias graves de ruidos o humos?",
+   "q": "Según la Ley 22/2006, de Capitalidad y Régimen Especial de Madrid, ¿qué plazo se concede al titular para subsanar deficiencias tras la inmovilización por molestias graves de ruidos o humos?",
    "o": [
     "Quince días",
     "Cinco días",
@@ -4134,7 +4134,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿A quién corresponde la instrucción de atestados por accidentes de circulación en las vías urbanas de Madrid?",
+   "q": "Según la Ley 22/2006, de Capitalidad y Régimen Especial de Madrid, ¿a quién corresponde la instrucción de atestados por accidentes de circulación en las vías urbanas de Madrid?",
    "o": [
     "Al Ayuntamiento de Madrid",
     "A la Policía Nacional",
@@ -4152,7 +4152,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "¿Puede comprobarse y ordenarse la retirada de vehículos en Madrid de forma remota?",
+   "q": "Según la Ley 22/2006, de Capitalidad y Régimen Especial de Madrid, ¿puede comprobarse y ordenarse la retirada de vehículos en Madrid de forma remota?",
    "o": [
     "Sí, mediante fotografías, filmación u otros medios tecnológicos",
     "Solo con autorización judicial previa y expresa",
@@ -4170,7 +4170,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Es causa de retirada en Madrid ofrecer en venta el propio vehículo estacionado en la vía pública?",
+   "q": "Según la Ley 22/2006, de Capitalidad y Régimen Especial de Madrid, ¿es causa de retirada en Madrid ofrecer en venta el propio vehículo estacionado en la vía pública?",
    "o": [
     "Solo si es un camión",
     "Sí",
@@ -4188,7 +4188,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Quién paga los gastos de la inmovilización o retirada en Madrid?",
+   "q": "Según la Ley 22/2006, de Capitalidad y Régimen Especial de Madrid, ¿quién paga los gastos de la inmovilización o retirada en Madrid?",
    "o": [
     "El Ayuntamiento",
     "El conductor solo si es reincidente",
@@ -4206,7 +4206,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Es causa de inmovilización en Madrid no solicitar en plazo el registro de transferencia del vehículo?",
+   "q": "Según la Ley 22/2006, de Capitalidad y Régimen Especial de Madrid, ¿es causa de inmovilización en Madrid no solicitar en plazo el registro de transferencia del vehículo?",
    "o": [
     "Sí",
     "No",
@@ -4260,7 +4260,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "En municipios de gran población, ¿pueden asignarse funcionarios en exclusiva a la instrucción de atestados?",
+   "q": "Según la LOFCS (LO 2/1986), en municipios de gran población, ¿pueden asignarse funcionarios en exclusiva a la instrucción de atestados?",
    "o": [
     "Solo en Madrid y Barcelona, por su régimen especial de capitalidad",
     "Sí, por el Pleno, como agentes de la autoridad sin integrarse en las FCS",
@@ -4296,7 +4296,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Deben los agentes de vigilancia del tráfico denunciar las infracciones que observen?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿deben los agentes de vigilancia del tráfico denunciar las infracciones que observen?",
    "o": [
     "No, la denuncia es siempre potestativa",
     "Solo las muy graves y las graves con puntos",
@@ -4314,7 +4314,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué valor tienen las denuncias de los agentes de vigilancia del tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué valor tienen las denuncias de los agentes de vigilancia del tráfico?",
    "o": [
     "Ninguno si no hay testigos presenciales",
     "Valor probatorio, salvo prueba en contrario",
@@ -4332,7 +4332,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Cómo pueden ser las denuncias de los agentes de vigilancia del tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cómo pueden ser las denuncias de los agentes de vigilancia del tráfico?",
    "o": [
     "Voluntarias u obligatorias",
     "Solo escritas y firmadas",
@@ -4350,7 +4350,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Cómo puede acreditarse la tenencia de la autorización administrativa para conducir?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cómo puede acreditarse la tenencia de la autorización administrativa para conducir?",
    "o": [
     "Solo mediante el DNI del conductor",
     "Mediante su presentación física o digital",
@@ -4368,7 +4368,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué documentos debe llevar consigo el conductor de un vehículo a motor?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué documentos debe llevar consigo el conductor de un vehículo a motor?",
    "o": [
     "Permiso de conducción, permiso de circulación y tarjeta ITV",
     "Solo la póliza del seguro y el último recibo pagado",
@@ -4386,7 +4386,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Cuántos titulares pueden constar en una autorización administrativa de circulación?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos titulares pueden constar en una autorización administrativa de circulación?",
    "o": [
     "Hasta tres",
     "Dos",
@@ -4404,7 +4404,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué es la DEV?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué es la DEV?",
    "o": [
     "El Documento Especial de Vehículos",
     "La Declaración de Estado del Vehículo",
@@ -4422,7 +4422,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Se asigna de oficio la DEV a las personas físicas titulares de autorizaciones?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿se asigna de oficio la DEV a las personas físicas titulares de autorizaciones?",
    "o": [
     "Solo a los conductores profesionales",
     "No, solo si la solicitan voluntariamente",
@@ -4440,7 +4440,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Quiénes pueden comunicar a la JCT nuevos domicilios de los titulares?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quiénes pueden comunicar a la JCT nuevos domicilios de los titulares?",
    "o": [
     "Solo el propio titular",
     "Los bancos",
@@ -4476,7 +4476,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Puede una persona ser titular de más de un permiso expedido por Estados de la UE o del EEE?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿puede una persona ser titular de más de un permiso expedido por Estados de la UE o del EEE?",
    "o": [
     "No",
     "Sí, de dos como máximo",
@@ -4494,7 +4494,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Quién expide los permisos y licencias de conducción?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿quién expide los permisos y licencias de conducción?",
    "o": [
     "Las Jefaturas Provinciales de Tráfico",
     "Las autoescuelas autorizadas",
@@ -4512,7 +4512,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Quién expide el permiso internacional para conducir?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿quién expide el permiso internacional para conducir?",
    "o": [
     "Las Jefaturas Provinciales de Tráfico",
     "El RACE",
@@ -4548,7 +4548,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué antigüedad en el permiso A2 se exige para obtener el permiso A?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué antigüedad en el permiso A2 se exige para obtener el permiso A?",
    "o": [
     "Al menos un año",
     "Ninguna",
@@ -4566,7 +4566,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué permiso previo se exige para obtener los permisos C1, C, D1 y D?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué permiso previo se exige para obtener los permisos C1, C, D1 y D?",
    "o": [
     "El permiso B",
     "El permiso A2",
@@ -4584,7 +4584,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué permiso implica la obtención del permiso A1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué permiso implica la obtención del permiso A1?",
    "o": [
     "Ninguno",
     "El B",
@@ -4602,7 +4602,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué permisos implica la obtención del permiso C+E?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué permisos implica la obtención del permiso C+E?",
    "o": [
     "Solo el C, sin ningún otro permiso adicional",
     "Solo el B, que ya era requisito previo",
@@ -4620,7 +4620,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Autoriza el permiso B o el C a conducir motocicletas?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿autoriza el permiso B o el C a conducir motocicletas?",
    "o": [
     "Sí, cualquier motocicleta",
     "Sí, de hasta 125 cc",
@@ -4638,7 +4638,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué permiso se exige para conducir un trolebús?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué permiso se exige para conducir un trolebús?",
    "o": [
     "El permiso C",
     "El permiso B",
@@ -4656,7 +4656,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "¿Qué permiso se exige para un vehículo especial no agrícola que transporte de 9 a 17 personas?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué permiso se exige para un vehículo especial no agrícola que transporte de 9 a 17 personas?",
    "o": [
     "El C1",
     "El B",
@@ -4674,7 +4674,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "Con permiso B, ¿qué se exige para conducir un conjunto con remolque de más de 750 kg cuando el total supera 3.500 kg?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), con permiso B, ¿qué se exige para conducir un conjunto con remolque de más de 750 kg cuando el total supera 3.500 kg?",
    "o": [
     "Superar la prueba de aptitudes y comportamientos o una formación",
     "Obtener el permiso B+E con examen teórico y práctico",
@@ -4692,7 +4692,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué edad mínima se exige para la licencia de vehículos para personas de movilidad reducida?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima se exige para la licencia de vehículos para personas de movilidad reducida?",
    "o": [
     "14 años",
     "18 años",
@@ -4710,7 +4710,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Hasta qué edad no autoriza a transportar pasajeros la licencia para vehículos de movilidad reducida?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿hasta qué edad no autoriza a transportar pasajeros la licencia para vehículos de movilidad reducida?",
    "o": [
     "Siempre autoriza",
     "Hasta los 15 años",
@@ -4728,7 +4728,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué edad mínima se exige para la licencia de vehículos especiales agrícolas?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima se exige para la licencia de vehículos especiales agrícolas?",
    "o": [
     "18 años",
     "16 años",
@@ -4746,7 +4746,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué permisos integran el grupo 2 a efectos de aptitudes psicofísicas?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué permisos integran el grupo 2 a efectos de aptitudes psicofísicas?",
    "o": [
     "Todos los permisos y licencias sin distinción",
     "B, B+E y las licencias de conducción",
@@ -4764,7 +4764,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿A qué grupo se equiparan los profesionales de la enseñanza de la conducción?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿a qué grupo se equiparan los profesionales de la enseñanza de la conducción?",
    "o": [
     "Al grupo 3",
     "Al grupo 2",
@@ -4782,7 +4782,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Impide obtener un permiso ordinario la obligación de usar lentes correctoras?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿impide obtener un permiso ordinario la obligación de usar lentes correctoras?",
    "o": [
     "Solo a partir de 65 años",
     "No",
@@ -4800,7 +4800,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿En qué plazo debe comunicarse a la Jefatura Provincial la variación de datos del permiso o del domicilio?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿en qué plazo debe comunicarse a la Jefatura Provincial la variación de datos del permiso o del domicilio?",
    "o": [
     "Quince días",
     "Un mes",
@@ -4818,7 +4818,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué ocurre si se posee a la vez el original y el duplicado del permiso?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué ocurre si se posee a la vez el original y el duplicado del permiso?",
    "o": [
     "Se recoge inmediatamente el original",
     "Se impone una multa de 200 €",
@@ -4836,7 +4836,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 1,
-   "q": "¿Qué vigencia tiene el permiso B hasta que su titular cumple 65 años?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué vigencia tiene el permiso B hasta que su titular cumple 65 años?",
    "o": [
     "Cinco años",
     "Diez años",
@@ -4854,7 +4854,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué vigencia tiene el permiso B a partir de los 65 años?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué vigencia tiene el permiso B a partir de los 65 años?",
    "o": [
     "Cinco años",
     "Diez años",
@@ -4872,7 +4872,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué vigencia tienen los permisos C y D hasta los 65 años?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué vigencia tienen los permisos C y D hasta los 65 años?",
    "o": [
     "Tres años",
     "Ocho años",
@@ -4890,7 +4890,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué vigencia tienen los permisos C y D a partir de los 65 años?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué vigencia tienen los permisos C y D a partir de los 65 años?",
    "o": [
     "Cinco años",
     "Dos años",
@@ -4908,7 +4908,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué hace el agente ante un permiso con la vigencia vencida?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué hace el agente ante un permiso con la vigencia vencida?",
    "o": [
     "Lo interviene y lo remite a la Jefatura Provincial",
     "Solo formula denuncia y se lo devuelve",
@@ -4926,7 +4926,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Con qué antelación máxima puede solicitarse la prórroga del permiso?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿con qué antelación máxima puede solicitarse la prórroga del permiso?",
    "o": [
     "Un año",
     "Un mes",
@@ -4944,7 +4944,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Implica la prórroga de un permiso del grupo 2 la de las autorizaciones del grupo 1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿implica la prórroga de un permiso del grupo 2 la de las autorizaciones del grupo 1?",
    "o": [
     "No, deben prorrogarse por separado",
     "Solo si se solicita de forma expresa",
@@ -4962,7 +4962,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué edad se exige en España a un conductor con permiso de otro Estado de la UE?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad se exige en España a un conductor con permiso de otro Estado de la UE?",
    "o": [
     "21 años en todo caso y para todo permiso",
     "La exigida para el permiso español equivalente",
@@ -4980,7 +4980,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Cuándo debe renovar en España un residente con permiso UE sin vigencia determinada?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿cuándo debe renovar en España un residente con permiso UE sin vigencia determinada?",
    "o": [
     "Transcurridos dos años desde que fija su residencia",
     "A los seis meses de fijar su residencia",
@@ -4998,7 +4998,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Durante cuánto tiempo es válido en España el permiso de un tercer país desde que su titular adquiere la residencia normal?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿durante cuánto tiempo es válido en España el permiso de un tercer país desde que su titular adquiere la residencia normal?",
    "o": [
     "Un año",
     "Tres meses",
@@ -5016,7 +5016,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "¿Conforme a qué convenios deben expedirse los permisos de terceros países para ser válidos en España?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿conforme a qué convenios deben expedirse los permisos de terceros países para ser válidos en España?",
    "o": [
     "París de 1926 o Nueva York de 1958 (anexo 1)",
     "Ginebra de 1949 (anexo 9) o Viena de 1968 (anexo 6)",
@@ -5034,7 +5034,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué vigencia tiene la autorización especial para conducir vehículos con mercancías peligrosas?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué vigencia tiene la autorización especial para conducir vehículos con mercancías peligrosas?",
    "o": [
     "Tres años, prorrogables por periodos de tres",
     "Cinco años, prorrogables por periodos de cinco",
@@ -5052,7 +5052,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Habilita por sí sola la autorización ADR para conducir?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿habilita por sí sola la autorización ADR para conducir?",
    "o": [
     "Sí, habilita por sí sola en todo caso",
     "Solo en vías urbanas y travesías",
@@ -5070,7 +5070,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué validez tiene el permiso internacional para conducir?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué validez tiene el permiso internacional para conducir?",
    "o": [
     "Seis meses",
     "Un año",
@@ -5088,7 +5088,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿En qué Estado no autoriza a conducir el permiso internacional?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿en qué Estado no autoriza a conducir el permiso internacional?",
    "o": [
     "En los Estados no firmantes de Viena",
     "En los Estados de la UE",
@@ -5106,7 +5106,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 1,
-   "q": "¿Qué crédito inicial de puntos se asigna con carácter general al titular de un permiso?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué crédito inicial de puntos se asigna con carácter general al titular de un permiso?",
    "o": [
     "15 puntos",
     "8 puntos",
@@ -5124,7 +5124,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué crédito inicial de puntos tiene un conductor con permiso de antigüedad no superior a tres años?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué crédito inicial de puntos tiene un conductor con permiso de antigüedad no superior a tres años?",
    "o": [
     "10 puntos",
     "12 puntos",
@@ -5142,7 +5142,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué crédito de puntos recibe quien obtiene de nuevo el permiso tras perder todos los puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué crédito de puntos recibe quien obtiene de nuevo el permiso tras perder todos los puntos?",
    "o": [
     "6 puntos",
     "12 puntos",
@@ -5160,7 +5160,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Cuántos puntos se pueden acumular como máximo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pueden acumular como máximo?",
    "o": [
     "18 puntos",
     "15 puntos",
@@ -5178,7 +5178,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué bonificación de puntos se obtiene durante los tres primeros años sin sanciones firmes?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué bonificación de puntos se obtiene durante los tres primeros años sin sanciones firmes?",
    "o": [
     "Un punto",
     "Dos puntos",
@@ -5196,7 +5196,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "Tras la primera bonificación, ¿qué puntos se obtienen por los tres años siguientes sin sanciones?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), tras la primera bonificación, ¿qué puntos se obtienen por los tres años siguientes sin sanciones?",
    "o": [
     "Dos puntos",
     "Ninguno",
@@ -5214,7 +5214,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Es único el crédito de puntos para todas las autorizaciones de un mismo conductor?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿es único el crédito de puntos para todas las autorizaciones de un mismo conductor?",
    "o": [
     "No, se separan licencias y permisos",
     "Solo para los permisos del grupo 1",
@@ -5232,7 +5232,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Con qué frecuencia máxima pueden hacerse los cursos de conducción segura y eficiente que suman puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿con qué frecuencia máxima pueden hacerse los cursos de conducción segura y eficiente que suman puntos?",
    "o": [
     "Sin límite de frecuencia mientras haya saldo",
     "Un curso de cada tipo cada dos años",
@@ -5250,7 +5250,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué sanciones reducen el crédito de puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué sanciones reducen el crédito de puntos?",
    "o": [
     "Las sanciones firmes por infracciones graves o muy graves con puntos",
     "Cualquier denuncia de un agente, aunque no sea firme",
@@ -5268,7 +5268,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Cuántos puntos como máximo se pueden perder en un solo día por acumulación de infracciones, con carácter general?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos como máximo se pueden perder en un solo día por acumulación de infracciones, con carácter general?",
    "o": [
     "6 puntos",
     "8 puntos",
@@ -5286,7 +5286,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Cuándo no procede ya la detracción de puntos de una sanción firme no anotada en el Registro?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo no procede ya la detracción de puntos de una sanción firme no anotada en el Registro?",
    "o": [
     "Transcurrido un año desde la firmeza sin anotarse",
     "Nunca caduca",
@@ -5304,7 +5304,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Conserva la antigüedad el permiso obtenido tras perder todos los puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿conserva la antigüedad el permiso obtenido tras perder todos los puntos?",
    "o": [
     "Solo para profesionales",
     "Sí",
@@ -5322,7 +5322,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Cuánto tiempo sin sanciones firmes con pérdida de puntos hace recuperar los 12 puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuánto tiempo sin sanciones firmes con pérdida de puntos hace recuperar los 12 puntos?",
    "o": [
     "Seis meses",
     "Un año",
@@ -5340,7 +5340,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Cuántos puntos pueden recuperarse como máximo con un curso de sensibilización y reeducación vial parcial?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos pueden recuperarse como máximo con un curso de sensibilización y reeducación vial parcial?",
    "o": [
     "Ocho puntos",
     "Doce puntos",
@@ -5358,7 +5358,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Con qué frecuencia pueden los conductores no profesionales hacer el curso de recuperación parcial de puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿con qué frecuencia pueden los conductores no profesionales hacer el curso de recuperación parcial de puntos?",
    "o": [
     "Sin límite",
     "Una sola vez cada dos años",
@@ -5376,7 +5376,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Con qué frecuencia pueden los conductores profesionales hacer el curso de recuperación parcial?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿con qué frecuencia pueden los conductores profesionales hacer el curso de recuperación parcial?",
    "o": [
     "Anual",
     "Cada seis meses",
@@ -5394,7 +5394,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué duración máxima tiene el curso de recuperación parcial de puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué duración máxima tiene el curso de recuperación parcial de puntos?",
    "o": [
     "Quince horas",
     "Diez horas",
@@ -5412,7 +5412,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Cuántas convocatorias hay para superar la prueba del curso de sensibilización y reeducación vial?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿cuántas convocatorias hay para superar la prueba del curso de sensibilización y reeducación vial?",
    "o": [
     "Dos",
     "Tres",
@@ -5430,7 +5430,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Se pierden puntos por hechos cometidos conduciendo un vehículo que no exige permiso?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿se pierden puntos por hechos cometidos conduciendo un vehículo que no exige permiso?",
    "o": [
     "Sí, siempre",
     "No",
@@ -5448,7 +5448,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Quién puede declarar la pérdida de vigencia por desaparición de las aptitudes psicofísicas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién puede declarar la pérdida de vigencia por desaparición de las aptitudes psicofísicas?",
    "o": [
     "La Agrupación de Tráfico",
     "El juez de lo penal competente",
@@ -5466,7 +5466,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué órgano declara la pérdida de vigencia del permiso por pérdida total de puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué órgano declara la pérdida de vigencia del permiso por pérdida total de puntos?",
    "o": [
     "La Jefatura Central de Tráfico",
     "El alcalde",
@@ -5484,7 +5484,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿En qué plazo se notifica al interesado el acuerdo de pérdida total de puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿en qué plazo se notifica al interesado el acuerdo de pérdida total de puntos?",
    "o": [
     "Un mes",
     "Tres meses",
@@ -5502,7 +5502,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Cuánto tiempo debe esperar un conductor no profesional para obtener nuevo permiso tras perder todos los puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuánto tiempo debe esperar un conductor no profesional para obtener nuevo permiso tras perder todos los puntos?",
    "o": [
     "Seis meses",
     "Tres meses",
@@ -5520,7 +5520,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Cuánto tiempo debe esperar un conductor profesional para obtener nuevo permiso tras perder todos los puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuánto tiempo debe esperar un conductor profesional para obtener nuevo permiso tras perder todos los puntos?",
    "o": [
     "Un año",
     "Tres meses",
@@ -5538,7 +5538,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "Si se pierden de nuevo todos los puntos en los tres años siguientes, ¿cuánto debe esperar un conductor no profesional?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si se pierden de nuevo todos los puntos en los tres años siguientes, ¿cuánto debe esperar un conductor no profesional?",
    "o": [
     "Doce meses",
     "Tres meses",
@@ -5556,7 +5556,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "Si un profesional pierde de nuevo todos los puntos en los tres años siguientes, ¿cuánto debe esperar?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si un profesional pierde de nuevo todos los puntos en los tres años siguientes, ¿cuánto debe esperar?",
    "o": [
     "Seis meses",
     "Tres meses",
@@ -5574,7 +5574,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué duración máxima tiene el curso de reeducación para obtener un nuevo permiso tras perder todos los puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué duración máxima tiene el curso de reeducación para obtener un nuevo permiso tras perder todos los puntos?",
    "o": [
     "40 horas",
     "20 horas",
@@ -5592,7 +5592,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "¿Cuándo se acuerda la suspensión cautelar de la autorización en un procedimiento de pérdida de vigencia?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo se acuerda la suspensión cautelar de la autorización en un procedimiento de pérdida de vigencia?",
    "o": [
     "Solo si lo solicita el propio interesado por escrito",
     "Nunca, solo cabe tras la resolución firme del procedimiento",
@@ -5610,7 +5610,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Con cuántos puntos se obtiene el permiso tras cumplir una condena de privación del derecho a conducir superior a dos años?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿con cuántos puntos se obtiene el permiso tras cumplir una condena de privación del derecho a conducir superior a dos años?",
    "o": [
     "Quince puntos",
     "Doce puntos",
@@ -5628,7 +5628,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "Si la condena de privación del derecho a conducir es igual o inferior a dos años, ¿qué se exige para volver a conducir?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si la condena de privación del derecho a conducir es igual o inferior a dos años, ¿qué se exige para volver a conducir?",
    "o": [
     "Nada",
     "Superar el curso de reeducación y sensibilización vial",
@@ -5646,7 +5646,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué ocurre si un vehículo circula sin permiso de circulación?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué ocurre si un vehículo circula sin permiso de circulación?",
    "o": [
     "Se destruye en un centro autorizado",
     "Se inmoviliza hasta que se disponga de él",
@@ -5664,7 +5664,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Cuándo debe renovarse el permiso de circulación?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo debe renovarse el permiso de circulación?",
    "o": [
     "Cuando el titular cambie de domicilio",
     "Cada diez años desde su primera expedición",
@@ -5682,7 +5682,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Quién puede autorizar una matrícula distinta de la inicial por razones de Seguridad Nacional?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién puede autorizar una matrícula distinta de la inicial por razones de Seguridad Nacional?",
    "o": [
     "El Secretario de Estado de Seguridad",
     "El Director General de Tráfico",
@@ -5700,7 +5700,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Quién lleva el Registro de Vehículos?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿quién lleva el Registro de Vehículos?",
    "o": [
     "El Registro Mercantil",
     "La Jefatura Central de Tráfico",
@@ -5718,7 +5718,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Prejuzgan los datos del Registro de Vehículos las cuestiones civiles sobre la propiedad?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿prejuzgan los datos del Registro de Vehículos las cuestiones civiles sobre la propiedad?",
    "o": [
     "Solo en caso de embargo judicial",
     "Sí, acredita la propiedad frente a terceros",
@@ -5736,7 +5736,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿A partir de qué masa máxima autorizada deben matricularse los remolques?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿a partir de qué masa máxima autorizada deben matricularse los remolques?",
    "o": [
     "Superior a 3.500 kg",
     "Superior a 1.000 kg",
@@ -5754,7 +5754,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué documento del remolque de hasta 750 kg debe llevar el conductor?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué documento del remolque de hasta 750 kg debe llevar el conductor?",
    "o": [
     "Nada",
     "El seguro del remolque",
@@ -5772,7 +5772,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Dónde se solicita la matriculación de un automóvil?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿dónde se solicita la matriculación de un automóvil?",
    "o": [
     "En cualquier ayuntamiento, a elección del interesado",
     "En el concesionario que vende el vehículo nuevo",
@@ -5790,7 +5790,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué letras no se usan en las matrículas ordinarias?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué letras no se usan en las matrículas ordinarias?",
    "o": [
     "Las letras X, Y y la Z",
     "Ninguna, se usan todas",
@@ -5808,7 +5808,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué colores tiene la placa trasera de los taxis y VTC de hasta nueve plazas?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué colores tiene la placa trasera de los taxis y VTC de hasta nueve plazas?",
    "o": [
     "Fondo verde y caracteres blancos",
     "Fondo blanco y caracteres negros",
@@ -5826,7 +5826,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué letra y color de caracteres llevan las matrículas de vehículos especiales?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué letra y color de caracteres llevan las matrículas de vehículos especiales?",
    "o": [
     "Letra E y caracteres rojos",
     "Letra H y caracteres azules",
@@ -5844,7 +5844,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué letra y color de fondo llevan las matrículas de los ciclomotores?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué letra y color de fondo llevan las matrículas de los ciclomotores?",
    "o": [
     "Letra C y fondo amarillo",
     "Letra M y fondo blanco",
@@ -5862,7 +5862,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué letra y color de fondo llevan las matrículas de remolques y semirremolques?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué letra y color de fondo llevan las matrículas de remolques y semirremolques?",
    "o": [
     "Letra E sobre fondo amarillo",
     "Letra S sobre fondo azul",
@@ -5880,7 +5880,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué color de fondo tienen las matrículas del cuerpo diplomático (CD)?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué color de fondo tienen las matrículas del cuerpo diplomático (CD)?",
    "o": [
     "Azul",
     "Rojo",
@@ -5898,7 +5898,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué letra lleva la autorización temporal de circulación para particulares?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué letra lleva la autorización temporal de circulación para particulares?",
    "o": [
     "T, sobre fondo amarillo",
     "S, sobre fondo rojo",
@@ -5916,7 +5916,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Quién debe someter el vehículo a las inspecciones técnicas exigibles?",
+   "q": "Según el RD 920/2017, ¿quién debe someter el vehículo a las inspecciones técnicas exigibles?",
    "o": [
     "El taller que realiza el mantenimiento",
     "El fabricante durante el periodo de garantía",
@@ -5934,7 +5934,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "Con la ITV caducada, ¿puede circularse hasta la estación con cita previa?",
+   "q": "Según el RD 920/2017, con la ITV caducada, ¿puede circularse hasta la estación con cita previa?",
    "o": [
     "Sí, con el recibo de la cita, en ese trayecto",
     "Solo de día y por vías interurbanas",
@@ -5970,7 +5970,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Con qué frecuencia pasan la ITV los turismos M1 de autoescuela a partir de los cinco años?",
+   "q": "Según el RD 920/2017, ¿con qué frecuencia pasan la ITV los turismos M1 de autoescuela a partir de los cinco años?",
    "o": [
     "Anual",
     "Bienal",
@@ -5988,7 +5988,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Con qué frecuencia mínima pasan la ITV los vehículos históricos de hasta cuarenta años?",
+   "q": "Según el RD 920/2017, ¿con qué frecuencia mínima pasan la ITV los vehículos históricos de hasta cuarenta años?",
    "o": [
     "Trienal",
     "Cuatrienal",
@@ -6006,7 +6006,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Con qué frecuencia mínima pasan la ITV los vehículos históricos de más de cuarenta y cinco años?",
+   "q": "Según el RD 920/2017, ¿con qué frecuencia mínima pasan la ITV los vehículos históricos de más de cuarenta y cinco años?",
    "o": [
     "Bienal",
     "Anual",
@@ -6024,7 +6024,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "Si se pasa la ITV en los treinta días anteriores a su expiración, ¿desde cuándo se cuenta la nueva validez?",
+   "q": "Según el RD 920/2017, si se pasa la ITV en los treinta días anteriores a su expiración, ¿desde cuándo se cuenta la nueva validez?",
    "o": [
     "Desde la fecha de expiración de la anterior",
     "Desde la fecha de primera matriculación",
@@ -6042,7 +6042,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué resultado tiene la ITV si se detecta algún defecto grave?",
+   "q": "Según el RD 920/2017, ¿qué resultado tiene la ITV si se detecta algún defecto grave?",
    "o": [
     "Favorable",
     "Negativo",
@@ -6060,7 +6060,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué resultado tiene la ITV si se detecta algún defecto muy grave?",
+   "q": "Según el RD 920/2017, ¿qué resultado tiene la ITV si se detecta algún defecto muy grave?",
    "o": [
     "Negativo",
     "Desfavorable",
@@ -6078,7 +6078,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué resultado tiene la ITV con solo defectos leves?",
+   "q": "Según el RD 920/2017, ¿qué resultado tiene la ITV con solo defectos leves?",
    "o": [
     "Negativo",
     "Favorable",
@@ -6096,7 +6096,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿En qué plazo deben repararse los defectos leves de la ITV?",
+   "q": "Según el RD 920/2017, ¿en qué plazo deben repararse los defectos leves de la ITV?",
    "o": [
     "Seis meses",
     "Un mes",
@@ -6114,7 +6114,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Cómo debe salir de la estación un vehículo con ITV negativa?",
+   "q": "Según el RD 920/2017, ¿cómo debe salir de la estación un vehículo con ITV negativa?",
    "o": [
     "Conducido directamente al taller",
     "Conducido a su domicilio",
@@ -6132,7 +6132,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué ocurre si el vehículo vuelve a la segunda inspección fuera de plazo?",
+   "q": "Según el RD 920/2017, ¿qué ocurre si el vehículo vuelve a la segunda inspección fuera de plazo?",
    "o": [
     "Se le multa sin necesidad de inspección",
     "Se da de baja el vehículo en el Registro",
@@ -6150,7 +6150,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué distintivo acredita haber superado la ITV periódica?",
+   "q": "Según el RD 920/2017, ¿qué distintivo acredita haber superado la ITV periódica?",
    "o": [
     "El V-25",
     "El V-16",
@@ -6168,7 +6168,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿De qué color es el dispositivo luminoso de la señal V-1 (vehículo prioritario)?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿de qué color es el dispositivo luminoso de la señal V-1 (vehículo prioritario)?",
    "o": [
     "Verde",
     "Rojo",
@@ -6186,7 +6186,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿A qué distancia mínima debe ser visible la señal V-1?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿a qué distancia mínima debe ser visible la señal V-1?",
    "o": [
     "100 metros",
     "50 metros",
@@ -6204,7 +6204,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué indica la señal V-2?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué indica la señal V-2?",
    "o": [
     "Vehículo de policía en servicio no urgente",
     "Vehículo-obstáculo en la vía",
@@ -6222,7 +6222,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿A qué velocidad máxima circula el vehículo señalizado con la V-2?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿a qué velocidad máxima circula el vehículo señalizado con la V-2?",
    "o": [
     "60 km/h",
     "25 km/h",
@@ -6240,7 +6240,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué señala la V-3?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señala la V-3?",
    "o": [
     "Un vehículo-obstáculo realizando trabajos",
     "Un vehículo largo de más de doce metros",
@@ -6258,7 +6258,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué indica la señal V-5?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué indica la señal V-5?",
    "o": [
     "Limitación de velocidad del vehículo",
     "Vehículo lento que no supera 40 km/h",
@@ -6276,7 +6276,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿A partir de qué longitud debe llevarse la señal V-6 de vehículo largo?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿a partir de qué longitud debe llevarse la señal V-6 de vehículo largo?",
    "o": [
     "Más de 12 metros",
     "Más de 18 metros",
@@ -6294,7 +6294,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué señal identifica al conductor novel?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal identifica al conductor novel?",
    "o": [
     "La V-15",
     "La V-13",
@@ -6312,7 +6312,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Dónde se coloca la señal V-13 de conductor novel?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿dónde se coloca la señal V-13 de conductor novel?",
    "o": [
     "En la parte posterior izquierda",
     "En la parte delantera derecha",
@@ -6330,7 +6330,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué señal llevan los vehículos de autoescuela?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal llevan los vehículos de autoescuela?",
    "o": [
     "La V-9",
     "La V-14",
@@ -6348,7 +6348,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué señal identifica el transporte escolar?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal identifica el transporte escolar?",
    "o": [
     "La V-15",
     "La V-10",
@@ -6366,7 +6366,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué señal identifica el transporte de mercancías peligrosas?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal identifica el transporte de mercancías peligrosas?",
    "o": [
     "La V-23",
     "La V-10",
@@ -6384,7 +6384,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué letras lleva la señal V-12 de vehículo en ensayo o investigación?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué letras lleva la señal V-12 de vehículo en ensayo o investigación?",
    "o": [
     "S.P.",
     "P.R.",
@@ -6402,7 +6402,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué letras lleva la señal V-9 de servicio público?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué letras lleva la señal V-9 de servicio público?",
    "o": [
     "P.S.",
     "S.P.",
@@ -6420,7 +6420,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué es la señal V-16?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué es la señal V-16?",
    "o": [
     "La placa identificativa de vehículo histórico catalogado",
     "El panel para cargas que sobresalen del vehículo",
@@ -6438,7 +6438,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿De qué color es la baliza V-16?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿de qué color es la baliza V-16?",
    "o": [
     "Azul eléctrico",
     "Rojo intenso",
@@ -6456,7 +6456,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿A quién comunica la V-16 su activación y geoposicionamiento?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿a quién comunica la V-16 su activación y geoposicionamiento?",
    "o": [
     "A la aseguradora del vehículo mediante aviso",
     "Al punto de acceso nacional de tráfico y movilidad",
@@ -6474,7 +6474,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué señal es el panel para cargas que sobresalen?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal es el panel para cargas que sobresalen?",
    "o": [
     "La V-23",
     "La V-20",
@@ -6492,7 +6492,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué señal es el distintivo ambiental?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal es el distintivo ambiental?",
    "o": [
     "La V-26",
     "La V-25",
@@ -6510,7 +6510,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Existe distintivo ambiental para la categoría A?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿existe distintivo ambiental para la categoría A?",
    "o": [
     "Sí, de color blanco",
     "Sí, de color rojo",
@@ -6528,7 +6528,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿De qué color es el distintivo ambiental «0 emisiones»?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿de qué color es el distintivo ambiental «0 emisiones»?",
    "o": [
     "Azul",
     "Verde",
@@ -6546,7 +6546,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué señal identifica al vehículo de servicio de auxilio en vías públicas?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal identifica al vehículo de servicio de auxilio en vías públicas?",
    "o": [
     "La V-2",
     "La V-24",
@@ -6564,7 +6564,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué es la señal V-27?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué es la señal V-27?",
    "o": [
     "El cartel de acompañamiento de ciclistas",
     "El triángulo virtual de los vehículos conectados",
@@ -6582,7 +6582,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "¿Qué señal identifica el vehículo de uso compartido?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué señal identifica el vehículo de uso compartido?",
    "o": [
     "La V-25",
     "La V-27",
@@ -6600,7 +6600,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Desde cuándo es la V-16 conectada el único dispositivo de preseñalización de peligro válido?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿desde cuándo es la V-16 conectada el único dispositivo de preseñalización de peligro válido?",
    "o": [
     "Desde el 1 de octubre de 2026",
     "Desde el 1 de enero de 2026",
@@ -6619,7 +6619,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Están obligadas las motocicletas a llevar la baliza V-16?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿están obligadas las motocicletas a llevar la baliza V-16?",
    "o": [
     "Solo las de más de 125 cc",
     "Sí, desde 2026",
@@ -6637,7 +6637,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué dotación obligatoria llevan los turismos?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué dotación obligatoria llevan los turismos?",
    "o": [
     "Baliza V-16, chaleco reflectante y rueda de repuesto o sistema alternativo",
     "Solo el chaleco reflectante de alta visibilidad certificado",
@@ -6655,7 +6655,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué elemento adicional deben llevar autobuses y camiones de más de 3.500 kg?",
+   "q": "Según el Reglamento General de Vehículos (RD 2822/1998), ¿qué elemento adicional deben llevar autobuses y camiones de más de 3.500 kg?",
    "o": [
     "Cadenas para nieve",
     "Un extintor homologado",
@@ -6673,7 +6673,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿En virtud de qué responde el conductor de los daños causados a las personas?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿en virtud de qué responde el conductor de los daños causados a las personas?",
    "o": [
     "Del riesgo creado por la conducción",
     "De su dolo",
@@ -6691,7 +6691,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Es fuerza mayor que exonera al conductor la rotura de una pieza del vehículo?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿es fuerza mayor que exonera al conductor la rotura de una pieza del vehículo?",
    "o": [
     "No",
     "Sí",
@@ -6709,7 +6709,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Cuándo responde el propietario no conductor de un vehículo sin seguro?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿cuándo responde el propietario no conductor de un vehículo sin seguro?",
    "o": [
     "Solo si viajaba como pasajero en el vehículo",
     "Solo si el propietario es una persona jurídica",
@@ -6727,7 +6727,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Quién es responsable civil subsidiario por los delitos cometidos con un vehículo por sus dependientes?",
+   "q": "Según el Código Penal, ¿quién es responsable civil subsidiario por los delitos cometidos con un vehículo por sus dependientes?",
    "o": [
     "El Consorcio en todo caso",
     "El fabricante",
@@ -6745,7 +6745,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué remolques están exceptuados de la obligación de aseguramiento?",
+   "q": "Según el Reglamento del Seguro Obligatorio de Automóviles (RD 1507/2008), ¿qué remolques están exceptuados de la obligación de aseguramiento?",
    "o": [
     "Ninguno, todos deben asegurarse siempre",
     "Todos los remolques y semirremolques sin excepción",
@@ -6763,7 +6763,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Quién está obligado a suscribir el seguro obligatorio?",
+   "q": "Según el Reglamento del Seguro Obligatorio de Automóviles (RD 1507/2008), ¿quién está obligado a suscribir el seguro obligatorio?",
    "o": [
     "Solo quien circule habitualmente por autopistas y autovías",
     "Solo las empresas titulares de flotas de vehículos",
@@ -6781,7 +6781,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Durante cuánto tiempo se deposita cautelarmente un vehículo sin seguro, con carácter general?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿durante cuánto tiempo se deposita cautelarmente un vehículo sin seguro, con carácter general?",
    "o": [
     "Un año",
     "Un mes",
@@ -6799,7 +6799,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Durante cuánto tiempo se deposita cautelarmente un vehículo sin seguro en caso de reincidencia?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿durante cuánto tiempo se deposita cautelarmente un vehículo sin seguro en caso de reincidencia?",
    "o": [
     "Seis meses",
     "Un mes",
@@ -6817,7 +6817,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Durante cuánto tiempo se deposita el vehículo sin seguro si se quebranta el depósito o precinto?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿durante cuánto tiempo se deposita el vehículo sin seguro si se quebranta el depósito o precinto?",
    "o": [
     "Seis meses",
     "Dos años",
@@ -6835,7 +6835,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué sanción pecuniaria tiene circular sin seguro obligatorio?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿qué sanción pecuniaria tiene circular sin seguro obligatorio?",
    "o": [
     "De 601 a 3.005 euros",
     "De 1.000 a 6.000 euros",
@@ -6853,7 +6853,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Quién sanciona la falta de seguro obligatorio con carácter general?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿quién sanciona la falta de seguro obligatorio con carácter general?",
    "o": [
     "El juez de instrucción",
     "El alcalde del municipio",
@@ -6871,7 +6871,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Cómo constatan los agentes la vigencia del seguro obligatorio?",
+   "q": "Según el Reglamento del Seguro Obligatorio de Automóviles (RD 1507/2008), ¿cómo constatan los agentes la vigencia del seguro obligatorio?",
    "o": [
     "Exigiendo siempre la póliza original en papel",
     "Llamando por teléfono a la entidad aseguradora",
@@ -6889,7 +6889,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "Si no consta el seguro en el fichero, ¿qué documento puede acreditarlo?",
+   "q": "Según el Reglamento del Seguro Obligatorio de Automóviles (RD 1507/2008), si no consta el seguro en el fichero, ¿qué documento puede acreditarlo?",
    "o": [
     "Una declaración jurada del conductor sobre la vigencia del contrato",
     "La tarjeta ITV del vehículo con la anotación del seguro contratado",
@@ -6907,7 +6907,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿En qué ámbito cubre el seguro obligatorio español con una sola prima?",
+   "q": "Según la Ley sobre responsabilidad civil y seguro en la circulación de vehículos a motor (RDLeg 8/2004), ¿en qué ámbito cubre el seguro obligatorio español con una sola prima?",
    "o": [
     "Toda Europa y los países del norte de África",
     "Todo el mundo, sin limitación territorial alguna",
@@ -6925,7 +6925,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Cuál es la Oficina Nacional de Seguro en España?",
+   "q": "Según el Reglamento del Seguro Obligatorio de Automóviles (RD 1507/2008), ¿cuál es la Oficina Nacional de Seguro en España?",
    "o": [
     "La DGT",
     "El Consorcio de Compensación de Seguros",
@@ -6979,7 +6979,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "Si una infracción puede ser delito, ¿qué hace la Administración?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si una infracción puede ser delito, ¿qué hace la Administración?",
    "o": [
     "Sanciona primero y comunica después los hechos al juez",
     "Pasa el tanto de culpa al juez y se abstiene de seguir",
@@ -6997,7 +6997,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué multa corresponde con carácter general a una infracción grave?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa corresponde con carácter general a una infracción grave?",
    "o": [
     "100 euros",
     "300 euros",
@@ -7015,7 +7015,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué multa corresponde con carácter general a una infracción muy grave?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa corresponde con carácter general a una infracción muy grave?",
    "o": [
     "500 euros",
     "1.000 euros",
@@ -7033,7 +7033,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Hasta qué cuantía se sancionan las infracciones leves?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿hasta qué cuantía se sancionan las infracciones leves?",
    "o": [
     "Hasta 150 euros",
     "Hasta 50 euros",
@@ -7051,7 +7051,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué multa tiene conducir superando el doble de la tasa de alcohol permitida?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa tiene conducir superando el doble de la tasa de alcohol permitida?",
    "o": [
     "2.000 euros",
     "600 euros",
@@ -7069,7 +7069,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué multa tiene llevar instalados inhibidores de radar?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa tiene llevar instalados inhibidores de radar?",
    "o": [
     "6.000 euros",
     "1.000 euros",
@@ -7087,7 +7087,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Qué horquilla de multa tienen las infracciones del art. 77 letras n) a t)?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué horquilla de multa tienen las infracciones del art. 77 letras n) a t)?",
    "o": [
     "De 1.000 a 6.000 euros",
     "De 3.000 a 20.000 euros",
@@ -7105,7 +7105,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué sanción tiene no identificar al conductor si la infracción original fue leve?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué sanción tiene no identificar al conductor si la infracción original fue leve?",
    "o": [
     "El triple de su importe",
     "500 euros fijos",
@@ -7123,7 +7123,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "Si no se identifica al conductor en una infracción con pérdida de puntos, ¿quién responde?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si no se identifica al conductor en una infracción con pérdida de puntos, ¿quién responde?",
    "o": [
     "El conductor habitual en todo caso, aunque no conduzca",
     "La aseguradora del vehículo con la que se contrató",
@@ -7141,7 +7141,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Cuándo procede inmovilizar por exceso de ocupación?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo procede inmovilizar por exceso de ocupación?",
    "o": [
     "Siempre que viaje una persona más de las plazas autorizadas",
     "Si se supera en más de un 50 % la ocupación, sin contar al conductor",
@@ -7159,7 +7159,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Quién paga los gastos de inmovilización?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién paga los gastos de inmovilización?",
    "o": [
     "El Ayuntamiento del lugar de la inmovilización",
     "El agente que denunció y ordenó la medida",
@@ -7177,7 +7177,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Procede inmovilizar si los ocupantes no llevan casco, salvo que sean ciclistas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿procede inmovilizar si los ocupantes no llevan casco, salvo que sean ciclistas?",
    "o": [
     "Solo si son menores",
     "Solo en autopista",
@@ -7195,7 +7195,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Quién sanciona las infracciones cometidas en vías urbanas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién sanciona las infracciones cometidas en vías urbanas?",
    "o": [
     "El Jefe Provincial de Tráfico",
     "El delegado del Gobierno",
@@ -7213,7 +7213,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Quién sanciona las infracciones cometidas en vías interurbanas y travesías?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién sanciona las infracciones cometidas en vías interurbanas y travesías?",
    "o": [
     "La Guardia Civil",
     "El Jefe Provincial de Tráfico",
@@ -7249,7 +7249,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Quién sanciona las infracciones de tráfico en Ceuta y Melilla?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién sanciona las infracciones de tráfico en Ceuta y Melilla?",
    "o": [
     "El Delegado del Gobierno",
     "El Director General de Tráfico",
@@ -7267,7 +7267,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Puede el alcalde sancionar las infracciones del Título IV (requisitos técnicos y seguro) cometidas en vías urbanas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿puede el alcalde sancionar las infracciones del Título IV (requisitos técnicos y seguro) cometidas en vías urbanas?",
    "o": [
     "Solo con delegación de la DGT",
     "Solo las del seguro",
@@ -7285,7 +7285,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué señales ocupan el primer lugar en el orden de preferencia?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué señales ocupan el primer lugar en el orden de preferencia?",
    "o": [
     "Las señales verticales de circulación",
     "Los semáforos de tiempo fijo",
@@ -7303,7 +7303,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué señales ocupan el último lugar en el orden de preferencia?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué señales ocupan el último lugar en el orden de preferencia?",
    "o": [
     "Las marcas viales",
     "Las señales verticales",
@@ -7321,7 +7321,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué lugar ocupan los semáforos en el orden de preferencia de las señales?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué lugar ocupan los semáforos en el orden de preferencia de las señales?",
    "o": [
     "El tercero",
     "El primero",
@@ -7339,7 +7339,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿En qué lengua figuran las indicaciones escritas de las señales?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿en qué lengua figuran las indicaciones escritas de las señales?",
    "o": [
     "En castellano y en inglés en todo caso",
     "En castellano y, además, en la lengua cooficial",
@@ -7357,7 +7357,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿A quién corresponde la responsabilidad del mantenimiento de la vía y de sus señales?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la responsabilidad del mantenimiento de la vía y de sus señales?",
    "o": [
     "A los usuarios",
     "Al titular de la vía",
@@ -7375,7 +7375,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Pueden los agentes instalar señales circunstanciales sin autorización previa?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿pueden los agentes instalar señales circunstanciales sin autorización previa?",
    "o": [
     "No, nunca",
     "Solo de día",
@@ -7393,7 +7393,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿A quién corresponde la señalización de las obras en las vías?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la señalización de las obras en las vías?",
    "o": [
     "Al titular de la vía en todo caso y sin excepción",
     "A la Dirección General de Tráfico",
@@ -7411,7 +7411,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 1,
-   "q": "¿Qué edad mínima se exige para el permiso AM?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima se exige para el permiso AM?",
    "o": [
     "18 años",
     "15 años",
@@ -7429,7 +7429,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué edad mínima se exige para el permiso A1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima se exige para el permiso A1?",
    "o": [
     "15 años",
     "16 años",
@@ -7447,7 +7447,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué edad mínima se exige para el permiso A2?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima se exige para el permiso A2?",
    "o": [
     "21 años",
     "18 años",
@@ -7465,7 +7465,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué edad mínima se exige para el permiso A?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima se exige para el permiso A?",
    "o": [
     "20 años, o 24 en acceso directo",
     "18 años en todo caso",
@@ -7483,7 +7483,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué cilindrada máxima tienen las motocicletas que autoriza el permiso A1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué cilindrada máxima tienen las motocicletas que autoriza el permiso A1?",
    "o": [
     "50 cm³",
     "500 cm³",
@@ -7501,7 +7501,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué potencia máxima tienen las motocicletas que autoriza el permiso A1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué potencia máxima tienen las motocicletas que autoriza el permiso A1?",
    "o": [
     "4 kW",
     "11 kW",
@@ -7519,7 +7519,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué potencia máxima tienen las motocicletas que autoriza el permiso A2?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué potencia máxima tienen las motocicletas que autoriza el permiso A2?",
    "o": [
     "25 kW",
     "50 kW",
@@ -7537,7 +7537,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Qué masa máxima autorizada tienen los automóviles que autoriza el permiso B?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué masa máxima autorizada tienen los automóviles que autoriza el permiso B?",
    "o": [
     "Hasta 4.250 kg",
     "Hasta 2.500 kg",
@@ -7555,7 +7555,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Con cuántos años de antigüedad autoriza el permiso B a conducir motocicletas del A1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿con cuántos años de antigüedad autoriza el permiso B a conducir motocicletas del A1?",
    "o": [
     "Cinco años",
     "Dos años",
@@ -7573,7 +7573,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Qué masa máxima del remolque autoriza el permiso B+E?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué masa máxima del remolque autoriza el permiso B+E?",
    "o": [
     "Sin límite",
     "Hasta 3.500 kg",
@@ -7591,7 +7591,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 6,
-   "q": "¿Entre qué masas máximas autorizadas se sitúan los automóviles del permiso C1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿entre qué masas máximas autorizadas se sitúan los automóviles del permiso C1?",
    "o": [
     "Más de 12.000 kg",
     "Entre 7.500 y 12.000 kg",
@@ -7609,7 +7609,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 7,
-   "q": "¿Qué masa máxima puede tener el conjunto del permiso C1+E?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué masa máxima puede tener el conjunto del permiso C1+E?",
    "o": [
     "3.500 kg",
     "12.000 kg",
@@ -7627,7 +7627,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué edad mínima general se exige para el permiso C?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima general se exige para el permiso C?",
    "o": [
     "18 años en todo caso",
     "24 años",
@@ -7645,7 +7645,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 5,
-   "q": "¿Cuántos pasajeros y qué longitud autoriza el permiso D1?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿cuántos pasajeros y qué longitud autoriza el permiso D1?",
    "o": [
     "Hasta 8+1 pasajeros",
     "Hasta 22+1 pasajeros y 10 metros",
@@ -7663,7 +7663,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Qué edad mínima general se exige para el permiso D?",
+   "q": "Según el Reglamento General de Conductores (RD 818/2009), ¿qué edad mínima general se exige para el permiso D?",
    "o": [
     "24 años",
     "21 años",
@@ -7681,7 +7681,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Hasta qué antigüedad está exento de ITV un turismo M1 particular?",
+   "q": "Según el RD 920/2017, ¿hasta qué antigüedad está exento de ITV un turismo M1 particular?",
    "o": [
     "Tres años",
     "Cinco años",
@@ -7699,7 +7699,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 2,
-   "q": "¿Con qué periodicidad pasa la ITV un turismo de entre cuatro y diez años?",
+   "q": "Según el RD 920/2017, ¿con qué periodicidad pasa la ITV un turismo de entre cuatro y diez años?",
    "o": [
     "Semestral",
     "Trienal",
@@ -7717,7 +7717,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Hasta qué antigüedad están exentos de ITV los ciclomotores de dos ruedas?",
+   "q": "Según el RD 920/2017, ¿hasta qué antigüedad están exentos de ITV los ciclomotores de dos ruedas?",
    "o": [
     "Dos años",
     "Cinco años",
@@ -7735,7 +7735,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Con qué periodicidad pasan la ITV los camiones N2 y N3 a partir de los cinco años?",
+   "q": "Según el RD 920/2017, ¿con qué periodicidad pasan la ITV los camiones N2 y N3 a partir de los cinco años?",
    "o": [
     "Anual",
     "Semestral",
@@ -7753,7 +7753,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 3,
-   "q": "¿Con qué periodicidad pasa la ITV una furgoneta N1 de más de diez años?",
+   "q": "Según el RD 920/2017, ¿con qué periodicidad pasa la ITV una furgoneta N1 de más de diez años?",
    "o": [
     "Semestral",
     "Anual",
@@ -7771,7 +7771,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Con qué periodicidad pasan la ITV los autobuses M3 hasta los cinco años?",
+   "q": "Según el RD 920/2017, ¿con qué periodicidad pasan la ITV los autobuses M3 hasta los cinco años?",
    "o": [
     "Anual",
     "Semestral",
@@ -7789,7 +7789,7 @@
    "tema": 28,
    "b": "NORMAS",
    "n": 4,
-   "q": "¿Qué antigüedad mínima se exige con carácter general para catalogar un vehículo como histórico?",
+   "q": "Según el RD 1247/1995, ¿qué antigüedad mínima se exige con carácter general para catalogar un vehículo como histórico?",
    "o": [
     "25 años desde su fabricación o primera matriculación",
     "30 años desde su fabricación o primera matriculación",
@@ -7844,7 +7844,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Puede el conductor reanudar la marcha ante una señal de detención antes de cumplirla?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿puede el conductor reanudar la marcha ante una señal de detención antes de cumplirla?",
    "o": [
     "Sí, si es de noche",
     "Solo si es un vehículo prioritario",
@@ -7862,7 +7862,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 5,
-   "q": "¿Debe obedecerse una señal que parezca contradecir las normas de comportamiento?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿debe obedecerse una señal que parezca contradecir las normas de comportamiento?",
    "o": [
     "Sí, salvo circunstancias especiales que lo justifiquen",
     "Solo si es una señal vertical",
@@ -7880,7 +7880,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 6,
-   "q": "¿Qué deben llevar los vehículos que usen peajes dinámicos o telepeajes?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué deben llevar los vehículos que usen peajes dinámicos o telepeajes?",
    "o": [
     "El medio técnico que posibilite su uso en condiciones operativas",
     "Nada, el pago se realiza siempre en la cabina",
@@ -7898,7 +7898,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 2,
-   "q": "¿Qué señales tienen la máxima preferencia?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué señales tienen la máxima preferencia?",
    "o": [
     "Las señales y órdenes de los agentes",
     "Los semáforos",
@@ -7916,7 +7916,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué lugar ocupa la señalización circunstancial en el orden de preferencia?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué lugar ocupa la señalización circunstancial en el orden de preferencia?",
    "o": [
     "El tercero",
     "El primero",
@@ -7934,7 +7934,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 2,
-   "q": "¿Qué lugar ocupan las señales verticales en el orden de preferencia?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué lugar ocupan las señales verticales en el orden de preferencia?",
    "o": [
     "El cuarto",
     "El segundo",
@@ -7952,7 +7952,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "Si dos señales del mismo tipo parecen contradecirse, ¿cuál prevalece?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si dos señales del mismo tipo parecen contradecirse, ¿cuál prevalece?",
    "o": [
     "La más reciente",
     "La situada a la derecha",
@@ -7970,7 +7970,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "Si una señal vertical y un semáforo se contradicen, ¿cuál prevalece?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si una señal vertical y un semáforo se contradicen, ¿cuál prevalece?",
    "o": [
     "La más cercana",
     "La señal vertical",
@@ -8042,7 +8042,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 5,
-   "q": "¿Qué establece el Catálogo Oficial de Señales de la Circulación y Marcas Viales?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué establece el Catálogo Oficial de Señales de la Circulación y Marcas Viales?",
    "o": [
     "Forma, color, diseño, significado y dimensiones de las señales",
     "Los fabricantes autorizados para producir las señales",
@@ -8060,7 +8060,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Quién es responsable de la instalación y conservación de la señalización permanente?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién es responsable de la instalación y conservación de la señalización permanente?",
    "o": [
     "La autoridad de tráfico",
     "Los agentes",
@@ -8078,7 +8078,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 5,
-   "q": "¿Quién es responsable de la señalización circunstancial y variable?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién es responsable de la señalización circunstancial y variable?",
    "o": [
     "La empresa adjudicataria del mantenimiento de la vía",
     "La autoridad encargada de la regulación y gestión del tráfico",
@@ -8114,7 +8114,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Puede un particular retirar o trasladar una señal de la vía?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿puede un particular retirar o trasladar una señal de la vía?",
    "o": [
     "Sí, si la señal está deteriorada o es ilegible",
     "Sí, si le impide el acceso a su propiedad",
@@ -8132,7 +8132,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué hace el titular de la vía con las señales que han perdido su objeto?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué hace el titular de la vía con las señales que han perdido su objeto?",
    "o": [
     "Las mantiene hasta la siguiente campaña anual de reposición",
     "Ordena su inmediata retirada y, en su caso, sustitución",
@@ -8168,7 +8168,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 2,
-   "q": "¿Qué significa el brazo del agente levantado verticalmente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significa el brazo del agente levantado verticalmente?",
    "o": [
     "Paso libre para los vehículos que circulan en el sentido del brazo",
     "Disminución de la velocidad de los vehículos que se acercan al agente",
@@ -8186,7 +8186,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Afecta la orden de brazo levantado verticalmente al vehículo que ya ha entrado en la intersección?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿afecta la orden de brazo levantado verticalmente al vehículo que ya ha entrado en la intersección?",
    "o": [
     "Solo si es un camión",
     "No",
@@ -8204,7 +8204,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué significan los brazos del agente extendidos horizontalmente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significan los brazos del agente extendidos horizontalmente?",
    "o": [
     "Disminución de la velocidad en todos los sentidos de la marcha",
     "Detención de los vehículos que circulan en sentido perpendicular a los brazos",
@@ -8222,7 +8222,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Hasta cuándo permanece en vigor la señal de brazos extendidos horizontalmente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿hasta cuándo permanece en vigor la señal de brazos extendidos horizontalmente?",
    "o": [
     "Durante diez segundos desde que la adopta",
     "Hasta que el agente cambie de posición",
@@ -8240,7 +8240,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué significa el balanceo de una luz roja o amarilla por el agente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significa el balanceo de una luz roja o amarilla por el agente?",
    "o": [
     "Advierte de un desvío obligatorio a la derecha",
     "Obliga a acelerar a los vehículos que se aproximan",
@@ -8258,7 +8258,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué indica el agente moviendo el brazo extendido de arriba abajo?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica el agente moviendo el brazo extendido de arriba abajo?",
    "o": [
     "Que se detengan todos",
     "Que se gire a la izquierda",
@@ -8276,7 +8276,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 2,
-   "q": "¿Qué significa el toque de silbato corto y frecuente del agente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significa el toque de silbato corto y frecuente del agente?",
    "o": [
     "Precaución",
     "Disminuir la velocidad",
@@ -8294,7 +8294,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué significa el toque de silbato largo del agente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significa el toque de silbato largo del agente?",
    "o": [
     "Detención",
     "Reanudación de la marcha",
@@ -8312,7 +8312,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué indica la bandera roja empleada por los agentes?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica la bandera roja empleada por los agentes?",
    "o": [
     "Calzada temporalmente cerrada, salvo vehículos escoltados",
     "Fin de todas las prohibiciones impuestas en el tramo",
@@ -8330,7 +8330,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué indica la bandera verde empleada por los agentes?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica la bandera verde empleada por los agentes?",
    "o": [
     "Calzada abierta al tráfico",
     "Calzada cerrada",
@@ -8348,7 +8348,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué indica la bandera amarilla empleada por los agentes?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica la bandera amarilla empleada por los agentes?",
    "o": [
     "Calzada cerrada",
     "Extremar la precaución",
@@ -8366,7 +8366,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 6,
-   "q": "¿Qué indica el brazo del agente extendido hacia abajo, inclinado y fijo, desde un vehículo policial?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica el brazo del agente extendido hacia abajo, inclinado y fijo, desde un vehículo policial?",
    "o": [
     "Obligación de reducir la velocidad de la marcha",
     "Paso libre por el carril de la izquierda",
@@ -8510,7 +8510,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 1,
-   "q": "¿Qué significa una luz roja fija del semáforo?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significa una luz roja fija del semáforo?",
    "o": [
     "Permite el paso con cuidado",
     "Prohíbe el paso",
@@ -8528,7 +8528,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 2,
-   "q": "¿Qué obliga a hacer la luz amarilla no intermitente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué obliga a hacer la luz amarilla no intermitente?",
    "o": [
     "Ceder el paso a los vehículos que vienen por la derecha",
     "Detenerse como con la roja, salvo que sea imposible",
@@ -8546,7 +8546,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué obliga a hacer la luz amarilla intermitente?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué obliga a hacer la luz amarilla intermitente?",
    "o": [
     "Extremar la precaución y ceder el paso",
     "Acelerar para despejar la intersección",
@@ -8564,7 +8564,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 5,
-   "q": "¿Dónde se utiliza la luz roja intermitente o dos rojas alternativas?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿dónde se utiliza la luz roja intermitente o dos rojas alternativas?",
    "o": [
     "En los túneles, para indicar que debe cederse el paso",
     "En pasos a nivel y similares, prohibiendo temporalmente el paso",
@@ -8582,7 +8582,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué significa una flecha verde sobre fondo negro en un semáforo?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significa una flecha verde sobre fondo negro en un semáforo?",
    "o": [
     "Obliga a girar en la dirección indicada",
     "Permite el paso en la dirección indicada",
@@ -8600,7 +8600,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 6,
-   "q": "¿Qué significa una flecha negra sobre luz roja o amarilla?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué significa una flecha negra sobre luz roja o amarilla?",
    "o": [
     "Que se permite libremente el movimiento de la flecha",
     "Que la indicación afecta solo al movimiento de la flecha",
@@ -8618,7 +8618,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Cómo se identifica el semáforo destinado a ciclos y ciclomotores?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿cómo se identifica el semáforo destinado a ciclos y ciclomotores?",
    "o": [
     "Con una luz verde intermitente",
     "Con una flecha azul",
@@ -8636,7 +8636,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué indica una barra blanca horizontal en el semáforo de tranvías y autobuses?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica una barra blanca horizontal en el semáforo de tranvías y autobuses?",
    "o": [
     "Giro a la derecha",
     "Precaución",
@@ -8654,7 +8654,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué indica una barra blanca vertical en el semáforo de tranvías y autobuses?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica una barra blanca vertical en el semáforo de tranvías y autobuses?",
    "o": [
     "Giro a la izquierda",
     "Permite el paso",
@@ -8672,7 +8672,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 6,
-   "q": "¿Qué indica una barra blanca oblicua hacia la derecha en el semáforo de tranvías?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica una barra blanca oblicua hacia la derecha en el semáforo de tranvías?",
    "o": [
     "Prohíbe girar a la derecha",
     "Permite el paso hacia la derecha",
@@ -8942,7 +8942,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué prohíbe la marca amarilla longitudinal continua?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué prohíbe la marca amarilla longitudinal continua?",
    "o": [
     "Solo la parada",
     "La parada y el estacionamiento",
@@ -8960,7 +8960,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 3,
-   "q": "¿Qué prohíbe la marca amarilla longitudinal discontinua?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué prohíbe la marca amarilla longitudinal discontinua?",
    "o": [
     "El estacionamiento, permitiendo la parada",
     "El cambio de carril y el adelantamiento",
@@ -8978,7 +8978,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué indica la marca amarilla en zigzag?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica la marca amarilla en zigzag?",
    "o": [
     "Zona de frenado de emergencia en pendientes pronunciadas",
     "Prohíbe estacionar, con parada permitida a determinados vehículos",
@@ -8996,7 +8996,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué prohíbe la cuadrícula amarilla en un cruce?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué prohíbe la cuadrícula amarilla en un cruce?",
    "o": [
     "Quedarse detenido en su interior, además de parar y estacionar",
     "Cruzar a los peatones por la zona cuadriculada",
@@ -9014,7 +9014,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué indica el damero blanco y rojo en la calzada?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indica el damero blanco y rojo en la calzada?",
    "o": [
     "Zona de frenado de emergencia",
     "Carril bus",
@@ -9032,7 +9032,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué indican las marcas azules en la calzada?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué indican las marcas azules en la calzada?",
    "o": [
     "Zona de estacionamiento regulado y limitado",
     "Prohibición de parar y estacionar en la zona",
@@ -9140,7 +9140,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué calificación tiene instalar inhibidores de radares en el vehículo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene instalar inhibidores de radares en el vehículo?",
    "o": [
     "Leve",
     "No es infracción",
@@ -9159,7 +9159,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Qué calificación tiene llevar en el vehículo detectores de radares?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene llevar en el vehículo detectores de radares?",
    "o": [
     "No es infracción",
     "Muy grave",
@@ -9177,7 +9177,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿Están permitidos los avisadores que informan de la posición de los radares?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿están permitidos los avisadores que informan de la posición de los radares?",
    "o": [
     "Sí",
     "No",
@@ -9195,7 +9195,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 7,
-   "q": "¿Cuántos puntos se pierden por llevar inhibidores de radar?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pierden por llevar inhibidores de radar?",
    "o": [
     "3 puntos",
     "2 puntos",
@@ -9213,7 +9213,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 6,
-   "q": "¿Cuántos puntos se pierden por llevar detectores de radar?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pierden por llevar detectores de radar?",
    "o": [
     "6 puntos",
     "4 puntos",
@@ -9231,7 +9231,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 5,
-   "q": "¿Cuántos puntos se pierden por no respetar la luz roja de un semáforo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pierden por no respetar la luz roja de un semáforo?",
    "o": [
     "3 puntos",
     "2 puntos",
@@ -9249,7 +9249,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 5,
-   "q": "¿Cuántos puntos se pierden por no respetar las señales o las órdenes de los agentes?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pierden por no respetar las señales o las órdenes de los agentes?",
    "o": [
     "6 puntos",
     "4 puntos",
@@ -9267,7 +9267,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 6,
-   "q": "¿Qué calificación tiene retirar, ocultar o alterar la señalización de la vía sin causa justificada?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene retirar, ocultar o alterar la señalización de la vía sin causa justificada?",
    "o": [
     "Leve",
     "Grave",
@@ -9303,7 +9303,7 @@
    "tema": 29,
    "b": "SENAL",
    "n": 4,
-   "q": "¿A qué control están sometidos los aparatos de medida usados para denunciar infracciones de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a qué control están sometidos los aparatos de medida usados para denunciar infracciones de tráfico?",
    "o": [
     "Al control metrológico",
     "A ninguno",
@@ -9393,7 +9393,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "Si la infracción de tráfico pudiera ser delito, ¿qué ocurre con el procedimiento administrativo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si la infracción de tráfico pudiera ser delito, ¿qué ocurre con el procedimiento administrativo?",
    "o": [
     "Se tramita por el procedimiento abreviado",
     "Se archiva definitivamente en todo caso",
@@ -9411,7 +9411,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "Si la sentencia penal condena por los mismos hechos, ¿puede sancionarse además por vía administrativa?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si la sentencia penal condena por los mismos hechos, ¿puede sancionarse además por vía administrativa?",
    "o": [
     "Sí, siempre",
     "Solo con pérdida de puntos",
@@ -9447,7 +9447,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Cómo se clasifican las infracciones de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cómo se clasifican las infracciones de tráfico?",
    "o": [
     "Menos graves y graves",
     "Leves, graves y muy graves",
@@ -9465,7 +9465,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Qué calificación tiene circular en sentido contrario al establecido?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene circular en sentido contrario al establecido?",
    "o": [
     "Grave",
     "Leve",
@@ -9484,7 +9484,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Qué calificación tiene participar en carreras o competiciones no autorizadas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene participar en carreras o competiciones no autorizadas?",
    "o": [
     "No es infracción",
     "Leve",
@@ -9503,7 +9503,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Qué calificación tiene la conducción temeraria como infracción administrativa?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene la conducción temeraria como infracción administrativa?",
    "o": [
     "Grave",
     "Muy grave",
@@ -9521,7 +9521,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Qué calificación tiene negarse a las pruebas de detección de alcohol o drogas como infracción administrativa?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene negarse a las pruebas de detección de alcohol o drogas como infracción administrativa?",
    "o": [
     "No es infracción",
     "Grave",
@@ -9539,7 +9539,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué calificación tiene aumentar más de un 50 % los tiempos de conducción?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene aumentar más de un 50 % los tiempos de conducción?",
    "o": [
     "Leve",
     "Muy grave",
@@ -9558,7 +9558,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué calificación tiene manipular el tacógrafo o el limitador de velocidad?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene manipular el tacógrafo o el limitador de velocidad?",
    "o": [
     "Delito leve",
     "Muy grave",
@@ -9576,7 +9576,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué calificación tiene que la carga del vehículo caiga a la vía?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene que la carga del vehículo caiga a la vía?",
    "o": [
     "Leve",
     "No es infracción",
@@ -9594,7 +9594,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué calificación tiene arrojar a la vía objetos que puedan causar incendios o accidentes?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene arrojar a la vía objetos que puedan causar incendios o accidentes?",
    "o": [
     "Grave",
     "Delito leve",
@@ -9613,7 +9613,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué calificación tiene circular sin la autorización administrativa del vehículo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene circular sin la autorización administrativa del vehículo?",
    "o": [
     "Muy grave",
     "No es infracción",
@@ -9632,7 +9632,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué calificación tiene no identificar verazmente al conductor responsable cuando se requiere?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene no identificar verazmente al conductor responsable cuando se requiere?",
    "o": [
     "Leve",
     "Muy grave",
@@ -9650,7 +9650,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Qué calificación tiene superar los límites de velocidad en los términos que el anexo IV califica como muy graves?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene superar los límites de velocidad en los términos que el anexo IV califica como muy graves?",
    "o": [
     "Delito leve",
     "Leve",
@@ -9668,7 +9668,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Qué calificación tiene causar daños a la infraestructura viaria que afecten a la seguridad?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene causar daños a la infraestructura viaria que afecten a la seguridad?",
    "o": [
     "Leve",
     "Delito leve",
@@ -9686,7 +9686,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué multa corresponde a una infracción grave?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa corresponde a una infracción grave?",
    "o": [
     "100 euros",
     "200 euros",
@@ -9704,7 +9704,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Qué multa tiene negarse a las pruebas de alcohol o drogas, según el tema?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa tiene negarse a las pruebas de alcohol o drogas, según el tema?",
    "o": [
     "1.000 euros",
     "200 euros",
@@ -9722,7 +9722,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Qué multa tiene conducir con inhibidores de radar instalados?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa tiene conducir con inhibidores de radar instalados?",
    "o": [
     "6.000 euros",
     "1.000 euros",
@@ -9740,7 +9740,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 7,
-   "q": "¿Qué horquilla de multa tienen las obras en la vía sin autorización o sin señalización?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué horquilla de multa tienen las obras en la vía sin autorización o sin señalización?",
    "o": [
     "De 3.000 a 20.000 euros",
     "De 1.000 a 6.000 euros",
@@ -9758,7 +9758,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Hasta qué porcentaje puede incrementarse la multa por graduación?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿hasta qué porcentaje puede incrementarse la multa por graduación?",
    "o": [
     "Hasta un 100 %",
     "Hasta un 20 %",
@@ -9776,7 +9776,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Cuál de estos criterios se tiene en cuenta para graduar la multa?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuál de estos criterios se tiene en cuenta para graduar la multa?",
    "o": [
     "La antigüedad y el valor del vehículo",
     "Los antecedentes y la reincidencia del infractor",
@@ -9794,7 +9794,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Quién responde si un pasajero circula sin el casco obligatorio?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién responde si un pasajero circula sin el casco obligatorio?",
    "o": [
     "El conductor",
     "El pasajero",
@@ -9812,7 +9812,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Quién responde si se transportan menores sin el sistema de retención infantil obligatorio?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién responde si se transportan menores sin el sistema de retención infantil obligatorio?",
    "o": [
     "El menor",
     "El titular del vehículo",
@@ -9830,7 +9830,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Quién responde solidariamente de la infracción cometida por un menor de 18 años?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién responde solidariamente de la infracción cometida por un menor de 18 años?",
    "o": [
     "El agente que formula la denuncia",
     "Nadie, el menor no es responsable",
@@ -9848,7 +9848,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Quién responde de los incumplimientos sobre la documentación del vehículo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién responde de los incumplimientos sobre la documentación del vehículo?",
    "o": [
     "El taller que realiza el mantenimiento",
     "El conductor ocasional del vehículo",
@@ -9866,7 +9866,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Cómo se inicia siempre el procedimiento sancionador de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cómo se inicia siempre el procedimiento sancionador de tráfico?",
    "o": [
     "Por denuncia privada obligatoria",
     "A instancia de parte",
@@ -9884,7 +9884,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Es obligatoria para el agente de tráfico la denuncia de las infracciones que observe en servicio?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿es obligatoria para el agente de tráfico la denuncia de las infracciones que observe en servicio?",
    "o": [
     "No, es voluntaria",
     "Solo si hay víctimas",
@@ -9920,7 +9920,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Cuál es la regla general sobre la notificación de la denuncia?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuál es la regla general sobre la notificación de la denuncia?",
    "o": [
     "Se notifica en el acto al conductor",
     "Se notifica a los 15 días",
@@ -9938,7 +9938,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Cuál de estos supuestos permite no notificar la denuncia en el acto?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuál de estos supuestos permite no notificar la denuncia en el acto?",
    "o": [
     "Vehículo estacionado con el conductor ausente",
     "Infracción leve sin pérdida de puntos",
@@ -9956,7 +9956,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Se notifica en el acto la infracción captada por un cinemómetro sin detener al vehículo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿se notifica en el acto la infracción captada por un cinemómetro sin detener al vehículo?",
    "o": [
     "Sí, siempre debe notificarse en el acto",
     "Solo si la infracción es muy grave",
@@ -9974,7 +9974,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Es causa para no notificar en el acto que exista riesgo para la seguridad de la circulación al dar el alto?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿es causa para no notificar en el acto que exista riesgo para la seguridad de la circulación al dar el alto?",
    "o": [
     "No",
     "Sí",
@@ -9992,7 +9992,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Cuándo se entiende rechazada la notificación en la DEV?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo se entiende rechazada la notificación en la DEV?",
    "o": [
     "Si no se accede a su contenido en 15 días hábiles",
     "Si no se accede a su contenido en 10 días naturales",
@@ -10028,7 +10028,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Qué puede hacer el agente si el conductor sin residencia legal en España no paga la multa en el acto?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué puede hacer el agente si el conductor sin residencia legal en España no paga la multa en el acto?",
    "o": [
     "Nada, solo formular la denuncia",
     "Detenerlo y ponerlo a disposición judicial",
@@ -10046,7 +10046,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Cómo puede pagar en el acto el conductor sin residencia legal en España?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cómo puede pagar en el acto el conductor sin residencia legal en España?",
    "o": [
     "Solo en la oficina de correos",
     "Solo con cheque",
@@ -10064,7 +10064,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Qué reducción tiene el pago voluntario de la multa en el procedimiento abreviado?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué reducción tiene el pago voluntario de la multa en el procedimiento abreviado?",
    "o": [
     "50 %",
     "30 %",
@@ -10082,7 +10082,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿En qué plazo puede pagarse la multa con la reducción del 50 %?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿en qué plazo puede pagarse la multa con la reducción del 50 %?",
    "o": [
     "1 mes desde la firmeza de la resolución sancionadora",
     "30 días naturales desde la notificación de la denuncia",
@@ -10100,7 +10100,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Qué consecuencia tiene el pago con reducción del 50 %?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué consecuencia tiene el pago con reducción del 50 %?",
    "o": [
     "Suspensión de la sanción hasta que se resuelva el recurso",
     "Anulación de la pérdida de puntos asociada a la infracción",
@@ -10118,7 +10118,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué recurso cabe tras pagar con reducción en el procedimiento abreviado?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué recurso cabe tras pagar con reducción en el procedimiento abreviado?",
    "o": [
     "Ninguno, el pago es inimpugnable",
     "Los recursos de reposición y alzada",
@@ -10136,7 +10136,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Computa como antecedente el pago abreviado de una infracción sin pérdida de puntos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿computa como antecedente el pago abreviado de una infracción sin pérdida de puntos?",
    "o": [
     "Sí, siempre",
     "Solo durante un año",
@@ -10154,7 +10154,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Se aplica el procedimiento abreviado a la infracción de no identificar verazmente al conductor?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿se aplica el procedimiento abreviado a la infracción de no identificar verazmente al conductor?",
    "o": [
     "Solo si se paga en 10 días",
     "Sí",
@@ -10172,7 +10172,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Se aplica el procedimiento abreviado a la conducción con inhibidores de radar?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿se aplica el procedimiento abreviado a la conducción con inhibidores de radar?",
    "o": [
     "Sí",
     "Solo la primera vez",
@@ -10190,7 +10190,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué plazo tiene el denunciado para alegar en el procedimiento ordinario?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué plazo tiene el denunciado para alegar en el procedimiento ordinario?",
    "o": [
     "15 días naturales",
     "20 días naturales",
@@ -10208,7 +10208,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿De qué plazo dispone el agente denunciante para informar sobre las alegaciones?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿de qué plazo dispone el agente denunciante para informar sobre las alegaciones?",
    "o": [
     "20 días naturales",
     "10 días naturales",
@@ -10226,7 +10226,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 7,
-   "q": "Si la propuesta de resolución se basa en hechos distintos de los alegados, ¿qué plazo tiene el interesado para nuevas alegaciones?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si la propuesta de resolución se basa en hechos distintos de los alegados, ¿qué plazo tiene el interesado para nuevas alegaciones?",
    "o": [
     "1 mes completo",
     "10 días naturales",
@@ -10262,7 +10262,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "Sin alegaciones ni pago en 20 días, ¿qué efecto tiene la denuncia en las infracciones leves?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), sin alegaciones ni pago en 20 días, ¿qué efecto tiene la denuncia en las infracciones leves?",
    "o": [
     "Surte efecto de acto resolutorio",
     "Caduca",
@@ -10280,7 +10280,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Cuándo prescriben las infracciones leves?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo prescriben las infracciones leves?",
    "o": [
     "A los tres meses",
     "A los seis meses",
@@ -10298,7 +10298,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Cuándo prescriben las infracciones graves y muy graves?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo prescriben las infracciones graves y muy graves?",
    "o": [
     "A los tres meses",
     "Al año",
@@ -10316,7 +10316,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Desde cuándo se computa la prescripción de las infracciones de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿desde cuándo se computa la prescripción de las infracciones de tráfico?",
    "o": [
     "Desde el día siguiente a su comisión",
     "Desde la notificación",
@@ -10334,7 +10334,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Cuándo prescriben las sanciones pecuniarias de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo prescriben las sanciones pecuniarias de tráfico?",
    "o": [
     "A los dos años",
     "Al año",
@@ -10352,7 +10352,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Cuándo prescriben las sanciones no pecuniarias, como la suspensión?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo prescriben las sanciones no pecuniarias, como la suspensión?",
    "o": [
     "A los cuatro años",
     "Al año",
@@ -10370,7 +10370,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Cuándo caduca el procedimiento sancionador de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo caduca el procedimiento sancionador de tráfico?",
    "o": [
     "No caduca mientras no prescriba la infracción",
     "Al año de su iniciación sin resolución notificada",
@@ -10388,7 +10388,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué infracciones se inscriben en el Registro de Conductores e Infractores?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué infracciones se inscriben en el Registro de Conductores e Infractores?",
    "o": [
     "Todas, incluidas las leves",
     "Las graves y muy graves",
@@ -10406,7 +10406,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 7,
-   "q": "¿En qué plazo se comunican al Registro las sanciones firmes?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿en qué plazo se comunican al Registro las sanciones firmes?",
    "o": [
     "10 días",
     "2 meses",
@@ -10424,7 +10424,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 7,
-   "q": "¿Cuándo se cancelan de oficio las anotaciones del Registro de Conductores e Infractores?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo se cancelan de oficio las anotaciones del Registro de Conductores e Infractores?",
    "o": [
     "A los 5 años",
     "A los 3 años",
@@ -10442,7 +10442,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 2,
-   "q": "¿Qué plazo tiene el recurso de reposición contra la sanción de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué plazo tiene el recurso de reposición contra la sanción de tráfico?",
    "o": [
     "Veinte días",
     "Dos meses",
@@ -10460,7 +10460,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Suspende la ejecución de la sanción la interposición del recurso de reposición?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿suspende la ejecución de la sanción la interposición del recurso de reposición?",
    "o": [
     "Solo si es muy grave",
     "Solo si se pide",
@@ -10478,7 +10478,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué carácter tiene el recurso de reposición en materia de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué carácter tiene el recurso de reposición en materia de tráfico?",
    "o": [
     "Potestativo",
     "Obligatorio",
@@ -10496,7 +10496,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué plazo hay para el recurso contencioso-administrativo con notificación expresa?",
+   "q": "Según la LJCA (Ley 29/1998), ¿qué plazo hay para el recurso contencioso-administrativo con notificación expresa?",
    "o": [
     "Dos meses",
     "Un mes",
@@ -10514,7 +10514,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Qué plazo hay para el recurso contencioso-administrativo sin notificación expresa, según el tema?",
+   "q": "Según la LJCA (Ley 29/1998), ¿qué plazo hay para el recurso contencioso-administrativo sin notificación expresa, según el tema?",
    "o": [
     "Seis meses",
     "Un año",
@@ -10532,7 +10532,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Contra qué actos procede el recurso extraordinario de revisión?",
+   "q": "Según la LPAC (Ley 39/2015), ¿contra qué actos procede el recurso extraordinario de revisión?",
    "o": [
     "Contra los actos de trámite del procedimiento sancionador",
     "Contra cualquier denuncia notificada en el acto por el agente",
@@ -10550,7 +10550,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Qué recargo se aplica en vía de apremio?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué recargo se aplica en vía de apremio?",
    "o": [
     "5 %",
     "20 %",
@@ -10569,7 +10569,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Puede inmovilizarse un vehículo que carece de seguro obligatorio?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿puede inmovilizarse un vehículo que carece de seguro obligatorio?",
    "o": [
     "Sí",
     "Solo en autopista",
@@ -10587,7 +10587,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Puede inmovilizarse el vehículo si su conductor se niega a las pruebas de alcohol o drogas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿puede inmovilizarse el vehículo si su conductor se niega a las pruebas de alcohol o drogas?",
    "o": [
     "Solo con orden judicial",
     "Sí",
@@ -10605,7 +10605,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 3,
-   "q": "¿Puede inmovilizarse un vehículo que supera los niveles de humos, gases o ruidos?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿puede inmovilizarse un vehículo que supera los niveles de humos, gases o ruidos?",
    "o": [
     "Solo de noche",
     "Solo si es un camión",
@@ -10623,7 +10623,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Qué diferencia la inmovilización de la retirada?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué diferencia la inmovilización de la retirada?",
    "o": [
     "La inmovilización la ordena siempre el juez, la retirada el agente",
     "En la inmovilización queda en su lugar; en la retirada va al depósito",
@@ -10659,7 +10659,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Cuál de estos supuestos permite retirar el vehículo de la vía?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuál de estos supuestos permite retirar el vehículo de la vía?",
    "o": [
     "Que esté mal aparcado dentro de un garaje privado",
     "Que tenga la ITV a punto de caducar en el mes",
@@ -10677,7 +10677,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Qué ocurre si no cesan las causas que motivaron la inmovilización?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué ocurre si no cesan las causas que motivaron la inmovilización?",
    "o": [
     "Se destruye el vehículo",
     "Se levanta la inmovilización",
@@ -10695,7 +10695,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿En qué plazo debe comunicarse al titular la retirada y depósito del vehículo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿en qué plazo debe comunicarse al titular la retirada y depósito del vehículo?",
    "o": [
     "24 horas",
     "48 horas",
@@ -10713,7 +10713,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 5,
-   "q": "¿Es causa de retirada que un accidente deje el vehículo impidiendo el paso?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿es causa de retirada que un accidente deje el vehículo impidiendo el paso?",
    "o": [
     "Sí",
     "Solo en vías interurbanas",
@@ -10731,7 +10731,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Adónde puede ordenarse el traslado de un vehículo abandonado para su destrucción y descontaminación?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿adónde puede ordenarse el traslado de un vehículo abandonado para su destrucción y descontaminación?",
    "o": [
     "Al depósito municipal, donde permanece indefinidamente",
     "A subasta pública organizada por el Ayuntamiento",
@@ -10749,7 +10749,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Cuándo puede trasladarse al CATV un vehículo depositado por la Administración?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo puede trasladarse al CATV un vehículo depositado por la Administración?",
    "o": [
     "Pasados más de dos meses sin que el titular formule alegaciones",
     "Pasados seis meses desde su depósito, con o sin alegaciones",
@@ -10767,7 +10767,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Cuándo puede trasladarse al CATV un vehículo estacionado en la vía?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo puede trasladarse al CATV un vehículo estacionado en la vía?",
    "o": [
     "Más de una semana en el mismo lugar, aunque pueda circular por sí mismo",
     "Más de un mes en el mismo lugar, con desperfectos que impiden moverlo o sin placas",
@@ -10785,7 +10785,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Cuándo puede trasladarse al CATV un vehículo dejado tras avería o accidente en un recinto privado?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo puede trasladarse al CATV un vehículo dejado tras avería o accidente en un recinto privado?",
    "o": [
     "Si lleva más de un mes sin que el titular lo retire",
     "Si lleva más de dos meses sin que el titular lo retire",
@@ -10803,7 +10803,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Qué trámite previo exige siempre el traslado al CATV?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué trámite previo exige siempre el traslado al CATV?",
    "o": [
     "Publicar un edicto en el BOE durante un mínimo de seis meses",
     "Recabar un informe previo de la entidad aseguradora del vehículo",
@@ -10821,7 +10821,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 7,
-   "q": "¿A quién debe solicitar el titular del recinto privado la autorización para el tratamiento residual del vehículo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién debe solicitar el titular del recinto privado la autorización para el tratamiento residual del vehículo?",
    "o": [
     "Al juzgado de primera instancia",
     "Al CATV directamente, sin trámites",
@@ -10839,7 +10839,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 7,
-   "q": "¿Qué alternativa al tratamiento residual en el CATV prevé el art. 106.3?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué alternativa al tratamiento residual en el CATV prevé el art. 106.3?",
    "o": [
     "Devolverlo al fabricante para su reciclaje",
     "Adjudicarlo a los servicios de vigilancia del tráfico",
@@ -10857,7 +10857,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 4,
-   "q": "¿Quién puede recoger la notificación en el domicilio si no está el interesado?",
+   "q": "Según la LPAC (Ley 39/2015), ¿quién puede recoger la notificación en el domicilio si no está el interesado?",
    "o": [
     "Cualquier persona mayor de 14 años que acredite su identidad",
     "Solo un familiar mayor de edad que conviva con el interesado",
@@ -10875,7 +10875,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿Quién responde subsidiariamente del impago de la multa con carácter general?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién responde subsidiariamente del impago de la multa con carácter general?",
    "o": [
     "La entidad aseguradora del vehículo del infractor",
     "El Ayuntamiento del lugar donde se cometió la infracción",
@@ -10893,7 +10893,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 7,
-   "q": "¿Responde subsidiariamente de la multa el titular cuyo vehículo le había sido sustraído?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿responde subsidiariamente de la multa el titular cuyo vehículo le había sido sustraído?",
    "o": [
     "Solo si es una empresa",
     "Solo si no lo denunció",
@@ -10911,7 +10911,7 @@
    "tema": 30,
    "b": "SANCION",
    "n": 6,
-   "q": "¿En quién puede delegar el Jefe Provincial de Tráfico la sanción de las denuncias automatizadas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿en quién puede delegar el Jefe Provincial de Tráfico la sanción de las denuncias automatizadas?",
    "o": [
     "En el alcalde del municipio donde se cometió la infracción",
     "En el jefe de la Agrupación de Tráfico de la Guardia Civil",
@@ -11001,7 +11001,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 6,
-   "q": "¿Cómo se consideran las colisiones múltiples sucesivas entre más de dos vehículos?",
+   "q": "Según la Orden INT/2223/2014, ¿cómo se consideran las colisiones múltiples sucesivas entre más de dos vehículos?",
    "o": [
     "No se registran",
     "Como dos accidentes",
@@ -11019,7 +11019,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Se considera accidente de tráfico el intento de suicidio que no causa daños a terceros?",
+   "q": "Según la Orden INT/2223/2014, ¿se considera accidente de tráfico el intento de suicidio que no causa daños a terceros?",
    "o": [
     "No",
     "Solo en vías urbanas",
@@ -11037,7 +11037,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Se considera accidente de tráfico el intento de suicidio que causa daños a otras personas?",
+   "q": "Según la Orden INT/2223/2014, ¿se considera accidente de tráfico el intento de suicidio que causa daños a otras personas?",
    "o": [
     "Solo si hay muertos",
     "No",
@@ -11055,7 +11055,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Se incluyen en el concepto estadístico los vehículos de raíles que circulan por vías públicas?",
+   "q": "Según la Orden INT/2223/2014, ¿se incluyen en el concepto estadístico los vehículos de raíles que circulan por vías públicas?",
    "o": [
     "Solo los tranvías urbanos",
     "No, nunca se incluyen",
@@ -11127,7 +11127,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 3,
-   "q": "¿Es peatón a efectos estadísticos quien conduce a pie una bicicleta?",
+   "q": "Según la Orden INT/2223/2014, ¿es peatón a efectos estadísticos quien conduce a pie una bicicleta?",
    "o": [
     "No, es conductor",
     "Solo si va por la acera",
@@ -11145,7 +11145,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 3,
-   "q": "¿Es peatón a efectos estadísticos quien se desplaza sobre patines?",
+   "q": "Según la Orden INT/2223/2014, ¿es peatón a efectos estadísticos quien se desplaza sobre patines?",
    "o": [
     "Sí",
     "Solo si es menor",
@@ -11163,7 +11163,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Es peatón a efectos estadísticos quien está reparando su vehículo fuera de él?",
+   "q": "Según la Orden INT/2223/2014, ¿es peatón a efectos estadísticos quien está reparando su vehículo fuera de él?",
    "o": [
     "No, es conductor",
     "Solo si está en el arcén",
@@ -11181,7 +11181,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 6,
-   "q": "¿Cómo se considera a efectos estadísticos quien se desplaza sobre un animal de monta?",
+   "q": "Según la Orden INT/2223/2014, ¿cómo se considera a efectos estadísticos quien se desplaza sobre un animal de monta?",
    "o": [
     "Conductor",
     "Pasajero",
@@ -11199,7 +11199,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 6,
-   "q": "¿Cómo se considera al conductor que abandona su vehículo y es arrollado mientras se aleja caminando?",
+   "q": "Según la Orden INT/2223/2014, ¿cómo se considera al conductor que abandona su vehículo y es arrollado mientras se aleja caminando?",
    "o": [
     "Peatón",
     "Conductor",
@@ -11217,7 +11217,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Cómo se considera a quien se desplaza en silla de ruedas, con o sin motor?",
+   "q": "Según la Orden INT/2223/2014, ¿cómo se considera a quien se desplaza en silla de ruedas, con o sin motor?",
    "o": [
     "Pasajero",
     "Ciclista",
@@ -11325,7 +11325,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 6,
-   "q": "¿A quién corresponde la coordinación de la estadística y la investigación de accidentes de tráfico?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde la coordinación de la estadística y la investigación de accidentes de tráfico?",
    "o": [
     "A los municipios",
     "Al INE",
@@ -11343,7 +11343,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 5,
-   "q": "¿En qué plazo máximo se comunican los datos de un accidente con fallecido o herido trasladado al hospital?",
+   "q": "Según la Orden INT/2223/2014, ¿en qué plazo máximo se comunican los datos de un accidente con fallecido o herido trasladado al hospital?",
    "o": [
     "48 horas",
     "10 días naturales",
@@ -11361,7 +11361,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 5,
-   "q": "¿En qué plazo se comunican los datos de un accidente con heridos sin traslado al hospital?",
+   "q": "Según la Orden INT/2223/2014, ¿en qué plazo se comunican los datos de un accidente con heridos sin traslado al hospital?",
    "o": [
     "15 días hábiles",
     "1 mes",
@@ -11379,7 +11379,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 5,
-   "q": "¿En qué plazo máximo debe remitirse el formulario totalmente cumplimentado?",
+   "q": "Según la Orden INT/2223/2014, ¿en qué plazo máximo debe remitirse el formulario totalmente cumplimentado?",
    "o": [
     "1 mes desde el accidente",
     "24 horas desde el accidente",
@@ -11433,7 +11433,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Quién se considera conductor en un vehículo de prácticas de conducción?",
+   "q": "Según la Orden INT/2223/2014, ¿quién se considera conductor en un vehículo de prácticas de conducción?",
    "o": [
     "El profesor a cargo de los mandos adicionales",
     "El alumno que lleva el volante",
@@ -11451,7 +11451,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Cómo se considera a la persona arrollada mientras sube o baja de un vehículo?",
+   "q": "Según la Orden INT/2223/2014, ¿cómo se considera a la persona arrollada mientras sube o baja de un vehículo?",
    "o": [
     "Peatón",
     "Ileso",
@@ -11469,7 +11469,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 3,
-   "q": "¿Hasta cuándo se computa un fallecido a efectos estadísticos?",
+   "q": "Según la Orden INT/2223/2014, ¿hasta cuándo se computa un fallecido a efectos estadísticos?",
    "o": [
     "En el acto o en los 30 días siguientes",
     "En el acto o en los 7 días siguientes",
@@ -11487,7 +11487,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 7,
-   "q": "¿Qué plazo de fallecimiento se usa en el formulario urgente del agente?",
+   "q": "Según la Orden INT/2223/2014, ¿qué plazo de fallecimiento se usa en el formulario urgente del agente?",
    "o": [
     "En el acto o en las 24 horas siguientes",
     "En el acto o en los 7 días siguientes",
@@ -11505,7 +11505,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 3,
-   "q": "¿Qué es un herido hospitalizado a efectos del RNVAT?",
+   "q": "Según la Orden INT/2223/2014, ¿qué es un herido hospitalizado a efectos del RNVAT?",
    "o": [
     "El que recibe cualquier asistencia",
     "El que tarda más de una semana en curar",
@@ -11523,7 +11523,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 5,
-   "q": "¿Qué es un herido no hospitalizado (leve)?",
+   "q": "Según la Orden INT/2223/2014, ¿qué es un herido no hospitalizado (leve)?",
    "o": [
     "El que recibe asistencia sin hospitalización superior a 24 horas",
     "El que no recibe ningún tipo de asistencia sanitaria",
@@ -11541,7 +11541,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Qué es un ileso a efectos del RNVAT?",
+   "q": "Según la Orden INT/2223/2014, ¿qué es un ileso a efectos del RNVAT?",
    "o": [
     "El testigo que presencia el accidente desde la acera",
     "El que recibe asistencia sanitaria leve en el lugar",
@@ -11559,7 +11559,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 3,
-   "q": "¿Qué es un accidente mortal?",
+   "q": "Según la Orden INT/2223/2014, ¿qué es un accidente mortal?",
    "o": [
     "El accidente ocurrido en autopista con varios vehículos",
     "El accidente con al menos un herido hospitalizado más de 24 horas",
@@ -11577,7 +11577,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 5,
-   "q": "¿Qué es un accidente grave?",
+   "q": "Según la Orden INT/2223/2014, ¿qué es un accidente grave?",
    "o": [
     "El no mortal con algún herido hospitalizado más de 24 horas",
     "El que causa daños materiales de más de 80.000 euros",
@@ -12243,7 +12243,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 2,
-   "q": "¿En qué vías es obligatorio el cinturón de seguridad?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿en qué vías es obligatorio el cinturón de seguridad?",
    "o": [
     "Solo en autopistas y autovías",
     "Solo en las vías interurbanas",
@@ -12261,7 +12261,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 3,
-   "q": "¿Qué estatura determina que un menor deba usar sistema de retención infantil?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué estatura determina que un menor deba usar sistema de retención infantil?",
    "o": [
     "Inferior a 135 cm",
     "Inferior a 150 cm",
@@ -12279,7 +12279,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Dónde deben viajar los menores de menos de 135 cm en vehículos de hasta nueve plazas?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿dónde deben viajar los menores de menos de 135 cm en vehículos de hasta nueve plazas?",
    "o": [
     "En el centro delantero",
     "Delante con cinturón",
@@ -12297,7 +12297,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 3,
-   "q": "¿Está exento del cinturón el conductor que hace marcha atrás para estacionar?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿está exento del cinturón el conductor que hace marcha atrás para estacionar?",
    "o": [
     "No",
     "Solo en garajes",
@@ -12315,7 +12315,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 5,
-   "q": "¿Está exento del cinturón quien acredita con certificado médico que no puede usarlo?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿está exento del cinturón quien acredita con certificado médico que no puede usarlo?",
    "o": [
     "No",
     "Solo los mayores de 65",
@@ -12333,7 +12333,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Dónde está exento del cinturón el conductor de taxi en servicio?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿dónde está exento del cinturón el conductor de taxi en servicio?",
    "o": [
     "Solo en autopistas",
     "En ninguna",
@@ -12351,7 +12351,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 4,
-   "q": "¿Está exento del cinturón el profesor de autoescuela en vías interurbanas?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿está exento del cinturón el profesor de autoescuela en vías interurbanas?",
    "o": [
     "Solo en autovías y autopistas",
     "Sí, en todas las vías",
@@ -12369,7 +12369,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 6,
-   "q": "¿Están exentos del cinturón en vías urbanas los distribuidores de mercancías durante la carga y descarga?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿están exentos del cinturón en vías urbanas los distribuidores de mercancías durante la carga y descarga?",
    "o": [
     "Solo si van en furgoneta",
     "Sí",
@@ -12477,7 +12477,7 @@
    "tema": 31,
    "b": "ACCID",
    "n": 6,
-   "q": "¿Cuándo se abre atestado por daños materiales en un accidente?",
+   "q": "Según el Código Penal, ¿cuándo se abre atestado por daños materiales en un accidente?",
    "o": [
     "Daños de más de 6.000 € aunque no haya denuncia del perjudicado",
     "Daños de más de 80.000 € por imprudencia grave y con denuncia",
@@ -12981,7 +12981,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 2,
-   "q": "¿Cuál es la tasa máxima general de alcohol en sangre?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿cuál es la tasa máxima general de alcohol en sangre?",
    "o": [
     "1,2 g/l",
     "0,3 g/l",
@@ -13000,7 +13000,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 2,
-   "q": "¿Cuál es la tasa máxima general de alcohol en aire espirado?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿cuál es la tasa máxima general de alcohol en aire espirado?",
    "o": [
     "0,15 mg/l",
     "0,25 mg/l",
@@ -13019,7 +13019,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 2,
-   "q": "¿Cuál es la tasa máxima reducida de alcohol en aire espirado?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿cuál es la tasa máxima reducida de alcohol en aire espirado?",
    "o": [
     "0,15 mg/l",
     "0,30 mg/l",
@@ -13038,7 +13038,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Cuál es la tasa máxima reducida de alcohol en sangre?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿cuál es la tasa máxima reducida de alcohol en sangre?",
    "o": [
     "0,15 g/l",
     "0,5 g/l",
@@ -13057,7 +13057,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Durante cuánto tiempo desde la obtención del permiso se aplica la tasa reducida a los noveles?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿durante cuánto tiempo desde la obtención del permiso se aplica la tasa reducida a los noveles?",
    "o": [
     "Tres años",
     "Dos años",
@@ -13075,7 +13075,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Se aplica la tasa reducida a los conductores de vehículos de mercancías de más de 3.500 kg?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿se aplica la tasa reducida a los conductores de vehículos de mercancías de más de 3.500 kg?",
    "o": [
     "No",
     "Sí",
@@ -13093,7 +13093,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Se aplica la tasa reducida a los conductores de vehículos de viajeros de más de nueve plazas?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿se aplica la tasa reducida a los conductores de vehículos de viajeros de más de nueve plazas?",
    "o": [
     "Sí",
     "No",
@@ -13111,7 +13111,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Se aplica la tasa reducida a los conductores de vehículos de servicios de urgencia?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿se aplica la tasa reducida a los conductores de vehículos de servicios de urgencia?",
    "o": [
     "Solo a los bomberos",
     "No",
@@ -13129,7 +13129,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Qué tasa se aplica a los conductores de bicicleta?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué tasa se aplica a los conductores de bicicleta?",
    "o": [
     "La de 0,8 g/l o 0,40 mg/l",
     "No tienen tasa máxima aplicable",
@@ -13147,7 +13147,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Se aplica la tasa reducida al transporte de mercancías peligrosas?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿se aplica la tasa reducida al transporte de mercancías peligrosas?",
    "o": [
     "Solo en túneles",
     "Sí",
@@ -13165,7 +13165,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 5,
-   "q": "¿Cuándo puede circular un conductor con presencia de medicamentos psicotrópicos en el organismo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuándo puede circular un conductor con presencia de medicamentos psicotrópicos en el organismo?",
    "o": [
     "Con prescripción facultativa que no impida conducir con seguridad",
     "Siempre que lleve consigo la receta médica, sin más",
@@ -13183,7 +13183,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Quiénes están obligados a someterse a las pruebas de alcohol y drogas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quiénes están obligados a someterse a las pruebas de alcohol y drogas?",
    "o": [
     "Los conductores y los usuarios implicados en accidente o autores de infracción",
     "Solo los implicados en accidentes con fallecidos o heridos graves",
@@ -13201,7 +13201,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Están obligados los conductores de bicicletas a someterse a las pruebas de alcoholemia?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿están obligados los conductores de bicicletas a someterse a las pruebas de alcoholemia?",
    "o": [
     "Sí",
     "No",
@@ -13219,7 +13219,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Pueden los agentes someter a la prueba a los conductores denunciados por cualquier infracción?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿pueden los agentes someter a la prueba a los conductores denunciados por cualquier infracción?",
    "o": [
     "Sí",
     "Solo con autorización judicial",
@@ -13237,7 +13237,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Exigen los controles preventivos de alcoholemia una infracción o un accidente previo?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿exigen los controles preventivos de alcoholemia una infracción o un accidente previo?",
    "o": [
     "Sí, un accidente",
     "No",
@@ -13273,7 +13273,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Cuántas fases de control metrológico tiene el etilómetro según el tema?",
+   "q": "Según la Ley 32/2014, ¿cuántas fases de control metrológico tiene el etilómetro según el tema?",
    "o": [
     "Una",
     "Tres",
@@ -13291,7 +13291,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Con qué periodicidad se verifica el etilómetro?",
+   "q": "Según la Ley 32/2014, ¿con qué periodicidad se verifica el etilómetro?",
    "o": [
     "Bienal",
     "Anual",
@@ -13310,7 +13310,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Es obligatoria la verificación del etilómetro tras su reparación o modificación?",
+   "q": "Según la Ley 32/2014, ¿es obligatoria la verificación del etilómetro tras su reparación o modificación?",
    "o": [
     "Solo en etilómetros de más de diez años",
     "Solo si lo pide el juez",
@@ -13328,7 +13328,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Cuántas veces se realiza el control de comercialización y puesta en servicio del etilómetro?",
+   "q": "Según la Ley 32/2014, ¿cuántas veces se realiza el control de comercialización y puesta en servicio del etilómetro?",
    "o": [
     "Cada año, junto a la verificación periódica",
     "Una sola vez, antes de su comercialización",
@@ -13346,7 +13346,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Con qué instrumento se realizan las pruebas oficiales de detección de alcohol?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿con qué instrumento se realizan las pruebas oficiales de detección de alcohol?",
    "o": [
     "Con alcoholímetro desechable",
     "Con prueba de equilibrio",
@@ -13364,7 +13364,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "Si el estado del conductor le impide soplar, ¿quién decide el tipo de prueba?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), si el estado del conductor le impide soplar, ¿quién decide el tipo de prueba?",
    "o": [
     "El juez de guardia siempre",
     "El personal facultativo",
@@ -13382,7 +13382,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Quién puede pedir u ordenar un análisis de sangre u orina como alternativa a la prueba de aire?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿quién puede pedir u ordenar un análisis de sangre u orina como alternativa a la prueba de aire?",
    "o": [
     "El interesado o la autoridad judicial",
     "El jefe de la unidad policial",
@@ -13400,7 +13400,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 2,
-   "q": "¿Qué intervalo mínimo debe pasar entre la primera y la segunda prueba con etilómetro?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué intervalo mínimo debe pasar entre la primera y la segunda prueba con etilómetro?",
    "o": [
     "5 minutos",
     "30 minutos",
@@ -13418,7 +13418,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Cuándo procede la segunda prueba con etilómetro?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿cuándo procede la segunda prueba con etilómetro?",
    "o": [
     "Si la primera es positiva o hay síntomas evidentes",
     "Solo en accidentes",
@@ -13436,7 +13436,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Qué resultado tiene valor probatorio en las pruebas de alcoholemia?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué resultado tiene valor probatorio en las pruebas de alcoholemia?",
    "o": [
     "El del alcoholímetro",
     "El de la segunda prueba",
@@ -13454,7 +13454,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Puede hacerse la segunda prueba con un etilómetro distinto del primero?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿puede hacerse la segunda prueba con un etilómetro distinto del primero?",
    "o": [
     "Sí, si está homologado",
     "No, siempre el mismo",
@@ -13472,7 +13472,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿De qué derecho debe informarse al interesado durante las pruebas?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿de qué derecho debe informarse al interesado durante las pruebas?",
    "o": [
     "De su derecho a llamar antes a su aseguradora",
     "De su derecho a negarse a soplar sin consecuencias",
@@ -13490,7 +13490,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿A quién corresponde determinar las drogas que afectan a la conducción y las pruebas para su detección?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿a quién corresponde determinar las drogas que afectan a la conducción y las pruebas para su detección?",
    "o": [
     "A las aseguradoras",
     "A los municipios",
@@ -13508,7 +13508,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Qué tipo de análisis se usa preferentemente en la prueba de contraste?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué tipo de análisis se usa preferentemente en la prueba de contraste?",
    "o": [
     "Prueba de aire espirado",
     "Análisis de sangre",
@@ -13526,7 +13526,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Quién paga la prueba de contraste si el resultado es positivo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿quién paga la prueba de contraste si el resultado es positivo?",
    "o": [
     "La Administración",
     "El Ayuntamiento",
@@ -13544,7 +13544,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Qué ocurre con el coste de la prueba de contraste si el resultado es negativo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué ocurre con el coste de la prueba de contraste si el resultado es negativo?",
    "o": [
     "Lo paga el agente",
     "Lo paga igualmente el interesado",
@@ -13562,7 +13562,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 5,
-   "q": "¿A quién debe comunicar el personal sanitario los resultados de la prueba de contraste?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿a quién debe comunicar el personal sanitario los resultados de la prueba de contraste?",
    "o": [
     "Solo al interesado, que decide si lo comunica a terceros",
     "Solo a la aseguradora del vehículo para la gestión del siniestro",
@@ -13580,7 +13580,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Qué debe consignar el agente en las diligencias tras un resultado positivo?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿qué debe consignar el agente en las diligencias tras un resultado positivo?",
    "o": [
     "Solo el resultado numérico de la segunda prueba realizada",
     "El procedimiento seguido, los datos del etilómetro y las advertencias",
@@ -13598,7 +13598,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Dónde se traslada al conductor que se niega injustificadamente a la prueba de alcoholemia?",
+   "q": "Según el Código Penal, ¿dónde se traslada al conductor que se niega injustificadamente a la prueba de alcoholemia?",
    "o": [
     "A su domicilio",
     "Al Juzgado de Guardia",
@@ -13634,7 +13634,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Cuándo puede inmovilizarse el vehículo tras un positivo en alcohol o drogas?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿cuándo puede inmovilizarse el vehículo tras un positivo en alcohol o drogas?",
    "o": [
     "Siempre, en todos los casos de resultado positivo",
     "Nunca, solo procede la denuncia del conductor",
@@ -13652,7 +13652,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 5,
-   "q": "¿Hasta cuándo dura la inmovilización por positivo en alcoholemia?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿hasta cuándo dura la inmovilización por positivo en alcoholemia?",
    "o": [
     "Durante 48 horas desde el resultado positivo",
     "Durante 24 horas desde el resultado positivo",
@@ -13670,7 +13670,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Quién paga los gastos del depósito del vehículo inmovilizado por alcoholemia?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿quién paga los gastos del depósito del vehículo inmovilizado por alcoholemia?",
    "o": [
     "La empresa concesionaria de la grúa",
     "La aseguradora del vehículo inmovilizado",
@@ -13688,7 +13688,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Cuántos puntos se pierden con una tasa superior a 0,25 y hasta 0,50 mg/l en aire espirado?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pierden con una tasa superior a 0,25 y hasta 0,50 mg/l en aire espirado?",
    "o": [
     "2 puntos",
     "6 puntos",
@@ -13706,7 +13706,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Cuántos puntos se pierden con una tasa superior a 0,50 mg/l en aire espirado?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pierden con una tasa superior a 0,50 mg/l en aire espirado?",
    "o": [
     "4 puntos",
     "12 puntos",
@@ -13724,7 +13724,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Qué calificación administrativa tiene conducir con tasa de alcohol superior a la permitida?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación administrativa tiene conducir con tasa de alcohol superior a la permitida?",
    "o": [
     "No es infracción administrativa",
     "Leve",
@@ -13742,7 +13742,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿A partir de qué tasa en aire espirado es delito conducir?",
+   "q": "Según el Código Penal, ¿a partir de qué tasa en aire espirado es delito conducir?",
    "o": [
     "Superior a 0,60 mg/l",
     "Superior a 0,25 mg/l",
@@ -13760,7 +13760,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿A partir de qué tasa en sangre es delito conducir?",
+   "q": "Según el Código Penal, ¿a partir de qué tasa en sangre es delito conducir?",
    "o": [
     "Superior a 0,8 g/l",
     "Superior a 2 g/l",
@@ -13778,7 +13778,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Qué pena de prisión tiene la negativa a someterse a las pruebas de alcohol o drogas?",
+   "q": "Según el Código Penal, ¿qué pena de prisión tiene la negativa a someterse a las pruebas de alcohol o drogas?",
    "o": [
     "De 1 a 2 años",
     "De 2 a 4 años",
@@ -13796,7 +13796,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Depende el delito de negativa a las pruebas de que el conductor estuviera intoxicado?",
+   "q": "Según el Código Penal, ¿depende el delito de negativa a las pruebas de que el conductor estuviera intoxicado?",
    "o": [
     "Solo si hubo accidente",
     "No",
@@ -13814,7 +13814,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Existe una tasa permitida para la presencia de drogas en la conducción?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿existe una tasa permitida para la presencia de drogas en la conducción?",
    "o": [
     "Sí, la misma tasa que para el alcohol",
     "Sí, 0,5 ng/ml para todas las sustancias",
@@ -13832,7 +13832,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Cómo se realiza principalmente la prueba de detección de drogas en carretera?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cómo se realiza principalmente la prueba de detección de drogas en carretera?",
    "o": [
     "Mediante análisis de sangre en el acto",
     "Mediante etilómetro",
@@ -13850,7 +13850,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "Si no puede hacerse la prueba salival de drogas, ¿qué puede hacerse?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), si no puede hacerse la prueba salival de drogas, ¿qué puede hacerse?",
    "o": [
     "Nada, se deja continuar la marcha",
     "Una prueba de aire espirado",
@@ -13868,7 +13868,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Qué calificación tiene conducir con presencia de drogas en el organismo?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué calificación tiene conducir con presencia de drogas en el organismo?",
    "o": [
     "Muy grave",
     "Solo delito",
@@ -13886,7 +13886,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 3,
-   "q": "¿Cuántos puntos se pierden por conducir con presencia de drogas?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿cuántos puntos se pierden por conducir con presencia de drogas?",
    "o": [
     "8 puntos",
     "4 puntos",
@@ -13904,7 +13904,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 4,
-   "q": "¿Son las reglas de obligación de someterse a las pruebas de drogas las mismas que las de alcoholemia?",
+   "q": "Según el Reglamento General de Circulación (RD 1428/2003), ¿son las reglas de obligación de someterse a las pruebas de drogas las mismas que las de alcoholemia?",
    "o": [
     "No, solo en accidentes",
     "No, solo afectan a profesionales",
@@ -13958,7 +13958,7 @@
    "tema": 32,
    "b": "ALCOHOL",
    "n": 6,
-   "q": "¿Qué multa tiene conducir superando el doble de la tasa de alcohol permitida?",
+   "q": "Según la Ley de Tráfico y Seguridad Vial (RDLeg 6/2015), ¿qué multa tiene conducir superando el doble de la tasa de alcohol permitida?",
    "o": [
     "500 euros",
     "6.000 euros",
