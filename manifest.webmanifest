@@ -16,9 +16,9 @@
     { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
 "screenshots": [
-  { "src": "screenshots/Captura1.png", "sizes": "1902x877", "type": "image/png", "form_factor": "wide" },
-  { "src": "screenshots/Captura2.png", "sizes": "1920x881", "type": "image/png", "form_factor": "wide" },
-  { "src": "screenshots/Captura3.jpeg", "sizes": "1080x1920", "type": "image/png", "form_factor": "narrow" }
+  { "src": "screenshots/Captura1.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide" },
+  { "src": "screenshots/Captura2.png", "sizes": "1920x1080", "type": "image/png", "form_factor": "wide" },
+  { "src": "screenshots/Captura3.jpeg", "sizes": "921x2048", "type": "image/png", "form_factor": "narrow" }
 ],
 "categories": ["education", "games"]
 }
