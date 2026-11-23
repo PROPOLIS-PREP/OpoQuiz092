@@ -23,11 +23,11 @@ El código está en el repositorio:
 
 ## Correo con Make + Gmail (activo)
 
-Ya está configurado y probado (22/11/2026): escenario «Patrulla 092 - enviar impugnación» en Make y secreto `MAKE_WEBHOOK_URL` en Supabase. Si hubiera que rehacerlo:
+Ya está configurado y probado (22/11/2026): escenario «Patrullan2 - enviar impugnación» en Make y secreto `MAKE_WEBHOOK_URL` en Supabase. Si hubiera que rehacerlo:
 
 La función avisa a un webhook de Make y un escenario envía el correo desde la propia cuenta de Gmail (sin dominio ni Resend).
 
-1. En Make hay un webhook «Patrulla 092 - impugnaciones» y un escenario que lo recibe y envía el correo con Gmail. Requiere conectar la cuenta de Gmail en Make.
+1. En Make hay un webhook «Patrullan2 - impugnaciones» y un escenario que lo recibe y envía el correo con Gmail. Requiere conectar la cuenta de Gmail en Make.
 2. En Supabase: **App PROPOLIS → Edge Functions → Secrets → Add new secret**: `MAKE_WEBHOOK_URL` = la URL del webhook (empieza por `https://hook.eu1.make.com/`).
 3. Listo. Si Make falla y existe `RESEND_API_KEY`, se intenta con Resend.
 

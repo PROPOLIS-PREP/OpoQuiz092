@@ -7874,7 +7874,7 @@ const NOMBRES=["Lucía M.","Sergio R.","Marta G.","Dani P.","Irene S.","Álvaro 
 /* =====================================================================
    PERFIL (se guarda en el dispositivo; si no se puede, vive en memoria)
    ===================================================================== */
-const LS="patrulla092_perfil_v7";
+const LS="patrullan2_perfil_v7", LS_ANTIGUA="patrulla092_perfil_v7"; /* la clave antigua se lee una vez para no perder partidas */
 const azar=a=>a[Math.floor(Math.random()*a.length)];
 const pad=n=>String(n).padStart(2,"0");
 const barajar=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
@@ -7886,7 +7886,7 @@ function perfilNuevo(){return{nombre:"Tú",monedas:150,trofeos:0,sobres:1,estrel
 let perfil=perfilNuevo();
 function guardar(){try{localStorage.setItem(LS,JSON.stringify(perfil))}catch(e){}}
 function cargar(){
-  try{const t=localStorage.getItem(LS);if(t)perfil=Object.assign(perfilNuevo(),JSON.parse(t))}catch(e){}
+  try{const t=localStorage.getItem(LS)||localStorage.getItem(LS_ANTIGUA);if(t)perfil=Object.assign(perfilNuevo(),JSON.parse(t))}catch(e){}
   /* v12: las figuras antiguas pasan a vehículo (agente→patrulla, canino→investigación, caballería→furgón) */
   const MIGRA={f_agente:"f_coche",f_perro:"f_investigacion",f_caballo:"f_furgon"};
   perfil.inv=[...new Set(perfil.inv.map(k=>MIGRA[k]||k))];
@@ -9717,7 +9717,7 @@ function turnoBot(){
    se abre el correo del jugador con el mensaje ya escrito (enlace mailto). ---- */
 const IMPUGNAR_A="oposicionesmunicipal@gmail.com";
 const IMPUGNAR_URL="https://auuotygakkegogssmaoy.supabase.co/functions/v1/impugnar";
-const VERSION_APP="v14.14";
+const VERSION_APP="v14.15";
 async function enviarImpugnacion(q,idx,nivel,motivo,trampa){
   const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),9000);
   try{

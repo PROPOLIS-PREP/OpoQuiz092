@@ -27,7 +27,7 @@ const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 
 async function huella(req: Request) {
   const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "desconocida";
-  const datos = new TextEncoder().encode(ip + (Deno.env.get("HASH_SAL") || "patrulla092"));
+  const datos = new TextEncoder().encode(ip + (Deno.env.get("HASH_SAL") || "patrullan2"));
   const h = await crypto.subtle.digest("SHA-256", datos);
   return Array.from(new Uint8Array(h)).map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 32);
 }

@@ -1,5 +1,10 @@
 # Cambios
 
+## v14.15 · 2026-11-23 · Nombre Patrullan2 en todas partes
+
+- La clave de guardado pasa a `patrullan2_perfil_v7`; si existe la antigua (`patrulla092_perfil_v7`) se lee una vez, así nadie pierde su partida.
+- El escenario y el webhook de Make se renombran a «Patrullan2 - …», y la documentación y la función `impugnar` usan el nombre nuevo. Solo queda «OpoQuiz092» en la ruta del repositorio y en los textos históricos de este registro.
+
 ## v14.14 · 2026-11-23 · Nombre Patrullan2 y 25 segundos por pregunta
 
 - La app pasa a llamarse **Patrullan2** (título, pantalla de inicio, icono instalado, manifiesto, reglas, README y comentarios). Se mantienen la clave de guardado `patrulla092_perfil_v7`, para no perder las partidas, y la ruta `OpoQuiz092/` del repositorio.
