@@ -1,4 +1,4 @@
-# Reglas de Patrulla 092
+# Reglas de Patrullan2
 
 ## Preparación
 

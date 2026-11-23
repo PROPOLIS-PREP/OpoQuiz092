@@ -1,8 +1,8 @@
-// Service worker de Patrulla 092: hace la app instalable y la deja abrir sin conexión.
+// Service worker de Patrullan2: hace la app instalable y la deja abrir sin conexión.
 // Estrategia: la página y los iconos se sirven de la red y se guardan; sin red, se usa lo guardado.
 // Si cambias algo que deba renovarse a la fuerza, sube VERSION.
-const VERSION = "v14.13";
-const CACHE = "patrulla092-" + VERSION;
+const VERSION = "v14.14";
+const CACHE = "patrullan2-" + VERSION;
 const BASE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -11,7 +11,7 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys()
-    .then(ks => Promise.all(ks.filter(k => k.startsWith("patrulla092-") && k !== CACHE).map(k => caches.delete(k))))
+    .then(ks => Promise.all(ks.filter(k => (k.startsWith("patrulla092-") || k.startsWith("patrullan2-")) && k !== CACHE).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 

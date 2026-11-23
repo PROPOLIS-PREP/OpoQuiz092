@@ -1,5 +1,10 @@
 # Cambios
 
+## v14.14 · 2026-11-23 · Nombre Patrullan2 y 25 segundos por pregunta
+
+- La app pasa a llamarse **Patrullan2** (título, pantalla de inicio, icono instalado, manifiesto, reglas, README y comentarios). Se mantienen la clave de guardado `patrulla092_perfil_v7`, para no perder las partidas, y la ruta `OpoQuiz092/` del repositorio.
+- El tiempo base por pregunta es de 25 segundos en todos los niveles (antes bajaba de 21 a 15 según el nivel). Radar, examen y comodines siguen sumando o restando sobre esa base.
+
 ## v14.13 · 2026-11-22 · Descripciones de las unidades del álbum
 
 - 17 emblemas que tenían una descripción de una línea («Emblema de…») pasan a tener 20-30 palabras con las funciones de la unidad, basadas en la memoria CAF 2018 de la Dirección General de la Policía Municipal, el anexo de funciones FE-PM 02-2024 y la revista del Cuerpo. Grupo Cosmos, Respuesta Temprana, Relaciones Internacionales y la Unidad Móvil no aparecen descritos en esas fuentes: su texto es genérico y conviene revisarlo.

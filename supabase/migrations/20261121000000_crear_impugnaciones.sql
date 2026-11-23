@@ -1,4 +1,4 @@
--- Impugnaciones de preguntas enviadas desde el juego (Patrulla 092).
+-- Impugnaciones de preguntas enviadas desde el juego (Patrullan2).
 -- Proyecto de Supabase: App PROPOLIS (auuotygakkegogssmaoy). Aplicada el 21/11/2026.
 -- Solo escribe la Edge Function "impugnar" (con la clave de servicio); desde fuera no se puede leer ni escribir.
 create table public.impugnaciones (
@@ -20,7 +20,7 @@ create table public.impugnaciones (
   version_app   text check (char_length(version_app) <= 40)
 );
 
-comment on table public.impugnaciones is 'Impugnaciones de preguntas del juego Patrulla 092. Escribe solo la Edge Function impugnar.';
+comment on table public.impugnaciones is 'Impugnaciones de preguntas del juego Patrullan2. Escribe solo la Edge Function impugnar.';
 
 create index impugnaciones_creada_idx on public.impugnaciones (creada desc);
 create index impugnaciones_origen_idx on public.impugnaciones (origen_hash, creada desc);

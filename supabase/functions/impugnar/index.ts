@@ -1,4 +1,4 @@
-// Recibe una impugnación de pregunta desde el juego Patrulla 092, la guarda en public.impugnaciones
+// Recibe una impugnación de pregunta desde el juego Patrullan2, la guarda en public.impugnaciones
 // y la envía por correo con Resend.
 // Es pública (el juego no tiene usuarios): se protege con validación, un campo trampa y límites por hora.
 // Desplegada en App PROPOLIS con verify_jwt = false.
@@ -101,7 +101,7 @@ Deno.serve(async (req) => {
       method: "POST",
       headers: { Authorization: `Bearer ${clave}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: `Patrulla 092 <${Deno.env.get("IMPUGNAR_DE") || "onboarding@resend.dev"}>`,
+        from: `Patrullan2 <${Deno.env.get("IMPUGNAR_DE") || "onboarding@resend.dev"}>`,
         to: [Deno.env.get("IMPUGNAR_A") || "oposicionesmunicipal@gmail.com"],
         subject: `Impugnación de pregunta ${pregunta_id}`,
         text: cuerpo,

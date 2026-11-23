@@ -1,4 +1,4 @@
-# Patrulla 092
+# Patrullan2
 
 Juego de preguntas y tablero para opositores a Policía Municipal de Madrid, en la línea de Preguntados y Monopoly. Cada jugador contesta test del temario, tira el dado y avanza por un plano de Madrid para ganar puntos, ascender en el escalafón y reclutar efectivos.
 
