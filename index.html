@@ -133,6 +133,7 @@ h3.sec span{font-family:var(--body);font-size:11.5px;font-weight:800}
 .marca-pie .sello small{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#CFE2F5}
 .marca-pie .sello small.pre{font-size:9px;line-height:1;color:var(--prop-oro)}
 .marca-pie .sello a{color:inherit;text-decoration:none}
+.marca-pie .copyright{max-width:340px;margin:9px auto 0;padding:0 12px;font-size:10px;line-height:1.35;font-weight:700;color:#fff;opacity:.78;text-shadow:0 1px 2px #02143a}
 .fila-sel label{font-family:var(--display);font-size:15px;width:84px}
 .fila-sel .ops-sel{display:flex;gap:6px;flex:1}
 .config-ascenso{align-items:flex-start}
@@ -8406,16 +8407,18 @@ function pintarTop(){
   $("#badge-album").textContent=perfil.sobres||"";
 }
 /* ---- marca ----
-   Único sitio donde vive el nombre de la academia. Si cambia de nombre o de dominio,
+   Único sitio donde vive el nombre de la plataforma y el aviso de derechos. Si cambia de nombre o de dominio,
    se toca aquí (y, si hay logotipo oficial, se pone en "logo" como ruta o data-URI). */
-const MARCA={nombre:"PROPOLIS",lema:"Academia de oposiciones",web:"",logo:""};
+const MARCA={nombre:"PROPOLIS",lema:"Plataforma de oposiciones a Policía Municipal",web:"",logo:"",
+  copyright:"© 2026 PROPOLIS · Todos los derechos reservados. Patrullan2 y su contenido (preguntas, textos, diseño, ilustraciones y código) son obra de PROPOLIS. Queda prohibida su copia, reproducción o distribución sin autorización."};
 function pintarMarca(){
   const p=$("#marca-pie");
   if(p){
     const cab=MARCA.logo?`<img src="${escapar(MARCA.logo)}" alt="${escapar(MARCA.nombre)}">`:`<b>${escapar(MARCA.nombre)}</b>`;
     const lema=`<small>${escapar(MARCA.lema)}</small>`;
     const cuerpo=`<small class="pre">un juego de</small>${cab}<i></i>${lema}`;
-    p.innerHTML=`<div class="sello">${MARCA.web?`<a href="${escapar(MARCA.web)}" target="_blank" rel="noopener">${cuerpo}</a>`:cuerpo}</div>`;
+    p.innerHTML=`<div class="sello">${MARCA.web?`<a href="${escapar(MARCA.web)}" target="_blank" rel="noopener">${cuerpo}</a>`:cuerpo}</div>`+
+      (MARCA.copyright?`<p class="copyright">${escapar(MARCA.copyright)}</p>`:"");
   }
 }
 function pintarInicio(){
@@ -9717,7 +9720,7 @@ function turnoBot(){
    se abre el correo del jugador con el mensaje ya escrito (enlace mailto). ---- */
 const IMPUGNAR_A="oposicionesmunicipal@gmail.com";
 const IMPUGNAR_URL="https://auuotygakkegogssmaoy.supabase.co/functions/v1/impugnar";
-const VERSION_APP="v14.15";
+const VERSION_APP="v14.16";
 async function enviarImpugnacion(q,idx,nivel,motivo,trampa){
   const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),9000);
   try{

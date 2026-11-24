@@ -76,13 +76,13 @@ node --test tests/*.test.mjs     # tests
 - Avatar: imitación vectorial del estilo de referencia, no ilustración pintada.
 - Los edificios del tablero conservan algunos restos de la peana en los bordes.
 - Pruebas: se han jugado partidas simuladas completas en escritorio y móvil emulado. Falta probar en un móvil real el arrastre con el dedo y el zoom.
-- Pendiente: el nombre definitivo de la academia y el dominio, para sustituir el sello provisional en `MARCA` (al principio del bloque de la pantalla de inicio).
+- Pendiente: el nombre definitivo de la plataforma y el dominio, para sustituir el sello provisional en `MARCA` (al principio del bloque de la pantalla de inicio).
 - Pendiente: revisar las 110 preguntas marcadas `revisar` (15 legislativo, 8 policial, 8 tráfico, 20 penal, 7 ordenanzas y 52 social) y anotar las fechas del BOE en `docs/fuentes.md`.
 
 ## Marca
 
-El nombre, el lema y el logotipo de la academia viven en la constante `MARCA` del código. Para cambiarlos, edita ese bloque. Los colores de marca están en las variables `--prop-*` del tema.
+El nombre, el lema, el logotipo y el aviso de derechos de la plataforma viven en la constante `MARCA` del código. Para cambiarlos, edita ese bloque. Los colores de marca están en las variables `--prop-*` del tema.
 
 ## Licencia
 
-Uso privado. Todos los derechos reservados a PROPOLIS mientras no se indique lo contrario.
+© 2026 PROPOLIS. Todos los derechos reservados. El código, las preguntas y sus explicaciones, los textos, el diseño y las ilustraciones de Patrullan2 son obra de PROPOLIS y no pueden copiarse, reproducirse, distribuirse ni usarse para otros fines sin autorización por escrito. El aviso aparece al pie del menú principal.

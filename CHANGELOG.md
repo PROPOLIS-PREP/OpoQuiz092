@@ -1,5 +1,10 @@
 # Cambios
 
+## v14.16 · 2026-11-24 · Aviso de derechos y lema de plataforma
+
+- Al pie del menú principal aparece el aviso «© 2026 PROPOLIS · Todos los derechos reservados…» (constante `MARCA.copyright`) y el README recoge la licencia.
+- El lema del sello pasa de «Academia de oposiciones» a «Plataforma de oposiciones a Policía Municipal», porque PROPOLIS no es una academia.
+
 ## v14.15 · 2026-11-23 · Nombre Patrullan2 en todas partes
 
 - La clave de guardado pasa a `patrullan2_perfil_v7`; si existe la antigua (`patrulla092_perfil_v7`) se lee una vez, así nadie pierde su partida.
