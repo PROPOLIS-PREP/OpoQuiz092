@@ -3,10 +3,10 @@
 //
 // Pasos:
 //   1. Comprueba el token y obtiene el usuario.
-//   2. prepare_account_deletion(uid): sale de sus grupos (cede la propiedad si hace falta) y pasa
-//      el anfitrión de sus partidas sin terminar a otro jugador.
+//   2. prepare_account_deletion(uid): sale de sus grupos (cede la propiedad si hace falta), abandona sus
+//      partidas en curso (las pierde) y pasa el anfitrión de sus partidas en el lobby a otro jugador.
 //   3. auth.admin.deleteUser(uid): al borrarse auth.users se borran en cascada profiles, friendships,
-//      group_members, match_players y match_answers.
+//      group_members, group_invitations, match_players y match_answers.
 //
 // Variables (las pone Supabase automáticamente): SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY.
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
