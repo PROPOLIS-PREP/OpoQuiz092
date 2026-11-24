@@ -53,7 +53,15 @@
   }
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  const util = { GENERICO_REGISTRO, validarNombre, validarCorreo, validarClave, traducirError, esc, RE_NOMBRE };
+  // URL de la página «Cuenta verificada» a la que vuelve el enlace del correo (emailRedirectTo).
+  // Se calcula desde la página actual (index.html, en la raíz de la app), así vale igual en localhost y en GitHub Pages.
+  // Abierto como archivo (file://) no hay URL válida: se devuelve undefined y Supabase usa su Site URL.
+  function urlConfirmado(loc) {
+    if (!loc || !/^https?:$/.test(loc.protocol)) return undefined;
+    return new URL("online/confirmado.html", loc.href).href;
+  }
+
+  const util = { GENERICO_REGISTRO, urlConfirmado, validarNombre, validarCorreo, validarClave, traducirError, esc, RE_NOMBRE };
   if (typeof module !== "undefined" && module.exports) { module.exports = util; return; }
 
   // ───────────────────────────── Cliente y estado
@@ -188,10 +196,7 @@ ${volver}`;
     st.ocupado = false; pintarSiVisible();
   }
 
-  function urlVuelta() {
-    // el enlace del correo vuelve a esta misma página (si es http/https); si no, Supabase usa la Site URL
-    return /^https?:$/.test(location.protocol) ? location.origin + location.pathname : undefined;
-  }
+  function urlVuelta() { return urlConfirmado(location); }
 
   async function registrar(correo, clave, clave2) {
     const err = validarCorreo(correo) || validarClave(clave, clave2, true);
