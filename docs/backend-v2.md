@@ -247,7 +247,7 @@ El backend está listo para el modelo lockstep, pero el juego todavía no lo usa
 2. **Cargar el banco.** Copia la clave secreta en `SUPABASE_SECRET_KEY` de `.env.local` y ejecuta `node tools/cargar-preguntas.mjs`. Carga 6254 preguntas activas; las marcadas `revisar` se quedan fuera. Es idempotente: repítelo cuando cambie el banco.
 3. **Desplegar `delete_account`.**
 4. **Revisar los advisors** de seguridad y rendimiento.
-5. **Generar los tipos** en `supabase/database.types.ts`.
+5. **Generar los tipos** en `src/lib/supabase-types.ts`.
 
 ## Cómo probar
 
