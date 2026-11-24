@@ -218,10 +218,12 @@ ${volver}`;
     e.preventDefault();
     const v = id => (document.getElementById(id) || {}).value || "";
     const tipo = f.dataset.olForm;
-    if (tipo !== "nombre") st.correo = v("ol-correo").trim();
-    if (tipo === "registro") ejecutar(() => registrar(st.correo, v("ol-clave"), v("ol-clave2")));
-    else if (tipo === "entrar") ejecutar(() => entrar(st.correo, v("ol-clave")));
-    else if (tipo === "nombre") ejecutar(() => guardarNombre(v("ol-nombre")));
+    // Leer los campos AHORA: ejecutar() vuelve a pintar el formulario (botón «Un momento…») y eso vacía los inputs.
+    const correo = v("ol-correo").trim(), clave = v("ol-clave"), clave2 = v("ol-clave2"), nombre = v("ol-nombre");
+    if (tipo !== "nombre") st.correo = correo;
+    if (tipo === "registro") ejecutar(() => registrar(correo, clave, clave2));
+    else if (tipo === "entrar") ejecutar(() => entrar(correo, clave));
+    else if (tipo === "nombre") ejecutar(() => guardarNombre(nombre));
   });
 
   document.addEventListener("click", e => {
