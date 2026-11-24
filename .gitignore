@@ -1,1 +1,6 @@
 __pycache__/
+
+# Credenciales locales (v2 online): nunca al repositorio
+.env
+.env.local
+.env.*.local
