@@ -922,6 +922,7 @@ body.en-cuartel .panel{color:var(--tinta)}
       </div>
     </div>
     <div class="centrar" style="padding:6px 0 4px"><span class="jugar-w"><button class="btn verde grande brillo pulsa" data-act="jugar"><span class="play-icon" aria-hidden="true">▶</span>Jugar</button><i class="chispa" style="left:-18px;top:-6px;animation-delay:.4s"></i><i class="chispa oro" style="right:-16px;bottom:2px;animation-delay:1.6s"></i></span></div>
+    <div class="centrar" style="padding:4px 0 2px"><button class="btn azul" data-act="ir" data-id="cuenta" style="width:100%">🌐 Jugar online / Cuenta</button></div>
   </div>
   <div id="inicio-extra"></div>
   <div class="marca-pie" id="marca-pie"></div>
@@ -955,6 +956,12 @@ body.en-cuartel .panel{color:var(--tinta)}
 <section id="s-amigos" class="pant pant-cuartel oculto">
   <h2 class="tit trazo"><svg class="cuartel-icono" viewBox="0 0 32 32" width="32" height="32" stroke="#102956" stroke-width="1.4" aria-hidden="true"><circle cx="23" cy="10" r="5" fill="#b4dbff"/><path d="M18 26v-5a6 6 0 0 1 12 0v5Z" fill="#518fd0"/><circle cx="12" cy="10" r="6" fill="#f5faff"/><path d="M3 28v-6a9 9 0 0 1 18 0v6Z" fill="#8acbff"/><path d="M7 23c0-3 2-5 5-5" stroke="#e9f7ff" fill="none" stroke-linecap="round"/></svg>Amigos y grupo</h2>
   <div id="amigos-cont"></div>
+</section>
+
+<!-- ================= CUENTA ONLINE (v2) ================= -->
+<section id="s-cuenta" class="pant pant-cuartel oculto">
+  <h2 class="tit trazo">Cuenta online</h2>
+  <div id="cuenta-cont"></div>
 </section>
 
 <!-- ================= AVATAR ================= -->
@@ -8395,7 +8402,7 @@ function ir(sec){
     if(antes!==sec){void s.offsetWidth;s.classList.add(a<0||b<0?"entra":b>a?"entra-der":"entra-izq")}
   }
   if(fuera){revisarFechas();pintarTop()}
-  ({inicio:pintarInicio,retos:pintarRetos,album:pintarAlbum,liga:pintarLiga,amigos:pintarAmigos,avatar:pintarAvatar}[sec]||(()=>{}))();
+  ({inicio:pintarInicio,retos:pintarRetos,album:pintarAlbum,liga:pintarLiga,amigos:pintarAmigos,avatar:pintarAvatar,cuenta:pintarCuenta}[sec]||(()=>{}))();
   window.scrollTo&&window.scrollTo(0,0);
 }
 function pintarTop(){
@@ -9903,6 +9910,28 @@ $("#selector-ascenso").addEventListener("keydown",e=>{
 });
 
 /* =====================================================================
+   CUENTA ONLINE (v2): supabase-js y online/*.js se cargan solo al entrar en «Jugar online / Cuenta»,
+   así el juego local funciona igual sin conexión y sin cuenta.
+   ===================================================================== */
+let promesaOnline=null;
+function cargarOnline(){
+  if(promesaOnline)return promesaOnline;
+  const uno=src=>new Promise((ok,ko)=>{const t=document.createElement("script");t.src=src;t.onload=ok;t.onerror=()=>ko(new Error(src));document.head.appendChild(t)});
+  promesaOnline=uno("lib/supabase.min.js").then(()=>uno("online/config.js")).then(()=>uno("online/cuenta.js")).then(()=>CuentaOnline.listo)
+    .catch(e=>{promesaOnline=null;throw e});
+  return promesaOnline;
+}
+function pintarCuenta(){
+  const c=$("#cuenta-cont");
+  if(!window.CuentaOnline)c.innerHTML='<div class="tarjeta centrar">Conectando…</div>';
+  cargarOnline().then(()=>CuentaOnline.pintar(c)).catch(()=>{
+    c.innerHTML='<div class="tarjeta centrar"><b>Sin conexión</b><p>Para la cuenta online hace falta internet. El juego local sigue disponible.</p><button class="btn azul peq" data-act="cuenta-reintentar">Reintentar</button> <button class="btn sec peq" data-act="ir" data-id="inicio">Volver al Cuartel</button></div>';
+  });
+}
+/* vuelta desde el enlace de confirmación del correo: abrir la cuenta para que supabase-js lea la sesión */
+if(/[#&](access_token|error_description)=/.test(location.hash))setTimeout(()=>ir("cuenta"),0);
+
+/* =====================================================================
    CLICS DEL CUARTEL
    ===================================================================== */
 document.addEventListener("click",e=>{
@@ -9910,6 +9939,7 @@ document.addEventListener("click",e=>{
   const id=b.dataset.id;
   switch(b.dataset.act){
     case"ir":ir(id);break;
+    case"cuenta-reintentar":pintarCuenta();break;
     case"nj":cfg.nJug=+id;pintarInicio();break;
     case"meta":cfg.rondas=+id;pintarInicio();break;
     case"modo":cfg.modo=id;pintarInicio();break;

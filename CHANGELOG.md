@@ -1,5 +1,12 @@
 # Cambios
 
+## v2 en desarrollo · fase 1 · 2026-11-24 · Cuenta online
+
+- Botón «Jugar online / Cuenta» en la tarjeta del Cuartel, debajo de «Jugar». Abre la pantalla `s-cuenta`: crear cuenta o entrar con correo y contraseña, aviso de confirmar el correo (con «Reenviar correo»), perfil con el nombre de agente editable (3-20 letras sin tilde, números o _) y cerrar sesión.
+- `lib/supabase.min.js` (supabase-js 2.45.4), `online/config.js` (URL y clave publicable de patrullan2-dev) y `online/cuenta.js` se cargan solo al entrar en esa pantalla: el juego local no los necesita y funciona igual sin conexión y sin cuenta.
+- El service worker guarda en caché los archivos nuevos (versión `v14.16-online1`).
+- Prueba `tests/cuenta.sql` (con ROLLBACK) para my_profile y el cambio de nombre.
+
 ## v14.16 · 2026-11-24 · Aviso de derechos y lema de plataforma
 
 - Al pie del menú principal aparece el aviso «© 2026 PROPOLIS · Todos los derechos reservados…» (constante `MARCA.copyright`) y el README recoge la licencia.
