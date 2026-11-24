@@ -26,7 +26,14 @@
     if (registro && c !== String(repetida || "")) return "Las dos contraseñas no coinciden.";
     return "";
   }
+  const GENERICO_REGISTRO = "No se ha podido crear la cuenta. Revisa la contraseña e inténtalo de nuevo.";
+  // ¿El rechazo de contraseña de Supabase es solo por longitud? (AuthWeakPasswordError trae reasons: length, characters, pwned)
+  function soloLongitud(e, msg) {
+    if (Array.isArray(e.reasons) && e.reasons.length) return e.reasons.every(r => r === "length");
+    return /at least \d+ characters/i.test(msg);
+  }
   // Traduce los errores de Supabase (Auth y PostgREST) a mensajes para el jugador.
+  // e.contexto === "registro" (lo pone registrar()): lo que no tenga mensaje propio usa el genérico de registro.
   function traducirError(e) {
     if (!e) return "";
     const cod = String(e.code || ""), msg = String(e.message || e);
@@ -36,16 +43,17 @@
     if (cod === "email_not_confirmed" || /email not confirmed/i.test(msg))
       return "Aún no has confirmado tu correo. Revisa tu bandeja de entrada (y la de spam).";
     if (cod === "user_already_exists" || /already registered/i.test(msg)) return "Ya hay una cuenta con ese correo. Inicia sesión.";
-    if (cod === "weak_password" || /password should be/i.test(msg)) return `La contraseña debe tener al menos ${MIN_CLAVE} caracteres.`;
+    if (cod === "weak_password" || /password should/i.test(msg))
+      return soloLongitud(e, msg) ? `La contraseña debe tener al menos ${(msg.match(/at least (\d+) characters/i) || [])[1] || MIN_CLAVE} caracteres.` : GENERICO_REGISTRO;
     if (cod === "email_address_invalid" || /invalid format|email address .* invalid/i.test(msg)) return "Ese correo no es válido.";
     if (/rate limit|too many|429/i.test(cod + " " + msg) || e.status === 429) return "Demasiados intentos. Espera unos minutos y vuelve a probar.";
     if (cod === "signup_disabled") return "El registro está cerrado en este momento.";
     if (/failed to fetch|network|load failed/i.test(msg)) return "No hay conexión con el servidor. Comprueba tu internet.";
-    return "No se pudo completar. Inténtalo de nuevo.";
+    return e.contexto === "registro" ? GENERICO_REGISTRO : "No se pudo completar. Inténtalo de nuevo.";
   }
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
-  const util = { validarNombre, validarCorreo, validarClave, traducirError, esc, RE_NOMBRE };
+  const util = { GENERICO_REGISTRO, validarNombre, validarCorreo, validarClave, traducirError, esc, RE_NOMBRE };
   if (typeof module !== "undefined" && module.exports) { module.exports = util; return; }
 
   // ───────────────────────────── Cliente y estado
@@ -189,7 +197,7 @@ ${volver}`;
     const err = validarCorreo(correo) || validarClave(clave, clave2, true);
     if (err) { aviso(err); return; }
     const { data, error } = await sb.auth.signUp({ email: correo, password: clave, options: { emailRedirectTo: urlVuelta() } });
-    if (error) throw error;
+    if (error) { error.contexto = "registro"; throw error; }
     if (data.session) return; // confirmación desactivada: ya hay sesión (onAuthStateChange pinta el perfil)
     st.enviado = correo;
   }
