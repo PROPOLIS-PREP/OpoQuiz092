@@ -278,3 +278,11 @@ El backend está listo para el modelo lockstep, pero el juego todavía no lo usa
 
 - **El bloqueado puede saber que le han bloqueado.** La política de lectura de `friendships` deja ver la fila a los dos participantes, así que quien ha sido bloqueado ve la fila `status = blocked` con el otro como `requester_id`. La app la oculta (`online/amigos.js`, `clasificar`), pero se puede leer con la clave publicable y una sesión. Arreglo posible: que la política excluya las filas `blocked` cuando `addressee_id = auth.uid()`.
 - **Avisos Realtime al borrar filas de `friendships`.** Los `DELETE` de Realtime no pasan por RLS: llegan a todos los suscritos a la tabla, solo con el `id` de la fila (sin datos personales). El cliente recarga sus listas al recibir cualquier cambio. Con muchos usuarios conectados es ineficiente. Alternativas: canales privados con Realtime Authorization o avisos por canal de usuario (broadcast) desde las RPC.
+
+### Reglas del lobby que hoy solo controla la app (subfase 3a, `online/partidas.js`)
+
+Pendientes de llevar al backend antes de la beta: quien llame a las RPC directamente con la clave publicable y una sesión puede saltárselas.
+
+- **Máximo 3 partidas simultáneas por jugador** (en sala de espera o en curso). `create_match` y `join_match` no lo comprueban; `tests/partidas.sql` deja constancia de que el backend permite una cuarta.
+- **Solo partidas contra amigos.** La app solo deja crear una partida eligiendo a un amigo y avisa si en la sala hay alguien que no lo es, pero `join_match` acepta a cualquiera que tenga el código. Arreglo posible: que `join_match` exija amistad aceptada con el anfitrión (y quizá un `invited_user` en `matches`).
+- **Cierre de salas de espera de más de 30 minutos.** Lo hace cada cliente al abrir la lista (sale con `leave_match`; la sala se borra cuando no queda nadie). Si nadie la abre, la sala sigue en la base de datos. Arreglo posible: una tarea programada (pg_cron) que borre las salas `lobby` antiguas.
