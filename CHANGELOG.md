@@ -1,5 +1,12 @@
 # Cambios
 
+## v2 en desarrollo · fase 2 · 2026-11-25 · Amigos online
+
+- En «Cuenta online», pestañas «Perfil» y «Amigos». En Amigos: buscar un agente por su nombre exacto, ver su ficha y enviarle solicitud; listas de Recibidas (aceptar o rechazar), Amigos (eliminar), Enviadas (cancelar) y Bloqueados (desbloquear); «Bloquear» desde la ficha, con confirmación.
+- Las listas se actualizan solas con Realtime (cambios en `friendships`).
+- Nuevo `online/amigos.js`, cargado solo al entrar en la cuenta; la pantalla de amigos del modo local no cambia. Service worker `v14.16-online4`.
+- Prueba `tests/amigos.sql` (con ROLLBACK).
+
 ## v2 en desarrollo · fase 1 · 2026-11-24 · Cuenta online
 
 - Botón «Jugar online / Cuenta» en la tarjeta del Cuartel, debajo de «Jugar». Abre la pantalla `s-cuenta`: crear cuenta o entrar con correo y contraseña, aviso de confirmar el correo (con «Reenviar correo»), perfil con el nombre de agente editable (3-20 letras sin tilde, números o _) y cerrar sesión.

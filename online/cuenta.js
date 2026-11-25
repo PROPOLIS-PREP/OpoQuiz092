@@ -79,6 +79,7 @@
     msg: "", msgTipo: "", // aviso bajo el formulario ("error" | "ok")
     ocupado: false,
     correo: "",          // se conserva al cambiar de pestaña
+    pestana: "perfil",   // con sesión: "perfil" | "amigos"
   };
 
   function aviso(txt, tipo) { st.msg = txt || ""; st.msgTipo = tipo || "error"; }
@@ -92,7 +93,11 @@
   sb.auth.onAuthStateChange((evento, sesion) => {
     const antes = st.sesion && st.sesion.user.id;
     st.sesion = sesion;
-    if (!sesion) { st.perfil = null; pintarSiVisible(); return; }
+    if (!sesion) {
+      st.perfil = null; st.pestana = "perfil";
+      if (window.AmigosOnline) window.AmigosOnline.desmontar();
+      pintarSiVisible(); return;
+    }
     if (sesion.user.id !== antes || !st.perfil) {
       // fuera del callback: supabase-js no recomienda llamar a la API dentro de él
       setTimeout(() => cargarPerfil().catch(e => aviso(traducirError(e))).finally(pintarSiVisible), 0);
@@ -166,7 +171,14 @@ ${volver}`;
     const p = st.perfil, u = st.sesion.user;
     if (!p) return `<div class="tarjeta centrar">${st.msg ? htmlMsg() : "Cargando tu perfil…"}
       <div class="cuenta-botones"><button class="btn azul peq" data-ol="recargar">Reintentar</button><button class="btn rojo peq" data-ol="salir">Cerrar sesión</button></div></div>${volver}`;
-    return `
+    const pies = `<div class="cuenta-botones"><button class="btn rojo peq" data-ol="salir"${dis()}>Cerrar sesión</button><button class="btn sec peq" data-act="ir" data-id="inicio">Volver al Cuartel</button></div>`;
+    const am = st.pestana === "amigos";
+    const pestanas = `<div class="seg" role="tablist">
+  <button class="${am ? "" : "on"}" data-ol="pestana" data-id="perfil" role="tab" aria-selected="${!am}">Perfil</button>
+  <button class="${am ? "on" : ""}" data-ol="pestana" data-id="amigos" role="tab" aria-selected="${am}">Amigos</button>
+</div>`;
+    if (am) return `${pestanas}<div id="ol-amigos"></div>${pies}`;
+    return `${pestanas}
 <div class="tarjeta">
   <h3 style="margin:0 0 6px">Tu perfil online</h3>
   <div class="cuenta-dato"><span>Nombre de agente</span><b>${esc(p.username)}</b></div>
@@ -180,12 +192,14 @@ ${volver}`;
     <div class="cuenta-botones"><button class="btn azul peq" type="submit"${dis()}>${st.ocupado ? "Guardando…" : "Guardar nombre"}</button></div>
   </form>
 </div>
-<div class="cuenta-botones"><button class="btn rojo peq" data-ol="salir"${dis()}>Cerrar sesión</button><button class="btn sec peq" data-act="ir" data-id="inicio">Volver al Cuartel</button></div>`;
+${pies}`;
   }
 
   function pintar(cont) {
     st.cont = cont;
     cont.innerHTML = st.sesion ? vistaPerfil() : st.enviado ? vistaConfirmar() : vistaAcceso();
+    const el = document.getElementById("ol-amigos");
+    if (el && window.AmigosOnline) { window.AmigosOnline.montar(sb, st.sesion.user.id); window.AmigosOnline.pintar(el); }
   }
 
   // ───────────────────────────── Acciones
@@ -256,6 +270,8 @@ ${volver}`;
       ejecutar(async () => { const { error } = await sb.auth.signOut(); if (error) throw error; st.modo = "entrar"; });
     } else if (que === "recargar") {
       ejecutar(cargarPerfil);
+    } else if (que === "pestana") {
+      st.pestana = b.dataset.id === "amigos" ? "amigos" : "perfil"; aviso(""); pintarSiVisible();
     }
   });
 

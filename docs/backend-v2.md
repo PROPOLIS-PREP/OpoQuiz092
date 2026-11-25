@@ -273,3 +273,8 @@ El backend está listo para el modelo lockstep, pero el juego todavía no lo usa
 - **Limpieza** de partidas del lobby abandonadas y de partidas terminadas antiguas.
 - **Realtime Authorization** para canales de Presence privados.
 - **Proyecto de producción:** crearlo cuando la v2 esté lista y aplicarle la misma migración.
+
+### Revisar antes de la beta (detectados en la fase 2 del cliente, amigos)
+
+- **El bloqueado puede saber que le han bloqueado.** La política de lectura de `friendships` deja ver la fila a los dos participantes, así que quien ha sido bloqueado ve la fila `status = blocked` con el otro como `requester_id`. La app la oculta (`online/amigos.js`, `clasificar`), pero se puede leer con la clave publicable y una sesión. Arreglo posible: que la política excluya las filas `blocked` cuando `addressee_id = auth.uid()`.
+- **Avisos Realtime al borrar filas de `friendships`.** Los `DELETE` de Realtime no pasan por RLS: llegan a todos los suscritos a la tabla, solo con el `id` de la fila (sin datos personales). El cliente recarga sus listas al recibir cualquier cambio. Con muchos usuarios conectados es ineficiente. Alternativas: canales privados con Realtime Authorization o avisos por canal de usuario (broadcast) desde las RPC.
