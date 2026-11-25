@@ -1,0 +1,17 @@
+Confirma tu cuenta en Patrullan2
+
+¡Bienvenido o bienvenida a Patrullan2!
+
+Para terminar de crear tu cuenta, confirma tu correo. Así podrás jugar online, añadir amigos y competir con otros opositores.
+
+Por seguridad, el enlace caduca pasado un tiempo y solo se puede usar una vez.
+
+Confirmar mi correo:
+{{ .ConfirmationURL }}
+
+Si el enlace no se abre al pulsarlo, cópialo y pégalo en tu navegador.
+
+Si no has creado una cuenta en Patrullan2, puedes ignorar este correo: no se activará nada.
+
+--
+Patrullan2 · PROPOLIS. Aplicación independiente de estudio, no afiliada a ninguna administración pública.
