@@ -7886,6 +7886,15 @@ const LS="patrullan2_perfil_v7", LS_ANTIGUA="patrulla092_perfil_v7"; /* la clave
 const azar=a=>a[Math.floor(Math.random()*a.length)];
 const pad=n=>String(n).padStart(2,"0");
 const barajar=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+/* Azar de las DECISIONES de la partida (dado, ruleta, nivel, cartas, preguntas y bots).
+   En el modo local es Math.random: la partida se juega exactamente igual que siempre (iniciar() lo restablece).
+   En una partida online, fijarSemilla(seed) lo cambia por semilla(String(seed)), con la semilla del servidor,
+   para que todos los móviles tomen las mismas decisiones. Los efectos visuales, los tiempos, el 50/50, la liga
+   simulada, el álbum y los avatares siguen con Math.random. */
+let rngJuego=Math.random;
+const azarJ=a=>a[Math.floor(rngJuego()*a.length)];
+const barajarJ=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(rngJuego()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+function fijarSemilla(s){rngJuego=semilla(String(s))}  /* solo desde una partida online */
 function avAzar(){return{agente:azar(["agente_m","agente_f"]),fondo:azar(["retiro","granvia","alcala","atardecer","cibeles","kio"]),gorra:azar(["plato","plato","boina","boina","lana","casco_bici","casco_moto","intervencion"]),extra:azar(["nada","nada","nada","bigote","pinganillo","silbato","radio","bufanda","gafas"]),marco:azar(["basico","basico","bronce","plata","platino","marco_damero","laureles"]),figura:azar(["f_coche","f_coche","f_bmwe","f_moto","f_motoe","f_triciclo","f_cross","f_bici","f_segway","f_camuflado","f_grua","f_pala","f_investigacion","f_furgon","f_dron"]),base:azar(["b_clasica","b_clasica","b_damero","b_adoquin","b_cesped","b_neon","b_oro"])}}
 function perfilNuevo(){return{nombre:"Tú",monedas:150,trofeos:0,sobres:1,estrellas:0,cromos:{},
   avatar:{agente:"agente_m",fondo:"retiro",gorra:"plato",extra:"nada",marco:"basico",figura:"f_coche",base:"b_clasica"},inv:["agente_m","agente_f","retiro","plato","boina","nada","basico","f_coche","b_clasica"],
@@ -8542,7 +8551,7 @@ function abrirSobre(){
   if(perfil.sobres<=0)return;
   perfil.sobres--;const sal=[];
   for(let i=0;i<3;i++){
-    const c=sacarPesada(CROMOS.map(c=>({c,peso:[0,6,3,1][c.r]}))).c;
+    const c=sacarPesada(CROMOS.map(c=>({c,peso:[0,6,3,1][c.r]})),Math.random).c;
     const nuevo=!perfil.cromos[c.id];
     perfil.cromos[c.id]=(perfil.cromos[c.id]||0)+1;
     if(!nuevo)perfil.monedas+=15;
@@ -8678,7 +8687,7 @@ const FX0=()=>({mult:1,tiempo:0,nivel:0,pista:false,facil:false,dado:0});
 const puntosBase=n=>[0,50,75,110,155,210,280,360][n];
 const segundosBase=()=>25;  /* tiempo base por pregunta, igual en todos los niveles */
 const dots=n=>"●".repeat(n)+"○".repeat(7-n);
-const azarJugador=()=>azar(estado.jugadores);
+const azarJugador=()=>azarJ(estado.jugadores);
 const jugActual=()=>estado.jugadores[estado.turno];
 const todos=fn=>estado.jugadores.forEach(fn);
 const lider=()=>[...estado.jugadores].sort((a,b)=>b.puntos-a.puntos)[0];
@@ -8696,15 +8705,15 @@ function perderRacha(p){
   p.racha=0;pintarHud();return true;
 }
 /* nivel de las preguntas de casilla: al azar y con la misma probabilidad (salvo carta de evento que fije el nivel) */
-const nivelAzar=()=>estado.mod.nivelFijo||1+Math.floor(Math.random()*7);
+const nivelAzar=()=>estado.mod.nivelFijo||1+Math.floor(rngJuego()*7);
 function sortearNivel(cat){
   if(estado.mod.nivelFijo)return estado.mod.nivelFijo;
-  const w=PESOS_NIVEL[cat];let r=Math.random()*w.reduce((a,b)=>a+b,0);
+  const w=PESOS_NIVEL[cat];let r=rngJuego()*w.reduce((a,b)=>a+b,0);
   for(let i=0;i<w.length;i++){if((r-=w[i])<0)return i+1}
   return 1;
 }
-function sacarPesada(mazo){
-  const total=mazo.reduce((a,e)=>a+e.peso,0);let r=Math.random()*total;
+function sacarPesada(mazo,rnd=rngJuego){  /* el álbum le pasa Math.random */
+  const total=mazo.reduce((a,e)=>a+e.peso,0);let r=rnd()*total;
   for(const e of mazo){if((r-=e.peso)<0)return e}
   return mazo[0];
 }
@@ -8725,7 +8734,9 @@ function fxChips(f){
 /* =====================================================================
    PARTIDA · arranque y pintado
    ===================================================================== */
-function iniciar(modo){
+function iniciar(modo,op={}){
+  /* partida local: el azar de siempre. Una partida online pasa {semilla}: se fija ANTES de la primera decisión */
+  if(op.semilla!=null)fijarSemilla(op.semilla);else rngJuego=Math.random;
   estado.modo=modo;
   let nombres,avs;
   if(modo==="grupo"&&perfil.grupo){
@@ -9103,8 +9114,8 @@ function faseDespliegue(p){
   if(p.bot){
     estado.fase="carta";
     let txt=`${p.nombre} reserva sus efectivos para más adelante.`,efe="Sin despliegue";
-    if(Math.random()<.7){
-      const o=unidadesDe(p)[0],i=validaDespliegue(p.pos)&&Math.random()<.6?p.pos:azar(casillasLibres());
+    if(rngJuego()<.7){
+      const o=unidadesDe(p)[0],i=validaDespliegue(p.pos)&&rngJuego()<.6?p.pos:azarJ(casillasLibres());
       desplegarEn(p,o.t,i);
       txt=`${p.nombre} destina efectivos a ${TABLERO[i].n}.`;efe=`${nombreUnidad(o.t)}: +${TIERS[o.t].bono.toFixed(1)}`;
     }
@@ -9241,7 +9252,7 @@ function ofrecerExamen(p,origen){
   const pre=origen==="vuelta"?"Vuelta completa al distrito: puedes presentarte sin esperar a la convocatoria. ":"";
   const cont=()=>origen==="ronda"?procesarColaAscenso():seguir();
   if(p.bot){
-    const va=Math.random()<(.85-p.cat*.08);
+    const va=rngJuego()<(.85-p.cat*.08);
     panelCarta({tipo:"tribunal",sello:`Tribunal · ${p.nombre}`,color:"var(--naranja)",tit:`Ascenso a ${sig.n}`,
       txt:pre+(va?`${p.nombre} reúne los ${sig.req} méritos y se presenta al examen.`:`${p.nombre} reúne los méritos pero deja pasar la ocasión.`),
       extra:balanceAscenso(p),botones:[{txt:"Continuar",fn:()=>{cerrarCarta();va?empezarExamen(p,origen):cont()}}]});
@@ -9358,7 +9369,7 @@ const Ruleta={
 $("#velo-ruleta").addEventListener("click",()=>{if(Ruleta.parar)Ruleta.parar()});
 function preguntaDeTurno(p){
   if(estado.fase!=="esperaPregunta")return;
-  const bloque=azar(CLAVES_BLOQUE);
+  const bloque=azarJ(CLAVES_BLOQUE);
   if(p.bot){lanzarPregunta(p,{turno:true,bloque});return}
   estado.fase="ruleta";accionBoton("Girando…",true);
   Ruleta.girar(bloque,()=>lanzarPregunta(p,{turno:true,bloque}));
@@ -9378,7 +9389,7 @@ function finTurnoSinTirada(p){
 function tirar(){
   if(estado.fase!=="esperaTirada")return;
   estado.fase="tirando";accionBoton("Tirando…",true);
-  const p=jugActual(),base=1+Math.floor(Math.random()*6),mod=p.fx.dado,n=Math.max(1,base+mod);
+  const p=jugActual(),base=1+Math.floor(rngJuego()*6),mod=p.fx.dado,n=Math.max(1,base+mod);
   sfx.dado();
   FX.dado(base,()=>{
     p.fx.dado=0;
@@ -9471,7 +9482,7 @@ function servicioDistrito(p,bloque){
   /* bloque aún sin preguntas: la pregunta extra sale de cualquier otro */
   const nom=bloqueVacio(bloque)?`otro bloque (${BLOQUES[bloque].nombre} aún no tiene preguntas)`:BLOQUES[bloque].nombre;
   if(p.bot){
-    const acepta=Math.random()<.4;
+    const acepta=rngJuego()<.4;
     panelCarta({tipo:"distrito",sello,color:col,tit:TABLERO[p.pos].n,
       txt:acepta?`${p.nombre} pide una pregunta extra de ${nom}.`:`${p.nombre} declina la pregunta extra de ${nom} y se guarda la racha.`,
       botones:[{txt:"Continuar",fn:()=>{cerrarCarta();acepta?lanzarPregunta(p,{bloque,extra:true}):seguir()}}]});
@@ -9511,7 +9522,7 @@ function comisaria(p){
 /* ---- casillas de sanción ---- */
 function cartaSancion(p){
   estado.fase="carta";
-  const c=azar(SANCIONES),quita=Math.min(p.puntos,Math.max(c.min,Math.round(p.puntos*c.pct/10)*10));
+  const c=azarJ(SANCIONES),quita=Math.min(p.puntos,Math.max(c.min,Math.round(p.puntos*c.pct/10)*10));
   panelCarta({tipo:"sancion",sello:`Sanción · ${p.nombre}`,color:"var(--rojo)",tit:c.e+" "+c.t,txt:c.x,
     efecto:()=>{sumar(p,-quita);p.sancionado+=quita;return quita?`−${quita} puntos`:"No había puntos que perder"},
     botones:[{txt:"Asumido",fn:seguir}]});
@@ -9588,8 +9599,8 @@ function accionRecolocar(p,c,sello){
   }
   if(p.bot){
     let r="Sin cambios";
-    if(libre&&Math.random()<.6){
-      const d=azar(mios);delete estado.destacamentos[d.casilla];
+    if(libre&&rngJuego()<.6){
+      const d=azarJ(mios);delete estado.destacamentos[d.casilla];
       estado.destacamentos[p.pos]={jug:p.id,tier:d.tier,bono:d.bono};pintarDestacamentos();
       r=`${TIERS[d.tier].n} de ${TABLERO[d.casilla].n} a ${TABLERO[p.pos].n}`;
     }
@@ -9638,7 +9649,7 @@ function elegirPregunta(bloque,nivel,distrito=false){
     /* el nivel sorteado; si ya no quedan de ese nivel, el más cercano (a igual distancia, el más fácil) */
     const dist=q=>Math.abs(q.n-nivel)*2+(q.n>nivel?1:0);
     const mejor=Math.min(...disponibles.map(({q})=>dist(q)));
-    const el=azar(disponibles.filter(({q})=>dist(q)===mejor));
+    const el=azarJ(disponibles.filter(({q})=>dist(q)===mejor));
     marcarUsada(el.i);
     return el.q;
   }
@@ -9648,7 +9659,7 @@ function elegirPregunta(bloque,nivel,distrito=false){
   if(!pool.length){estado.usadas=[];pool=idx.filter(x=>x.q.n===nivel)}
   if(!pool.length)pool=idx;
   if(bloque){const f=pool.filter(x=>x.q.b===bloque);if(f.length)pool=f}
-  const el=azar(pool);marcarUsada(el.i);return el.q;
+  const el=azarJ(pool);marcarUsada(el.i);return el.q;
 }
 /* 50/50: con 4 opciones quita dos falsas; con 3, quita una (siempre quedan dos para elegir) */
 const indicesFalsos=q=>q.o.map((_,i)=>i).filter(i=>i!==q.a);
@@ -9715,11 +9726,11 @@ function usarComodin(tipo){
 }
 function turnoBot(){
   const {q,nivel,total,fx}=preguntaActiva;
-  const acierta=Math.random()<Math.max(.28,.78-nivel*.06+(fx&&fx.pista?.18:0));
+  const acierta=rngJuego()<Math.max(.28,.78-nivel*.06+(fx&&fx.pista?.18:0));
   const espera=Math.max(1500,Math.min(total*1000-1200,2600+Math.random()*2600));
   luego(()=>{
     if(!preguntaActiva||preguntaActiva.respondida)return;
-    if(acierta)responder(q.a);else responder(azar(indicesFalsos(q)));
+    if(acierta)responder(q.a);else responder(azarJ(indicesFalsos(q)));
   },espera);
 }
 /* ---- impugnar una pregunta: se envía a la función "impugnar" de Supabase (proyecto App PROPOLIS),

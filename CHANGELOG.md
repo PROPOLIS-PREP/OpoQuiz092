@@ -1,5 +1,9 @@
 # Cambios
 
+## v2 en desarrollo · subfase 3b · 2026-11-25 · Motor con semilla
+
+- Las decisiones de la partida (dado, bloque de la ruleta, nivel, cartas de evento, regalos, acciones y sanciones, jugador afectado por un evento, pregunta elegida y decisiones de los bots) usan `rngJuego`. En el modo local es `Math.random`, así que la partida se juega exactamente igual; `iniciar(modo, {semilla})` (vía `fijarSemilla`) lo cambia por `semilla(String(seed))` para las partidas online. Siguen con `Math.random` el 50/50, los efectos visuales, los tiempos, la liga simulada, el álbum, los avatares y los amigos simulados.
+
 ## v2 en desarrollo · subfase 3a · 2026-11-25 · Lobby de partidas online
 
 - Pestaña «Partidas» en «Cuenta online»: crear una partida 1 contra 1 para un amigo (modo «Por puntos», 5, 10 o 15 turnos), unirse con el código de 5 letras, sala de espera en tiempo real, salir o abandonar y lista de mis partidas. Máximo 3 a la vez y las salas se cierran a los 30 minutos (controlado en la app). «Empezar» aún desactivado: el tablero online llega en la próxima versión. Nuevo `online/partidas.js` y prueba `tests/partidas.sql`; service worker `v14.16-online5`.
