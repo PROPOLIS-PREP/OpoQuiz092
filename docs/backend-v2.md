@@ -87,6 +87,8 @@ Al acabar los turnos, cada motor envía su resultado con `report_result(match, {
 - **si coinciden,** se guardan los puntos y gana el que más tiene (`completed`; con empate, sin ganador);
 - **si no coinciden,** la partida termina como `disputed`.
 
+`report_result` (y los abandonos, por `private.forfeit`) **solo cierra la partida**: `completed`, `forfeit` o `disputed`. No escribe puntos del marcador, monedas ni logros; eso llega en la 3d (ver «Modelo de la 3d y la 3e»).
+
 ## Credenciales
 
 - `.env.local`, en `.gitignore`, lleva `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY`, que son públicas y pueden ir al frontend.
@@ -236,7 +238,7 @@ Se despliega con `verify_jwt = true`.
 El backend está listo para el modelo lockstep, pero el juego todavía no lo usa. Para la v2 hace falta:
 1. **Azar con semilla.** Sustituir `Math.random()` del motor (dado, ruleta, cartas, `sortearNivel`, `sacarPesada`, `barajar`, `azar`…) por un generador con semilla. Las animaciones pueden seguir con `Math.random()` porque no cambian el estado.
 2. **Separar decisiones de efectos.** Cada decisión de un jugador se convierte en una jugada (`submit_action`), y el motor solo avanza al aplicar jugadas del registro, también las propias.
-3. **Preguntas del servidor.** El motor pide la pregunta con `draw_question` y aplica el `resultado` del registro en lugar de comprobar la respuesta en local. Las preguntas del archivo no viajan en la versión online.
+3. **Preguntas del servidor.** El motor pide la pregunta con `draw_question` y aplica el `resultado` del registro en lugar de comprobar la respuesta en local. De momento el `index.html` sigue llevando el banco local con las respuestas (ver «Pendientes»).
 4. **Comodines.** El 50/50 y el Chivatazo usan `use_lifeline('mitad')`, y el +10 s usa `use_lifeline('tiempo')`.
 5. **Pantallas nuevas:** inicio de sesión, perfil y nombre de usuario, amigos, grupos, crear o unirse a una partida con código, sala de espera, latido, abandono y resultado final.
 6. **Sin bots** en las partidas online: los rivales controlados por la máquina del modo local no participan.
@@ -266,8 +268,80 @@ El backend está listo para el modelo lockstep, pero el juego todavía no lo usa
   Termina en `ROLLBACK`, así que no deja datos. Si todo va bien, el último aviso es «TODOS LOS TESTS OK».
 - **Datos:** `node tools/cargar-preguntas.mjs --seco` cuenta las preguntas sin cargar nada.
 
+## Plan de subfases del cliente online
+
+- **3c · Partida online.** Tablero, turnos, semilla (`iniciar(modo, {semilla})`) y tiempo del servidor. Al terminar, `report_result` solo cierra la partida. No da monedas, puntos del marcador, trofeos ni progreso de retos, y no escribe en el perfil local: en una partida online, `hito()`, `regMax()` y el reparto de premios de `finPartida()` no se ejecutan.
+- **3d · Final de partida.** Marcador de puntos, monedas de la partida, pantalla de fin y tratamiento de las partidas `disputed`.
+- **3e · Perfil online.** Avatar visible para todos, accesorios comprados con monedas del servidor, ligas por tramos del marcador y logros online calculados en el servidor.
+
+El modo local no cambia: sus monedas, trofeos, retos y liga simulada siguen en el móvil. La única conexión es el traspaso de monedas, una sola vez, al entrar en la cuenta por primera vez.
+
+## Modelo de la 3d y la 3e (propuesta, sin migraciones)
+
+Todas las tablas llevan RLS. El cliente solo lee; escriben únicamente funciones `security definer` del servidor.
+
+### Configuración
+
+- **`public.game_config`**: `clave` (texto, clave primaria), `valor` (jsonb), `updated_at`. La leen los usuarios con sesión y se cambia desde el panel, sin tocar código. Valores previstos:
+  - `puntos_1v1`: `{"ganador": 30, "perdedor": -5}`. El abandono cuenta como derrota.
+  - `ligas`: `[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 100}, {"nombre": "Plata", "desde": 200}, {"nombre": "Oro", "desde": 300}]`.
+  - `monedas`: cantidades y límites, **pendientes** (ver abajo).
+
+### Marcador de puntos (3d)
+
+Sin Elo y sin temporadas: un marcador permanente que empieza en 0.
+
+- **`public.scores`**: `user_id` (clave primaria), `puntos` (entero, empieza en 0), `partidas`, `ganadas`, `perdidas`, `updated_at`. La leen los usuarios con sesión (clasificación general).
+- **`public.score_changes`**: `match_id`, `user_id`, `antes`, `despues`, `delta`, `resultado` (`win`, `loss`, `draw`), `created_at`. Clave primaria `(match_id, user_id)`: una partida nunca puntúa dos veces. Cada jugador lee los suyos.
+- **Cuándo se aplica:** desde `private.finish_match`, por donde pasan todos los finales.
+  - `completed` con ganador: el ganador suma `ganador` (+30) y el perdedor suma `perdedor` (−5).
+  - `forfeit`: quien abandona, como perdedor; el rival, como ganador.
+  - `disputed`: no cambia nada.
+- **Saldo mínimo 0:** `despues = greatest(0, antes + delta)` y `delta` guarda el cambio real (**propuesta pendiente de confirmar**).
+- **Pendientes:** empate en 1 contra 1 (`completed` sin ganador) y partidas de 3 o más jugadores. No se implementan hasta decidirlo.
+
+### Ligas (3e)
+
+Calculadas a partir de `scores.puntos` con los tramos de `game_config.ligas`, sin tabla propia: una función `public.liga_de(puntos)` o una vista de clasificación con `username`, `puntos` y `liga`. Tramos: Sin liga 0–99, Bronce 100–199, Plata 200–299, Oro desde 300.
+
+### Monedas (3d)
+
+Una sola cuenta de monedas por usuario, en el servidor. Se ganan jugando en local y en online.
+
+- **`public.wallets`**: `user_id` (clave primaria), `monedas` (entero, `check (monedas >= 0)`), `traspaso_local_at` (timestamptz, null hasta el traspaso), `updated_at`. Solo la lee su dueño.
+- **`public.coin_movements`**: `id`, `user_id`, `delta`, `motivo` (`traspaso_local`, `partida_online`, `partida_local`, `compra`, `logro`, `ajuste`), `match_id`, `item_id`, `origen` (texto libre del cliente, por ejemplo el id de la partida local), `created_at`. Es el libro de movimientos; `wallets.monedas` es su suma ya calculada.
+  - Índice único `(user_id, match_id)` cuando `motivo = 'partida_online'`: una partida online se cobra una sola vez.
+- **Traspaso de las monedas locales (una sola vez):**
+  - La función `import_local_coins(p_monedas)` comprueba que `wallets.traspaso_local_at` es null, apunta un movimiento `traspaso_local` y pone `traspaso_local_at = now()` en la misma transacción.
+  - Además, un índice único `(user_id)` cuando `motivo = 'traspaso_local'` impide un segundo traspaso aunque se llame dos veces a la vez.
+  - En el móvil, el perfil local guarda `traspasoCuenta = <user_id>` para no volver a ofrecerlo y deja de mostrar el saldo local como propio.
+  - Si el usuario entra desde un segundo móvil, ese móvil ya no puede traspasar: el servidor lo rechaza porque la cuenta ya tiene traspaso.
+- **Cantidades y límites: pendientes.** Las columnas y los motivos quedan previstos, sin valores: cuánto da una partida online, cuánto una local, tope del traspaso y límite diario.
+
+### Logros (3e)
+
+Dos conjuntos separados: los **locales** siguen en el móvil sin cambios, y los **online** viven en el servidor.
+
+- **`public.achievements`**: `id`, `nombre`, `descripcion`, `metrica` (por ejemplo `victorias_online`), `objetivo`, `premio_monedas` (puede ser 0), `activo`.
+- **`public.user_progress`**: `user_id`, `metrica`, `valor`, con clave primaria `(user_id, metrica)`. Solo métricas online: ganar X en local y ganar X en online son progresos distintos, y el progreso local sigue en el móvil.
+- **`public.user_achievements`**: `user_id`, `achievement_id`, `conseguido_at`.
+- Los concede el servidor (desde `private.finish_match` y `buy_item`). El cliente no puede concederlos.
+- **Lista inicial: pendiente.**
+
+### Avatar y accesorios (3e)
+
+- **`profiles.avatar_config`** (jsonb): la combinación de piezas (`agente`, `fondo`, `gorra`, `extra`, `marco`, `figura`, `base`). Se añade al permiso de lectura de columnas de `profiles` para los usuarios con sesión y **no** al de escritura: solo se cambia con `set_avatar`. `avatar_url` deja de usarse.
+- **`public.items`**: catálogo con `id` (el de la pieza en el juego), `tipo`, `precio` (0 = gratis), `activo`. Lo leen los usuarios con sesión.
+- **`public.user_items`**: `user_id`, `item_id`, `adquirido_at`, con clave primaria `(user_id, item_id)`. Solo lo lee su dueño.
+- **`set_avatar(config)`:** comprueba que cada pieza existe y es gratuita (`precio = 0`) o está en `user_items`, y guarda `avatar_config`. El cliente lo llama al entrar en la cuenta (sube el avatar del móvil) y en cada cambio. Si alguna pieza no es válida, se rechaza y se avisa.
+- **`buy_item(item_id)`:** en una sola transacción comprueba saldo, que la pieza esté activa y que no la tenga ya; apunta el movimiento `compra` y añade la pieza a `user_items`.
+- **Piezas básicas gratis** (las del perfil local nuevo): **propuesta pendiente de confirmar**.
+
 ## Pendientes y decisiones abiertas
 
+- **Hecho (3c): migración `20261125120000_resultado_segundos_restantes.sql`, aplicada en `patrullan2-dev` el 2026-11-25.** `private.close_question` añade a la jugada `resultado` los `segundos_restantes` en décimas (`round(floor(extract(epoch from (closes_at − now())) * 10) / 10, 1)`, 0 en `timeout`), para que los dos motores calculen los mismos puntos de la partida que el modo local. Probada con rollback (acierto con 12,37 s → 12.3; +10 s → 35.0; plazo vencido → 0) y `tests/rls.sql` sigue pasando.
+- **Jugador inactivo pero conectado (3d).** Si el rival no juega pero sigue enviando latidos, la partida espera. En la 3c la app solo avisa de que el rival lleva tiempo sin jugar.
+- **Respuestas en el cliente (antes de la beta pública).** El `index.html` lleva el banco local con la respuesta correcta de cada pregunta, así que en una partida online se podría buscar el enunciado y ver la respuesta. Se acepta mientras las partidas sean entre amigos. Antes de la beta pública habrá que servir el modo online sin respuestas en el cliente.
 - **Partidas `disputed`:** qué hacer cuando los motores no coinciden en el resultado. Hoy terminan sin ganador.
 - **Reconexión:** un jugador que vuelve antes de 60 s sigue jugando; tiene que releer el registro y reconstruir el estado.
 - **Limpieza** de partidas del lobby abandonadas y de partidas terminadas antiguas.
