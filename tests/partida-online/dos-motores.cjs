@@ -112,17 +112,23 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
   const perfilAntes = { A: leer(A, PERFIL), B: leer(B, PERFIL) };
   const personaB = { dormida: false };
   const actA = crearPersona(A, srv, semilla * 3 + 1), actB = crearPersona(B, srv, semilla * 5 + 2, personaB);
-  let pasos = 0, vistaAjena = 0, reclamado = false;
+  let pasos = 0, reclamado = false, malVista = 0;
+  const vistas = new Set(), intentadas = new Set();
   while (pasos < limite) {
     await vaciar();
     const acabado = srv.S.status === "finished" && !A.ctx.PartidaOnline.actual() && (!B.ctx.PartidaOnline.actual() || desconectaB);
     if (acabado) break;
     if (roto(A) || roto(B)) break;
-    // quien no responde no ve la pregunta abierta del rival
+    // quien no responde ve la misma pregunta en solo lectura, sin la opción correcta, y no puede responderla
     const cur = srv.S.current != null ? srv.S.qs[srv.S.current] : null;
     if (cur && !cur.closed) {
       const otro = cur.player === UA ? B : A;
-      if (otro.porIdGet("velo-preg").classList.contains("on") && otro.porIdGet("preg-texto").textContent === cur.q.q) vistaAjena++;
+      if (otro.porIdGet("velo-preg").classList.contains("on") && otro.porIdGet("preg-texto").textContent === cur.q.q) {
+        vistas.add(srv.S.current);
+        const v = leer(otro, "preguntaActiva?{a:preguntaActiva.q.a,o:JSON.stringify(preguntaActiva.q.o),rem:!!preguntaActiva.p.remoto,pie:document.getElementById('preg-pie').innerHTML}:null");
+        if (!v || v.a !== -1 || v.o !== JSON.stringify(cur.q.o) || !v.rem || !/Tu rival está respondiendo/.test(v.pie)) malVista++;
+        if (!intentadas.has(srv.S.current)) { intentadas.add(srv.S.current); otro.ctx.responderOnline(cur.q.a); }   // intenta responder: no debe salir nada
+      }
     }
     if (abandonaB != null && srv.S.log.length >= abandonaB && srv.S.status === "in_progress" && !personaB.dormida) {
       personaB.dormida = true; B.ctx.eval ? 0 : 0; vm.runInContext("estado.online.abandonar()", B.ctx);
@@ -139,7 +145,8 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
     break;
   }
   const perfilIntacto = leer(A, PERFIL) === perfilAntes.A && leer(B, PERFIL) === perfilAntes.B;
-  return { A, B, srv, pasos, vistaAjena, reclamado, reloj, rotoA: roto(A), rotoB: roto(B), perfilIntacto };
+  return { A, B, srv, pasos, reclamado, reloj, rotoA: roto(A), rotoB: roto(B), perfilIntacto,
+    vistas: vistas.size, preguntas: Object.keys(srv.S.qs).length, malVista, respuestasAjenas: srv.S.respuestasAjenas || 0 };
 }
 
 if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; return; }
@@ -147,7 +154,8 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
   // ── 1. partidas completas
   console.log("── 1. Partidas completas 1 contra 1 (dos motores, servidor falso)");
   const semillas = [101, 202, 303, 404, 505, 606];
-  let iguales = 0, cerradas = 0, sinVista = 0, sumaJugadas = 0, conPreguntas = 0, perfilesIntactos = 0;
+  let iguales = 0, cerradas = 0, sumaJugadas = 0, conPreguntas = 0, perfilesIntactos = 0;
+  let totalPreguntas = 0, totalVistas = 0, totalMal = 0, totalAjenas = 0;
   const tipos = new Set();
   for (const s of semillas) {
     const r = await jugar({ semilla: s, turnos: 5, semillaServidor: s + 9 });
@@ -161,12 +169,14 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
     if (igual) iguales++; else console.log(`   semilla ${s}: estado ${fa === fb ? "=" : "≠"} · trazas ${tA === tB ? "=" : "≠"}\n     A ${fa.slice(0, 300)}\n     B ${fb.slice(0, 300)}`);
     if (r.srv.S.status === "finished" && r.srv.S.motivo === "completed") cerradas++;
     else console.log(`   semilla ${s}: servidor ${r.srv.S.status} ${r.srv.S.motivo} · pasos ${r.pasos} · jugadas ${r.srv.S.log.length} · fase A ${leer(r.A, "estado.fase")} B ${leer(r.B, "estado.fase")}`);
-    if (r.vistaAjena === 0) sinVista++;
+    totalPreguntas += r.preguntas; totalVistas += r.vistas; totalMal += r.malVista; totalAjenas += r.respuestasAjenas;
     if (r.perfilIntacto) perfilesIntactos++; else console.log(`   semilla ${s}: el perfil local cambió durante la partida online`);
   }
   ok(iguales === semillas.length, `mismo estado final y mismas trazas (dado, ruleta, fin) en los dos móviles: ${iguales}/${semillas.length}`);
   ok(cerradas === semillas.length, `report_result coincide y el servidor cierra como completed (nunca disputed): ${cerradas}/${semillas.length}`);
-  ok(sinVista === semillas.length, `quien no responde nunca tiene en pantalla la pregunta abierta del rival: ${sinVista}/${semillas.length}`);
+  ok(totalVistas >= totalPreguntas * 0.9, `quien no responde ve el mismo enunciado y las mismas opciones mientras el otro responde: ${totalVistas}/${totalPreguntas} preguntas`);
+  ok(totalMal === 0, `en esa vista no tiene la opción correcta (q.a = -1), las opciones coinciden y sale «Tu rival está respondiendo» (fallos: ${totalMal})`);
+  ok(totalAjenas === 0, `al intentar responder la pregunta del rival no sale ninguna respuesta hacia el servidor (intentos que llegaron: ${totalAjenas})`);
   ok(conPreguntas === semillas.length, `cada partida reparte al menos 8 preguntas del servidor: ${conPreguntas}/${semillas.length}`);
   ok(perfilesIntactos === semillas.length, `el perfil local no cambia (monedas, trofeos, estrellas, sobres, estadísticas, retos, liga): ${perfilesIntactos}/${semillas.length}`);
   const esperadas = ["inicio", "tirar", "pregunta", "resultado", "fin"];

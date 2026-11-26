@@ -107,6 +107,7 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
       return ok(fuera);
     },
     submit_answer(u, a) {
+      if (S.qs[a.p_index] && S.qs[a.p_index].player !== u) S.respuestasAjenas = (S.respuestasAjenas || 0) + 1;   // intento de responder la pregunta del otro
       const e = activo(u); if (e) return err(e);
       avanzar();
       const q = S.qs[a.p_index];

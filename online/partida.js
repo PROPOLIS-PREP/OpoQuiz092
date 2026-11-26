@@ -44,16 +44,20 @@
       st.log.set(a.seq, a);
       if (a.seq > st.ultimo) st.ultimo = a.seq;
       if (a.user_id && a.user_id !== cfg.yo) st.ultimaRival = R.ahora();
-      // pregunta del rival: se guarda el enunciado para la revisión, pero NO se enseña mientras responde
+      // pregunta del rival: se pide ya el enunciado (sin la respuesta, que no sale hasta get_question_result)
       if (a.kind === "pregunta" && a.user_id && a.user_id !== cfg.yo) precargar(+a.payload.question_index);
       bombear();
     }
-    async function precargar(i) {
-      try {
-        const d = await rpc("get_current_question", { p_match: M });
-        const r = (d || []).find(x => +x.question_index === i);
-        if (r) st.cache[i] = { texto: r.texto, opciones: r.opciones };
-      } catch (e) { /* sin enunciado: la revisión enseña solo el resultado */ }
+    // get_current_question pedida por quien NO responde: no abre la pregunta ni trae la respuesta correcta
+    function precargar(i) {
+      if (!st.cache[i]) st.cache[i] = (async () => {
+        try {
+          const d = await rpc("get_current_question", { p_match: M });
+          const r = (d || []).find(x => +x.question_index === i);
+          return r ? { texto: r.texto, opciones: r.opciones, descartadas: r.descartadas || [] } : null;
+        } catch (e) { return null; }          // sin enunciado: se enseña solo «Tu rival está respondiendo»
+      })();
+      return st.cache[i];
     }
     async function leerNuevas() {
       const { data, error } = await sb.from("match_actions").select("seq, user_id, kind, payload")
@@ -115,6 +119,8 @@
         try { const d = await rpc("get_current_question", { p_match: M }); const r = (d || []).find(x => +x.question_index === i); return r ? { texto: r.texto, opciones: r.opciones, descartadas: r.descartadas || [] } : null; }
         catch (e) { cfg.alAviso && cfg.alAviso(textoError(e)); return null; }
       },
+      // la pregunta del rival en solo lectura: enunciado, opciones y descartadas, nunca la opción correcta
+      ver(i) { return precargar(i); },
       comodin(i, kind) { enFila(async () => { await rpc("use_lifeline", { p_match: M, p_index: i, p_kind: kind }); await leerNuevas(); }); },
       responder(i, op) {
         // submit_answer devuelve la respuesta correcta, pero no se usa: llega con get_question_result (resultado)
@@ -123,7 +129,7 @@
       async resultado(i) {
         try {
           const r = fila(await rpc("get_question_result", { p_match: M, p_index: i }));
-          const c = st.cache[i] || {};
+          const c = (st.cache[i] && await st.cache[i]) || {};
           return r ? { respuesta_correcta: r.respuesta_correcta, explicacion: r.explicacion, texto: c.texto, opciones: c.opciones } : null;
         } catch (e) { return null; }
       },

@@ -9866,6 +9866,17 @@ function preguntaOnline(p,op,nivel,fx){
         if(fx&&fx.pista)on.comodin(pa.idx,"mitad");             /* el chivatazo: 50/50 del servidor */
         pintarHud();pintarComodines();arrancarCrono();
       });
+    }else{
+      /* quien no responde ve la misma pregunta en solo lectura (sin la opción correcta, que llega al cerrarse) */
+      on.ver(pa.idx).then(d=>{
+        if(preguntaActiva!==pa||pa.respondida)return;
+        if(d){q.q=d.texto;q.o=d.opciones;(d.descartadas||[]).forEach(i=>{if(!pa.fuera.includes(+i))pa.fuera.push(+i)})}
+        if(!q.o.length)return;                                   /* sin enunciado: se queda el aviso */
+        pintarPregunta(q,p,op,nivel,fx);marcarFuera(pa);
+        $$("#preg-ops .op").forEach(b=>{b.disabled=true;b.onclick=null});
+        $("#preg-pie").innerHTML='<span class="leer">Tu rival está respondiendo…</span>';
+        pintarHud();pintarComodines();arrancarCrono();
+      });
     }
     esperarEnPregunta(pa);
   });
