@@ -183,7 +183,7 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
   console.log("── 1. Partidas completas 1 contra 1 (dos motores, servidor falso)");
   const semillas = [101, 202, 303, 404, 505, 606];
   let iguales = 0, cerradas = 0, sumaJugadas = 0, conPreguntas = 0, perfilesIntactos = 0;
-  let totalPreguntas = 0, totalVistas = 0, totalMal = 0, totalAjenas = 0;
+  let totalPreguntas = 0, totalVistas = 0, totalMal = 0, totalAjenas = 0, marcasPend = 0, marcasEspera = 0, marcasSinDato = 0;
   const tipos = new Set();
   for (const s of semillas) {
     const r = await jugar({ semilla: s, turnos: 5, semillaServidor: s + 9 });
@@ -198,6 +198,14 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
     if (r.srv.S.status === "finished" && r.srv.S.motivo === "completed") cerradas++;
     else console.log(`   semilla ${s}: servidor ${r.srv.S.status} ${r.srv.S.motivo} · pasos ${r.pasos} · jugadas ${r.srv.S.log.length} · fase A ${leer(r.A, "estado.fase")} B ${leer(r.B, "estado.fase")}`);
     totalPreguntas += r.preguntas; totalVistas += r.vistas; totalMal += r.malVista; totalAjenas += r.respuestasAjenas;
+    // p_pendiente en mark_activity: cada móvil lo envía cuando espera una acción suya (sin renovar la actividad)
+    // y cuando no (renovándola), además de en cada toque
+    for (const u of [UA, UB]) {
+      const m = r.srv.S.marcas.filter(x => x.u === u);
+      if (m.some(x => x.p_pendiente === true && x.p_actividad === false)) marcasPend++;
+      if (m.some(x => x.p_pendiente === false && x.p_actividad === true)) marcasEspera++;
+      if (m.some(x => typeof x.p_pendiente !== "boolean")) marcasSinDato++;
+    }
     if (r.perfilIntacto) perfilesIntactos++; else console.log(`   semilla ${s}: el perfil local cambió durante la partida online`);
   }
   ok(iguales === semillas.length, `mismo estado final y mismas trazas (dado, ruleta, fin) en los dos móviles: ${iguales}/${semillas.length}`);
@@ -205,6 +213,8 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
   ok(totalVistas >= totalPreguntas * 0.9, `quien no responde ve el mismo enunciado y las mismas opciones mientras el otro responde: ${totalVistas}/${totalPreguntas} preguntas`);
   ok(totalMal === 0, `en esa vista no tiene la opción correcta (q.a = -1), las opciones coinciden y sale «Tu rival está respondiendo» (fallos: ${totalMal})`);
   ok(totalAjenas === 0, `al intentar responder la pregunta del rival no sale ninguna respuesta hacia el servidor (intentos que llegaron: ${totalAjenas})`);
+  ok(marcasPend === semillas.length * 2 && marcasEspera === semillas.length * 2 && marcasSinDato === 0,
+    `mark_activity lleva p_pendiente: con acción pendiente (p_actividad false) ${marcasPend}/${semillas.length * 2} móviles, esperando al rival (p_actividad true) ${marcasEspera}/${semillas.length * 2}, sin el dato ${marcasSinDato}`);
   ok(conPreguntas === semillas.length, `cada partida reparte al menos 8 preguntas del servidor: ${conPreguntas}/${semillas.length}`);
   ok(perfilesIntactos === semillas.length, `el perfil local no cambia (monedas, trofeos, estrellas, sobres, estadísticas, retos, liga): ${perfilesIntactos}/${semillas.length}`);
   const esperadas = ["inicio", "tirar", "pregunta", "resultado", "fin"];

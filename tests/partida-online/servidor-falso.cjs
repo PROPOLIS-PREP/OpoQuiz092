@@ -12,7 +12,7 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
     status: "in_progress", current: null, log: [], qs: {}, usadas: new Set(), latido: {}, fuera: new Set(),
     informes: {}, ganador: null, motivo: null, subs: [], llamadas: [], bcast: [], enviados: [],
   };
-  S.actividad = {}; S.empezada = ahora();
+  S.actividad = {}; S.pendiente = {}; S.marcas = []; S.empezada = ahora();
   jugadores.forEach(u => { S.latido[u] = ahora(); S.actividad[u] = ahora(); });
   const err = (message, code = "P0001") => ({ data: null, error: { code, message } });
   const ok = data => ({ data, error: null });
@@ -76,7 +76,7 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
       const el = cand[Math.floor(rnd() * Math.min(cand.length, cand.length))];
       S.usadas.add(el.k);
       const i = S.current == null ? 0 : S.current + 1;
-      S.qs[i] = { k: el.k, q: el.q, player: u, tipo: a.p_tipo, segundos: a.p_segundos, abierta: false, cierra: ahora() + 10000, closed: false, descartadas: [], comodines: [] };
+      S.qs[i] = { repartida: ahora(), k: el.k, q: el.q, player: u, tipo: a.p_tipo, segundos: a.p_segundos, abierta: false, cierra: ahora() + 10000, closed: false, descartadas: [], comodines: [] };
       S.current = i;
       anotar(u, "pregunta", { question_index: i, tipo: a.p_tipo, bloque: el.q.b, nivel: el.q.n, nivel_pedido: a.p_nivel, segundos: a.p_segundos });
       return ok(i);
@@ -129,18 +129,32 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
       return ok([{ question_index: a.p_index, player_id: q.player, result: q.result, respuesta_correcta: q.q.a, explicacion: q.q.d || "" }]);
     },
     // migración 20261126120000_inactividad.sql (si conInactividad es false, el servidor se comporta como sin aplicarla)
-    mark_activity(u) {
+    // versión A: p_pendiente (true fija pendiente_desde si estaba vacío, false lo limpia, null no lo toca) y
+    // p_actividad (por defecto true; false = latido con algo pendiente, que no renueva la actividad)
+    mark_activity(u, a) {
       if (!conInactividad) return err("Could not find the function public.mark_activity(p_match) in the schema cache", "PGRST202");
       if (!jugadores.includes(u)) return err("No estás en esa partida");
-      if (!S.fuera.has(u)) { S.actividad[u] = ahora(); S.latido[u] = ahora(); }
+      S.marcas.push({ u, t: ahora(), p_pendiente: a.p_pendiente, p_actividad: a.p_actividad });
+      if (!S.fuera.has(u)) {
+        S.latido[u] = ahora();
+        if (a.p_actividad !== false) S.actividad[u] = ahora();
+        if (a.p_pendiente === true) S.pendiente[u] = S.pendiente[u] ?? ahora();
+        else if (a.p_pendiente === false) S.pendiente[u] = null;
+      }
       avanzar(); return ok(null);
     },
     claim_inactivity(u, a) {
       if (!conInactividad) return err("Could not find the function public.claim_inactivity(p_match, p_user) in the schema cache", "PGRST202");
       const e = activo(u); if (e) return err(e);
       if (a.p_user === u) return err("Para abandonar usa leave_match");
+      avanzar();
       if (S.fuera.has(a.p_user) || !jugadores.includes(a.p_user)) return err("Ese jugador no sigue en la partida");
-      if (Math.max(S.actividad[a.p_user], S.empezada) > ahora() - 60000) return err("Ese jugador sigue activo");
+      const act = Math.max(S.actividad[a.p_user], S.empezada);
+      const q = S.current != null ? S.qs[S.current] : null;
+      const preg = q && q.player === a.p_user && !q.closed && q.cierra > ahora() ? q.repartida : null;
+      const pend = S.pendiente[a.p_user] ?? preg;
+      if (pend != null) { if (Math.max(act, pend) > ahora() - 60000) return err("Ese jugador sigue activo"); }
+      else if (act > ahora() - 180000) return err("Ese jugador no tiene ninguna acción pendiente");
       abandono(a.p_user); return ok(null);
     },
     heartbeat(u) {
@@ -189,7 +203,7 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
             let d = [];
             if (tabla === "match_actions") d = S.log.filter(a => a.seq > (f.gt_seq ?? -1)).map(a => ({ ...a, payload: JSON.parse(JSON.stringify(a.payload)) }));
             if (tabla === "match_players") d = jugadores.map((id, seat) => Object.assign({ user_id: id, seat, forfeited: S.fuera.has(id), last_heartbeat: new Date(S.latido[id]).toISOString() },
-              conInactividad ? { ultima_actividad_at: new Date(S.actividad[id]).toISOString() } : {}));
+              conInactividad ? { ultima_actividad_at: new Date(S.actividad[id]).toISOString(), pendiente_desde: S.pendiente[id] != null ? new Date(S.pendiente[id]).toISOString() : null } : {}));
             if (tabla === "profiles") d = (f.in_id || []).map(id => ({ id, username: "agente_" + id.slice(-4) }));
             return Promise.resolve({ data: d, error: null }).then(res, rej);
           },

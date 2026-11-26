@@ -12,7 +12,7 @@ Cada móvil tiene una «persona» que decide con su propio azar y solo cuando le
 4. **Control negativo**: el motor B recibe otra semilla a escondidas. La partida nunca termina con un resultado falso `completed`: o el motor detecta una jugada inesperada, o el servidor cierra como `disputed`, o los dos se quedan esperándose (bloqueo; ver «Pendientes» en `docs/backend-v2.md`).
 5. **Modo local**: sin partida online, `estado.online` es `null` y `jugYo()` es el jugador 0.
 6. **Arranque que falla**: `entrar()` devuelve el error real y cierra el canal de Realtime.
-7. **Inactividad**: a los 60 s sin actividad cuando la pantalla espera al jugador, «Vas a perder por inactividad en 5…»; a 0 pierde; un toque la cancela; el rival puede reclamar con `claim_inactivity`; sin la migración, la derrota funciona igual y el rival no ve el botón.
+7. **Inactividad**: a los 60 s sin actividad cuando la pantalla espera al jugador, «Vas a perder por inactividad en 5…»; a 0 pierde; un toque la cancela; el rival puede reclamar con `claim_inactivity` (con algo pendiente, 60 s; sin nada, 180 s); sin la migración, la derrota funciona igual y el rival no ve el botón. Comprueba además que `mark_activity` lleva `p_pendiente` tanto con una acción pendiente (sin renovar la actividad) como esperando al rival.
 8. **Aviso de salida**: «Volver al cuartel» u «Otra partida» avisan al rival una sola vez (broadcast), sin tapar los puntos.
 
 ## Cómo se ejecuta

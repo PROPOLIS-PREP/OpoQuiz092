@@ -19,6 +19,7 @@
 
   const LATIDO_MS = 15000, SONDEO_MS = 3000, SIN_SENAL_MS = 60000, INACTIVO_MS = 60000;
   const MARCA_MS = 10000;          // mark_activity como mucho cada 10 s
+  const BLOQUEO_MS = 180000;       // sin nada pendiente, el rival solo puede reclamar a los 180 s (como claim_inactivity)
   const AVISO_S = 5;               // cuenta atrás «Vas a perder por inactividad en 5…»
   const GLOBALES = ["abandono", "fin"];
 
@@ -38,6 +39,7 @@
       log: new Map(), ultimo: -1, aplicado: 1, espera: null, cola: Promise.resolve(),
       cache: {}, terminado: false, ultimaRival: R.ahora(), turnoRival: false, roto: false,
       ultimaMarca: -Infinity, sinMarcar: false,   // sinMarcar: el servidor aún no tiene mark_activity (migración pendiente)
+      esperando: true,                             // la pantalla no espera nada de este jugador (lo actualiza marcarEspera)
     };
     const rpc = async (f, args) => { const r = await sb.rpc(f, args); if (r.error) throw r.error; return r.data; };
     const fila = d => Array.isArray(d) ? d[0] : d;
@@ -140,42 +142,56 @@
       terminar(puntos) { enFila(async () => { await rpc("report_result", { p_match: M, p_scores: puntos }); await leerNuevas(); }); },
       abandonar() { enFila(async () => { await rpc("leave_match", { p_match: M }); await leerNuevas(); }); },
       reclamar(uid) { return enFila(async () => { await rpc("claim_forfeit", { p_match: M, p_user: uid }); await leerNuevas(); }); },
-      // actividad de la persona (toque, clic o tecla): mark_activity como mucho cada 10 s; forzar, sin esperar
+      // actividad de la persona (toque, clic o tecla): mark_activity como mucho cada 10 s; forzar, sin esperar.
+      // Lleva siempre p_pendiente: si la pantalla espera algo de este jugador.
       actividad(forzar) {
         const t = R.ahora();
         if (st.sinMarcar || st.terminado || (!forzar && t - st.ultimaMarca < MARCA_MS)) return;
         st.ultimaMarca = t;
-        sb.rpc("mark_activity", { p_match: M }).then(r => {
-          if (r && r.error && (r.error.code === "PGRST202" || /mark_activity/.test(r.error.message || ""))) st.sinMarcar = true;   // sin migración
-        }, () => { /* sin conexión: el siguiente toque lo reintenta */ });
+        marcar({ p_pendiente: !st.esperando, p_actividad: true });
       },
       reclamarInactividad(uid) { return enFila(async () => { await rpc("claim_inactivity", { p_match: M, p_user: uid }); await leerNuevas(); }); },
       error,
       // para el motor y la pantalla
       marcarTurnoRival(v) { if (v && !st.turnoRival) st.ultimaRival = R.ahora(); st.turnoRival = v; },
-      marcarEspera(v) { st.esperando = v; },   // true: la pantalla no espera nada de este jugador
+      // true: la pantalla no espera nada de este jugador. Al cambiar, se avisa al servidor en el momento
+      // (pendiente_desde preciso); esperar cuenta como actividad, quedarse pendiente no.
+      marcarEspera(v) {
+        const antes = st.esperando; st.esperando = v;
+        if (antes !== v && !st.sinMarcar && !st.terminado) marcar({ p_pendiente: !v, p_actividad: v });
+      },
       _estado: st, _recibir: recibir, _leer: leerNuevas,
     };
 
     // latido, sondeo y estado del rival
     let latido = null, sondeo = null;
+    // mark_activity(p_match, p_pendiente, p_actividad); sin la migración (PGRST202) se deja de usar
+    function marcar(args) {
+      return sb.rpc("mark_activity", Object.assign({ p_match: M }, args)).then(r => {
+        if (r && r.error && (r.error.code === "PGRST202" || /mark_activity/.test(r.error.message || ""))) st.sinMarcar = true;
+        return r;
+      }, () => null);
+    }
     async function latir() {
       if (st.terminado) return;
-      try { await rpc("heartbeat", { p_match: M }); } catch (e) { /* sin conexión */ }
-      // mientras la pantalla no espera nada de este jugador, esperar cuenta como actividad:
-      // solo puede perder por inactividad quien tiene que actuar
-      if (st.esperando) api.actividad(true);
+      // cada latido declara si la pantalla espera algo de este jugador (p_pendiente). Esperar sin nada pendiente
+      // cuenta como actividad; con algo pendiente solo se informa (no renueva la actividad: así cuentan los 60 s)
+      const r = st.sinMarcar ? null : await marcar({ p_pendiente: !st.esperando, p_actividad: !!st.esperando });
+      if (!r || r.error) { try { await rpc("heartbeat", { p_match: M }); } catch (e) { /* sin conexión */ } }
       try {
         // «*»: así funciona con y sin la columna ultima_actividad_at (migración de inactividad)
         const { data } = await sb.from("match_players").select("*").eq("match_id", M);
         const rival = (data || []).find(j => j.user_id !== cfg.yo);
         if (rival && cfg.alEstado) {
           const silencio = R.ahora() - Date.parse(rival.last_heartbeat);
-          const ref = rival.ultima_actividad_at ? Math.max(Date.parse(rival.ultima_actividad_at), st.ultimaRival) : null;
+          // mismas reglas que claim_inactivity: con algo pendiente, 60 s; sin nada pendiente, 180 s
+          const act = rival.ultima_actividad_at ? Math.max(Date.parse(rival.ultima_actividad_at), st.ultimaRival) : null;
+          const pend = rival.pendiente_desde ? Date.parse(rival.pendiente_desde) : null;
+          const ref = act == null ? null : pend != null ? Math.max(act, pend) : act;
+          const quieto = ref != null ? R.ahora() - ref : null;
           cfg.alEstado({ rival: rival.user_id, sinSenal: silencio >= SIN_SENAL_MS, silencio,
             inactivo: st.turnoRival && R.ahora() - st.ultimaRival >= INACTIVO_MS,
-            // el móvil del rival envía actividad mientras espera: si está atrasada, es que tenía que actuar y no lo ha hecho
-            sinActividad: ref != null && R.ahora() - ref >= INACTIVO_MS, quieto: ref != null ? R.ahora() - ref : null });
+            sinActividad: quieto != null && quieto >= (pend != null ? INACTIVO_MS : BLOQUEO_MS), quieto, pendiente: pend != null });
         }
       } catch (e) { /* se reintenta en el siguiente latido */ }
     }
