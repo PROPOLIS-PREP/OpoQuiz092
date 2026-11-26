@@ -8211,6 +8211,18 @@ function confeti(n=34){
 }
 /* temporizador de partida: no dispara si se ha salido de la partida */
 function luego(fn,ms){const t=estado.tok;setTimeout(()=>{if(t===estado.tok&&estado.activa)fn()},ms)}
+/* online: pausa de cortesía que dura «ms», o solo «min» si el rival ya va por delante (el registro trae jugadas
+   que este motor aún no ha aplicado). Así el que mira no se queda atrás y ve la pregunta del rival antes de que la responda.
+   seguir() dice si la pausa sigue teniendo sentido (si no, no hace nada). */
+function aguardar(fn,ms,min,seguir){
+  const t=estado.tok,ini=Date.now();
+  const mira=()=>{
+    if(t!==estado.tok||!estado.activa||!seguir())return;
+    const pasado=Date.now()-ini,on=estado.online;
+    if(pasado>=ms||(pasado>=min&&on&&on.atrasado&&on.atrasado()))fn();else setTimeout(mira,Math.min(250,ms-pasado));
+  };
+  setTimeout(mira,Math.min(250,ms));
+}
 
 /* =====================================================================
    EFECTOS · todo lo que se mueve en la partida pasa por aquí.
@@ -8359,8 +8371,9 @@ const CARTA_FX={
   tienda:{ico:"comisaria"},despliegue:{ico:"divisa"}
 };
 let autoCarta=0;
-function abrirPanel(pref,{sello,color,tit,txt,extra,efecto,botones,tipo,ico}){
+function abrirPanel(pref,{sello,color,tit,txt,extra,efecto,botones,tipo,ico,mia}){
   const q=s=>$("#"+pref+"-"+s),velo=$("#velo-"+pref),panel=velo.firstElementChild,c=CARTA_FX[tipo]||{},abierto=velo.classList.contains("on");
+  velo.dataset.mia=mia?"1":"";                 /* online: carta que decide este jugador aunque no sea su turno (convocatoria) */
   q("sello").textContent=sello;q("sello").style.background=color||"var(--morado)";
   q("tit").textContent=tit;q("txt").textContent=txt||"";
   q("extra").innerHTML=extra||"";q("extra").onclick=null;
@@ -8386,7 +8399,8 @@ function abrirPanel(pref,{sello,color,tit,txt,extra,efecto,botones,tipo,ico}){
   },voltea?680:450);
   if(estado.online&&estado.activa&&pref==="carta"&&(botones||[]).length===1&&jugActual()&&jugActual().remoto){
     const b0=pie.children[0],serie=++autoCarta;
-    luego(()=>{if(serie===autoCarta&&velo.classList.contains("on")&&pie.children[0]===b0&&!b0.disabled)b0.onclick()},(efecto?(voltea?680:450):0)+3500);
+    const vivo=()=>serie===autoCarta&&velo.classList.contains("on")&&pie.children[0]===b0;
+    aguardar(()=>{if(vivo()&&!b0.disabled)b0.onclick()},(efecto?(voltea?680:450):0)+3500,(efecto?(voltea?680:450):0)+900,vivo);
   }
 }
 const panelCarta=o=>abrirPanel("carta",o);
@@ -9297,7 +9311,7 @@ function ofrecerExamen(p,origen){
     panelCarta({tipo:"tribunal",sello:`Tribunal · ${p.nombre}`,color:"var(--naranja)",tit:`Ascenso a ${sig.n}`,
       txt:p.remoto?pre+`${p.nombre} reúne los ${sig.req} méritos y decide si se presenta al examen…`
         :pre+`Reúnes los ${sig.req} méritos exigidos. El examen son ${EXAMEN_PREG[c]} preguntas y necesitas acertar ${EXAMEN_MIN[c]}. Grupo ${sig.grupo}.`,
-      extra:balanceAscenso(p),
+      extra:balanceAscenso(p),mia:!p.remoto,
       botones:p.remoto?[]:[{txt:"Esta no",sec:true,fn:()=>decide(false)},{txt:"Me presento",cls:"verde",fn:()=>decide(true)}]});
     estado.online.esperar(["examen"],a=>{cerrarCarta();a.payload.acepta?empezarExamen(p,origen):cont()});
     return;
@@ -9406,12 +9420,12 @@ const Ruleta={
     const dest=360*4+(360-(k*g+g/2))+(Math.random()*.6-.3)*g;
     let hecho=false,ult=-1;
     res.textContent="";res.classList.remove("pop");r.style.transform="rotate(0deg)";v.classList.add("on");
-    const acabar=()=>{
+    const acabar=rapido=>{                  /* rapido: online, el rival ya va por delante */
       if(hecho)return;hecho=true;this.parar=null;
       r.style.transform=`rotate(${dest.toFixed(1)}deg)`;
       res.innerHTML=escapar(BLOQUES[bloque].nombre)+(bloqueVacio(bloque)?`<small class="ruleta-aviso">Aún sin preguntas: te toca una de otro bloque</small>`:"");
       reanimar(res,"pop");sfx.ruletaFin();
-      luego(()=>{v.classList.remove("on");fin()},Anim.reducida()?450:(bloqueVacio(bloque)?1500:750));
+      luego(()=>{v.classList.remove("on");fin()},rapido===true?200:Anim.reducida()?450:(bloqueVacio(bloque)?1500:750));
     };
     this.parar=acabar;
     Anim.tween({ms:1700,ease:"out",tok:true,msReducida:200,fin:acabar,paso:t=>{
@@ -9429,6 +9443,14 @@ function preguntaDeTurno(p){
   if(p.bot){lanzarPregunta(p,{turno:true,bloque});return}
   estado.fase="ruleta";accionBoton("Girando…",true);
   Ruleta.girar(bloque,()=>lanzarPregunta(p,{turno:true,bloque}));
+  /* online, ruleta del rival: si su pregunta ya está repartida, la ruleta se detiene para no perderla */
+  if(estado.online&&p.remoto){
+    const t=estado.tok,vigila=()=>{
+      if(t!==estado.tok||!estado.activa||estado.fase!=="ruleta")return;
+      if(estado.online.atrasado()&&Ruleta.parar)Ruleta.parar(true);else setTimeout(vigila,100);
+    };
+    setTimeout(vigila,100);
+  }
 }
 function prepararTirada(p,extra){
   estado.fase="esperaTirada";
@@ -9868,15 +9890,16 @@ function preguntaOnline(p,op,nivel,fx){
       });
     }else{
       /* quien no responde ve la misma pregunta en solo lectura (sin la opción correcta, que llega al cerrarse) */
-      on.ver(pa.idx).then(d=>{
+      const verRival=()=>on.ver(pa.idx).then(d=>{
         if(preguntaActiva!==pa||pa.respondida)return;
         if(d){q.q=d.texto;q.o=d.opciones;(d.descartadas||[]).forEach(i=>{if(!pa.fuera.includes(+i))pa.fuera.push(+i)})}
-        if(!q.o.length)return;                                   /* sin enunciado: se queda el aviso */
+        if(!q.o.length){luego(()=>{if(preguntaActiva===pa&&!pa.respondida)verRival()},1000);return}   /* sin enunciado aún: se queda el aviso y se reintenta */
         pintarPregunta(q,p,op,nivel,fx);marcarFuera(pa);
         $$("#preg-ops .op").forEach(b=>{b.disabled=true;b.onclick=null});
-        $("#preg-pie").innerHTML='<span class="leer">Tu rival está respondiendo…</span>';
+        $("#preg-pie").innerHTML=`<span class="leer"><b>${escapar(p.nombre)}</b> está respondiendo…</span>`;
         pintarHud();pintarComodines();arrancarCrono();
       });
+      verRival();
     }
     esperarEnPregunta(pa);
   });
@@ -10074,7 +10097,8 @@ function responder(idx){
   };
   if(preguntaActiva.online){                                  /* online: la revisión no bloquea, se cierra sola */
     const pa=preguntaActiva,b=$("#preg-seguir");
-    luego(()=>{if(preguntaActiva===pa&&$("#velo-preg").classList.contains("on"))b.onclick()},10000);
+    const vivo=()=>preguntaActiva===pa&&$("#velo-preg").classList.contains("on");
+    aguardar(()=>{if(vivo())b.onclick()},10000,1500,vivo);
   }
   pintarHud();pintarComodines();
 }

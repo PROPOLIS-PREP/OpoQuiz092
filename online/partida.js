@@ -54,14 +54,20 @@
       bombear();
     }
     // get_current_question pedida por quien NO responde: no abre la pregunta ni trae la respuesta correcta
+    // Un fallo de red no se guarda: se reintenta (3 veces) y, si aun así no llega, la próxima llamada vuelve a pedirlo.
+    const cerrada = i => [...st.log.values()].some(a => a.kind === "resultado" && +a.payload.question_index === i);
     function precargar(i) {
       if (!st.cache[i]) st.cache[i] = (async () => {
-        try {
-          const d = await rpc("get_current_question", { p_match: M });
-          const r = (d || []).find(x => +x.question_index === i);
-          return r ? { texto: r.texto, opciones: r.opciones, descartadas: r.descartadas || [] } : null;
-        } catch (e) { return null; }          // sin enunciado: se enseña solo «Tu rival está respondiendo»
-      })();
+        for (let k = 0; k < 3 && !cerrada(i) && !st.terminado; k++) {
+          try {
+            const d = await rpc("get_current_question", { p_match: M });
+            const r = (d || []).find(x => +x.question_index === i);
+            if (r) return { texto: r.texto, opciones: r.opciones, descartadas: r.descartadas || [] };
+          } catch (e) { /* se reintenta */ }
+          await new Promise(ok => R.setTimeout(ok, 400));
+        }
+        return null;                          // sin enunciado: se enseña solo «Tu rival está respondiendo»
+      })().then(d => { if (!d) delete st.cache[i]; return d; });
       return st.cache[i];
     }
     async function leerNuevas() {
@@ -103,6 +109,9 @@
 
     const api = {
       esperar(tipos, fn, op = {}) { st.espera = { tipos, fn, mirar: !!op.mirar }; bombear(); },
+      // ¿el registro ya trae jugadas que este motor aún no ha aplicado? Entonces el otro va por delante
+      // y las pausas de cortesía (revisión, cartas del rival) se acortan para no perderse su pregunta.
+      atrasado() { return !st.terminado && !st.roto && pendientes(); },
       enviar(kind, payload) {
         if (pendientes() || st.terminado) return;    // al repasar el registro, la jugada ya está anotada
         enFila(async () => {
@@ -120,7 +129,7 @@
         enFila(async () => { await rpc("draw_question", { p_match: M, p_bloque: bloque, p_nivel: nivel, p_segundos: segundos, p_tipo: tipo }); await leerNuevas(); });
       },
       async abrir(i) {
-        if ([...st.log.values()].some(a => a.kind === "resultado" && +a.payload.question_index === i)) return null;  // ya cerrada
+        if (cerrada(i)) return null;  // ya cerrada
         try { const d = await rpc("get_current_question", { p_match: M }); const r = (d || []).find(x => +x.question_index === i); return r ? { texto: r.texto, opciones: r.opciones, descartadas: r.descartadas || [] } : null; }
         catch (e) { cfg.alAviso && cfg.alAviso(textoError(e)); return null; }
       },
@@ -446,8 +455,8 @@
     const b = document.getElementById("btn-accion");
     if (b && !b.disabled && b.onclick) return true;            // Responder, Tirar dado, Terminar despliegue (solo salen activos para ti)
     const velo = document.getElementById("velo-carta"), pie = document.getElementById("carta-pie"), ex = document.getElementById("carta-extra");
-    if (mio && velo && velo.classList.contains("on")) {
-      if (pie && [...pie.children].some(x => !x.disabled && x.onclick)) return true;   // carta de tu turno esperando tu botón
+    if ((mio || (velo && velo.dataset.mia === "1")) && velo && velo.classList.contains("on")) {
+      if (pie && [...pie.children].some(x => !x.disabled && x.onclick)) return true;   // carta de tu turno (o tu convocatoria) esperando tu botón
       if (ex && ex.onclick) return true;                         // elegir en una lista (comisaría, lanzar, recolocar)
     }
     if (mio && estado.fase === "despliegue") return true;

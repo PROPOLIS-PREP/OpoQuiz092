@@ -54,7 +54,7 @@ function crearPersona(E, srv, semilla, op = {}) {
       hechas["p" + pa.idx] = true;
       const r = rng();
       if (r < 0.12) E.ctx.usarComodin("tiempo"); else if (r < 0.24) E.ctx.usarComodin("mitad"); else if (r < 0.32) E.ctx.usarComodin("sirena");
-      const q = srv.S.qs[pa.idx].q, retraso = 800 + Math.floor(rng() * (rng() < 0.1 ? 40000 : 20000));
+      const q = srv.S.qs[pa.idx].q, retraso = op.rapida ? 800 + Math.floor(rng() * 1500) : 800 + Math.floor(rng() * (rng() < 0.1 ? 40000 : 20000));
       const bien = rng() < 0.6;
       E.reloj.setTimeout(() => {
         const fuera = leer(E, "preguntaActiva&&preguntaActiva.fuera?preguntaActiva.fuera.slice():[]");
@@ -66,13 +66,15 @@ function crearPersona(E, srv, semilla, op = {}) {
     }
     // 2. «Continuar» de la revisión de la pregunta
     const seguir = E.porIdGet("preg-seguir");
-    if (E.porIdGet("velo-preg").classList.contains("on") && seguir.onclick && /preg-seguir/.test(E.porIdGet("preg-pie").innerHTML) && rng() < 0.7) {
+    // con soloSuyo, como una persona real, no toca la revisión de la pregunta del rival (se cierra sola)
+    const revAjena = op.soloSuyo && leer(E, "!!(preguntaActiva&&preguntaActiva.p.remoto)");
+    if (!revAjena && E.porIdGet("velo-preg").classList.contains("on") && seguir.onclick && /preg-seguir/.test(E.porIdGet("preg-pie").innerHTML) && rng() < 0.7) {
       E.porIdGet("preg-pie").innerHTML = ""; seguir.onclick(); return true;
     }
     // 3. carta abierta: botones, o elección en la lista (comisaría, lanzar, recolocar)
     const velo = E.porIdGet("velo-carta"), pie = E.porIdGet("carta-pie"), extraC = E.porIdGet("carta-extra");
     if (velo.classList.contains("on")) {
-      const mio = leer(E, "jugActual()===jugYo()");
+      const mio = leer(E, "jugActual()===jugYo()||document.getElementById('velo-carta').dataset.mia==='1'");
       const tipo = velo.firstElementChild.className;
       if (mio && extraC.onclick && !hechas["x" + leer(E, "estado.ronda+':'+estado.turno+':'+jugYo().pos")] && (tipo.includes("tienda") ? rng() < 0.5 : true)) {
         const k = leer(E, "estado.ronda+':'+estado.turno+':'+jugYo().pos"); hechas["x" + k] = true;
@@ -85,7 +87,7 @@ function crearPersona(E, srv, semilla, op = {}) {
         extraC.onclick({ target: { closest: s => s === ".art" ? art : s === "[data-mv]" ? mv : s === "[data-rt]" ? rt : null } });
         return true;
       }
-      const bs = pie.children.filter(x => !x.disabled && x.onclick);
+      const bs = op.soloSuyo && !mio ? [] : pie.children.filter(x => !x.disabled && x.onclick);
       if (bs.length) { const b = bs[Math.floor(rng() * bs.length)]; b.onclick(); return true; }
     }
     // 4. despliegue propio: a veces coloca un efectivo antes de terminar
@@ -100,7 +102,7 @@ function crearPersona(E, srv, semilla, op = {}) {
   };
 }
 
-async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true, sinToques = false }) {
+async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true, sinToques = false, personas = {} }) {
   const { reloj, A, B, srv } = montar(semilla, turnos, semillaServidor, conInactividad);
   const ina = { aviso5: false, oculto: false, cancelado: false, reclamado: false, botonA: false };
   await A.ctx.PartidaOnline.entrar(srv.cliente(UA), "M1", UA);
@@ -115,8 +117,8 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
   const roto = E => { const a = E.ctx.PartidaOnline.actual(); return !!(a && a.puente._estado.roto); };
   const PERFIL = "JSON.stringify({m:perfil.monedas,t:perfil.trofeos,e:perfil.estrellas,s:perfil.sobres,st:perfil.stats,d:perfil.diario.prog,tp:perfil.temp.prog,liga:perfil.liga&&perfil.liga.pts,g:perfil.grupo})";
   const perfilAntes = { A: leer(A, PERFIL), B: leer(B, PERFIL) };
-  const personaB = { dormida: false };
-  const actA = crearPersona(A, srv, semilla * 3 + 1), actB = crearPersona(B, srv, semilla * 5 + 2, personaB);
+  const personaB = { dormida: false, ...personas };
+  const actA = crearPersona(A, srv, semilla * 3 + 1, { ...personas }), actB = crearPersona(B, srv, semilla * 5 + 2, personaB);
   let pasos = 0, reclamado = false, malVista = 0;
   const vistas = new Set(), intentadas = new Set();
   while (pasos < limite) {
@@ -131,7 +133,7 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
       if (otro.porIdGet("velo-preg").classList.contains("on") && otro.porIdGet("preg-texto").textContent === cur.q.q) {
         vistas.add(srv.S.current);
         const v = leer(otro, "preguntaActiva?{a:preguntaActiva.q.a,o:JSON.stringify(preguntaActiva.q.o),rem:!!preguntaActiva.p.remoto,pie:document.getElementById('preg-pie').innerHTML}:null");
-        if (!v || v.a !== -1 || v.o !== JSON.stringify(cur.q.o) || !v.rem || !/Tu rival está respondiendo/.test(v.pie)) malVista++;
+        if (!v || v.a !== -1 || v.o !== JSON.stringify(cur.q.o) || !v.rem || !/<b>agente_00(a1|b2)<\/b> está respondiendo…/.test(v.pie)) malVista++;
         if (!intentadas.has(srv.S.current)) { intentadas.add(srv.S.current); otro.ctx.responderOnline(cur.q.a); }   // intenta responder: no debe salir nada
       }
     }
@@ -153,6 +155,15 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
       else if (reloj.ahora - E.nec > 3000 && act()) { P.actividad(); E.nec = null; actuo = true; break; }
     }
     if (actuo) continue;
+    // con personas.reaccion (ms), cada persona actúa en cuanto pasa ese tiempo, aunque haya animaciones o cuentas
+    // atrás en marcha (como una persona de verdad, que no espera a que se cierre la revisión del rival)
+    if (personas.reaccion) {
+      for (const [E, act] of [[A, actA], [B, actB]]) {
+        if (E.ultimoToque == null) E.ultimoToque = reloj.ahora;
+        if (reloj.ahora - E.ultimoToque >= personas.reaccion) { E.ultimoToque = reloj.ahora; if (act()) { E.ctx.PartidaOnline.actividad(); actuo = true; } }
+      }
+      if (actuo) continue;
+    }
     if (reloj.hayTimeouts()) { reloj.paso(); pasos++; continue; }
     // inactividad: B deja de tocar la pantalla en su turno (la pestaña sigue abierta y enviando latidos)
     if (inactivoB && !personaB.dormida && !ina.cancelado && srv.S.status === "in_progress" && srv.S.log.length >= inactivoB.desde && leer(B, "estado.activa&&jugActual()===jugYo()")) {
@@ -177,7 +188,7 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
   }
   const perfilIntacto = leer(A, PERFIL) === perfilAntes.A && leer(B, PERFIL) === perfilAntes.B;
   return { A, B, srv, pasos, reclamado, ina, reloj, rotoA: roto(A), rotoB: roto(B), perfilIntacto,
-    vistas: vistas.size, preguntas: Object.keys(srv.S.qs).length, malVista, respuestasAjenas: srv.S.respuestasAjenas || 0 };
+    vistas: vistas.size, vistasIdx: [...vistas], preguntas: Object.keys(srv.S.qs).length, malVista, respuestasAjenas: srv.S.respuestasAjenas || 0 };
 }
 
 if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; return; }
@@ -214,7 +225,7 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
   ok(iguales === semillas.length, `mismo estado final y mismas trazas (dado, ruleta, fin) en los dos móviles: ${iguales}/${semillas.length}`);
   ok(cerradas === semillas.length, `report_result coincide y el servidor cierra como completed (nunca disputed): ${cerradas}/${semillas.length}`);
   ok(totalVistas >= totalPreguntas * 0.9, `quien no responde ve el mismo enunciado y las mismas opciones mientras el otro responde: ${totalVistas}/${totalPreguntas} preguntas`);
-  ok(totalMal === 0, `en esa vista no tiene la opción correcta (q.a = -1), las opciones coinciden y sale «Tu rival está respondiendo» (fallos: ${totalMal})`);
+  ok(totalMal === 0, `en esa vista no tiene la opción correcta (q.a = -1), las opciones coinciden y sale «X está respondiendo…» con su nombre (fallos: ${totalMal})`);
   ok(totalAjenas === 0, `al intentar responder la pregunta del rival no sale ninguna respuesta hacia el servidor (intentos que llegaron: ${totalAjenas})`);
   ok(marcasPend === semillas.length * 2 && marcasEspera === semillas.length * 2 && marcasSinDato === 0,
     `mark_activity lleva p_pendiente: con acción pendiente (p_actividad false) ${marcasPend}/${semillas.length * 2} móviles, esperando al rival (p_actividad true) ${marcasEspera}/${semillas.length * 2}, sin el dato ${marcasSinDato}`);
@@ -239,6 +250,28 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
   const acciones = ["tirar", "desplegar", "fin_despliegue", "examen", "distrito", "comprar", "fin_comisaria", "lanzar", "recolocar", "sirena", "comodin", "pregunta", "resultado"];
   const faltan = acciones.filter(t => !todas.has(t));
   ok(!faltan.length, `jugadas probadas: ${acciones.filter(t => todas.has(t)).join(", ")}${faltan.length ? " · sin probar: " + faltan.join(", ") : ""}`);
+
+  // ── 1c. el que mira ve la pregunta del rival antes de que la responda, con personas como las de verdad:
+  // reaccionan a los 1,2 s aunque haya animaciones, no tocan la revisión ni las cartas del rival y responden
+  // en 0,8–2,3 s. Sin ponerse al día, el motor del que mira se quedaba atrás (revisión de 10 s, cartas de 3,5 s,
+  // ruleta) y se perdía las preguntas de casilla. Por tipo y en los dos sentidos.
+  console.log("── 1c. Pregunta del rival a la vista antes de la respuesta (personas realistas, los dos sentidos)");
+  const tabla = {}, rotasR = [];
+  for (const s of [101, 202, 303, 404, 505, 606, 11, 12, 13]) {
+    const r = await jugar({ personas: { soloSuyo: true, rapida: true, reaccion: 1200 }, semilla: s, turnos: s < 100 ? 15 : 5, semillaServidor: s + 9,
+      preparar: s < 100 ? "estado.jugadores.forEach(j=>{j.reserva[1]+=3;j.reserva[0]+=4;j.puntos+=400})" : null });
+    if (r.srv.S.motivo !== "completed" || estadoFinal(r.A) !== estadoFinal(r.B)) rotasR.push(s);
+    for (const [i, q] of Object.entries(r.srv.S.qs)) {
+      const k = q.tipo + (q.player === UA ? " del anfitrión, la ve el invitado" : " del invitado, la ve el anfitrión");
+      tabla[k] = tabla[k] || { total: 0, vistas: 0 }; tabla[k].total++; if (r.vistasIdx.includes(+i)) tabla[k].vistas++;
+    }
+    if (r.malVista) rotasR.push(s + " (vista con la respuesta)");
+  }
+  for (const t of ["turno", "casilla", "examen"]) for (const d of [" del anfitrión, la ve el invitado", " del invitado, la ve el anfitrión"]) {
+    const x = tabla[t + d] || { total: 0, vistas: 0 };
+    ok(x.total > 0 && x.vistas === x.total, `pregunta de ${t}${d} antes de que responda: ${x.vistas}/${x.total}`);
+  }
+  ok(!rotasR.length, `esas partidas acaban completed, con el mismo estado y sin enseñar la respuesta${rotasR.length ? ": fallan " + rotasR.join(", ") : ""}`);
 
   // ── 2. abandono
   console.log("── 2. Abandono a mitad de partida");
