@@ -10,7 +10,7 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
   const ahora = () => EPOCA + reloj.ahora;
   const S = {
     status: "in_progress", current: null, log: [], qs: {}, usadas: new Set(), latido: {}, fuera: new Set(),
-    informes: {}, ganador: null, motivo: null, subs: [], llamadas: [],
+    informes: {}, ganador: null, motivo: null, subs: [], llamadas: [], bcast: [], enviados: [],
   };
   S.actividad = {}; S.empezada = ahora();
   jugadores.forEach(u => { S.latido[u] = ahora(); S.actividad[u] = ahora(); });
@@ -196,8 +196,21 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
         };
         return q;
       },
-      channel() { const ch = { on(ev, filtro, fn) { S.subs.push(fn); return ch; }, subscribe() { return ch; } }; return ch; },
-      removeChannel() {},
+      // canal de Realtime: postgres_changes (jugadas nuevas) y broadcast (avisos efímeros entre clientes, sin eco)
+      channel() {
+        const ch = {
+          on(ev, filtro, fn) { if (ev === "broadcast") S.bcast.push({ u, ch, evento: filtro.event, fn }); else S.subs.push(fn); return ch; },
+          subscribe() { return ch; },
+          send(m) {
+            S.bcast.filter(b => b.u !== u && b.evento === m.event && !b.cerrado)
+              .forEach(b => reloj.setTimeout(() => { if (!b.cerrado) b.fn({ payload: JSON.parse(JSON.stringify(m.payload)) }); }, latencia));
+            S.enviados.push(u.slice(-1) + ":" + m.event + ":" + (m.payload && m.payload.tipo));
+            return Promise.resolve("ok");
+          },
+        };
+        return ch;
+      },
+      removeChannel(ch) { S.bcast.forEach(b => { if (b.ch === ch) b.cerrado = true; }); },
     };
   }
 

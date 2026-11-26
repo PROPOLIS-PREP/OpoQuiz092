@@ -1,5 +1,12 @@
 # Cambios
 
+## v2 en desarrollo · 3c, correcciones tras la prueba con dos cuentas · 2026-11-26
+
+- Arreglo: «Entrar» en la partida fallaba con «Illegal invocation» (temporizadores llamados sobre otro objeto). Diagnóstico temporal de errores (`diagnostico: true`, quitar antes de la beta).
+- Quien no responde ve la misma pregunta en solo lectura, con «Tu rival está respondiendo…» y la cuenta atrás; la opción correcta sigue llegando solo al cerrarse.
+- Inactividad de 60 s en tu turno: cuenta atrás de 5 a 1, un toque la cancela y a 0 pierdes la partida; el rival puede «Reclamar victoria» aunque tu pestaña siga abierta. Migración `20261126120000_inactividad.sql` preparada, sin aplicar.
+- Aviso cuando el rival se va: «Tu rival ha abandonado la sala» o «Tu rival ha decidido jugar en modo local», con «Entendido», una vez y sin tapar los puntos. Service worker `v14.16-online9`.
+
 ## v2 en desarrollo · subfase 3c · 2026-11-26 · Partida online 1 contra 1
 
 - Migración `20261125120000_resultado_segundos_restantes.sql` (aplicada en patrullan2-dev): la jugada `resultado` lleva los segundos restantes en décimas, para que los dos móviles calculen los mismos puntos.

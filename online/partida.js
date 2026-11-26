@@ -182,17 +182,30 @@
     api.arrancar = async () => {
       await leerNuevas();
       if (sb.channel) {
-        api._canal = sb.channel("partida-" + M)
+        api._canal = sb.channel("partida-" + M, { config: { broadcast: { self: false } } })
           .on("postgres_changes", { event: "INSERT", schema: "public", table: "match_actions", filter: "match_id=eq." + M }, p => recibir(p.new))
+          // aviso efímero del rival al salir de la pantalla final (no se guarda en la base de datos)
+          .on("broadcast", { event: "salida" }, m => { const p = (m && m.payload) || {}; if (p.de !== cfg.yo && cfg.alSalida) cfg.alSalida(p); })
           .subscribe();
       }
       latido = R.setInterval(latir, LATIDO_MS);
       sondeo = R.setInterval(() => { if (!st.terminado) leerNuevas(); }, SONDEO_MS);
       latir();
     };
-    api.parar = () => {
+    // parar({mantenerCanal}): sin latido ni sondeo; el canal sigue abierto para el aviso de salida del rival
+    api.parar = (op = {}) => {
       R.clearInterval(latido); R.clearInterval(sondeo);
+      if (!op.mantenerCanal) api.cerrarCanal();
+    };
+    api.cerrarCanal = () => {
       if (api._canal && sb.removeChannel) { try { sb.removeChannel(api._canal); } catch (e) { /* nada */ } }
+      api._canal = null;
+    };
+    // tipo: "cuartel" (volver al cuartel o salir) | "local" (otra partida en modo local)
+    api.avisarSalida = tipo => {
+      try { if (api._canal && api._canal.send) return Promise.resolve(api._canal.send({ type: "broadcast", event: "salida", payload: { tipo, de: cfg.yo } })).catch(() => {}); }
+      catch (e) { /* sin canal: el rival no recibe el aviso */ }
+      return Promise.resolve();
     };
     api.inicio = () => st.log.get(0) || null;
     return api;
@@ -217,7 +230,9 @@
         #online-inactivo{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:60;max-width:calc(100% - 32px);text-align:center;
           background:#b60928;color:#fff;border:3px solid #ffcb2e;border-radius:18px;padding:16px 20px;font-family:var(--display);font-size:22px;box-shadow:0 6px 18px #000a}
         #online-inactivo small{display:block;font-family:inherit;font-size:13px;opacity:.9;margin-top:4px}
-        #online-inactivo.oculto{display:none}`;
+        #online-inactivo.oculto{display:none}
+        .online-aviso{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+        .online-aviso.oculto{display:none}`;
       document.head.appendChild(s);
       document.body.appendChild(b);
     }
@@ -262,11 +277,56 @@
       ir("fin");
     }
     const c = document.getElementById("online-cierre"); if (c) c.textContent = texto;
-    if (actual) { actual.puente.parar(); actual = null; }
+    if (fin.reason === "forfeit" && fin.winner === yo) avisoSalida("Tu rival ha abandonado la sala.");
+    if (actual) {
+      // la partida ha terminado: sin latido ni sondeo, pero con el canal abierto un rato para el aviso de salida del rival
+      cerrarDespedida();
+      despedida = { puente: actual.puente, cierre: setTimeout(cerrarDespedida, 10 * 60 * 1000) };
+      actual.puente.parar({ mantenerCanal: true }); actual = null;
+    }
     pintarBarra(null);
+    if (AVISO.pendiente) avisoSalida(AVISO.pendiente);
   }
 
+  // ───────────────────────────── Aviso cuando el rival se va (una vez por partida, sin tapar los puntos)
+  let despedida = null;
+  const AVISO = { mostrado: false, pendiente: null };
+  function avisoSalida(texto) {
+    if (AVISO.mostrado) return;
+    if (typeof pantalla === "undefined" || pantalla !== "fin") { AVISO.pendiente = texto; return; }   // se enseña al llegar al final
+    AVISO.mostrado = true; AVISO.pendiente = null;
+    barra();                                                     // estilos
+    let el = document.getElementById("online-aviso-salida");
+    if (!el) {
+      el = document.createElement("div"); el.id = "online-aviso-salida"; el.className = "tarjeta online-aviso"; el.setAttribute("role", "status");
+      const fin = document.getElementById("s-fin"); if (fin) fin.prepend(el);
+    }
+    el.classList.remove("oculto");
+    el.innerHTML = `<b>${window.CuentaOnline.util.esc(texto)}</b> <button class="btn azul peq" id="online-aviso-ok">Entendido</button>`;
+    const ok = document.getElementById("online-aviso-ok");
+    if (ok) ok.onclick = () => el.classList.add("oculto");
+  }
+  function alSalidaRival(p) {
+    avisoSalida(p.tipo === "local" ? "Tu rival ha decidido jugar en modo local." : "Tu rival ha abandonado la sala.");
+  }
+  // quien pulsa «Volver al cuartel» u «Otra partida» en la pantalla final se lo dice a su rival
+  function despedirse(tipo) {
+    const p = (despedida && despedida.puente) || (actual && actual.puente);
+    if (!p) return;
+    p.avisarSalida(tipo);
+    setTimeout(cerrarDespedida, 1500);
+  }
+  function cerrarDespedida() {
+    if (!despedida) return;
+    clearTimeout(despedida.cierre); despedida.puente.cerrarCanal(); despedida = null;
+  }
+  document.addEventListener("click", e => {
+    const b = e.target && e.target.closest && e.target.closest('#s-fin [data-act="volver"], #s-fin [data-act="otra"]');
+    if (b && (despedida || actual)) despedirse(b.dataset.act === "otra" ? "local" : "cuartel");
+  }, true);
+
   async function entrar(sb, matchId, yoUid) {
+    if (!actual || actual.matchId !== matchId) { cerrarDespedida(); Object.assign(AVISO, { mostrado: false, pendiente: null }); }
     if (actual) {
       if (actual.matchId === matchId) { if (typeof estado !== "undefined" && estado.online && estado.activa) ir("juego"); return; }   // ya dentro: volver al tablero
       actual.puente.parar(); actual = null;
@@ -282,6 +342,7 @@
       alError: t => { toast("Partida desincronizada: " + t); if (estado.online) { estado.tok++; estado.activa = false; } panelInfo({ sello: "Partida online", color: "var(--rojo)", tit: "Partida desincronizada", txt: t + " La partida se detiene; puedes abandonarla desde la lista de partidas." }); },
       alAviso: t => toast(t),
       alEstado: info => pintarBarra(info),
+      alSalida: alSalidaRival,
     });
     try { await puente.arrancar(); }
     catch (e) { puente.parar(); throw e; }   // si el arranque falla, no quedan abiertos el canal de Realtime ni los intervalos
@@ -352,5 +413,5 @@
     return false;
   }
 
-  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, _act: ACT, _necesitoActuar: necesitoActuar };
+  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, despedirse, _act: ACT, _necesitoActuar: necesitoActuar };
 })();

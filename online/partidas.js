@@ -52,6 +52,8 @@
     sala: null,                // id de la partida abierta
     amigoElegido: "", turnos: TURNOS_DEFECTO, codigo: "",
     confirmar: false,          // confirmación de «Abandonar» en una partida en curso
+    jugadoresSala: null,       // quién estaba en la sala abierta (para avisar si el rival se va)
+    avisados: new Set(),       // un aviso por sala y rival
     msg: "", msgTipo: "", ocupado: false,
   };
   let temporizador = null;
@@ -98,6 +100,14 @@
         st.entrando = true; setTimeout(() => entrarPartida(abierta.id), 0);
       }
       st.estadoSala = abierta ? abierta.status : null;
+      // el rival sale de la sala de espera: ventana «Tu rival ha abandonado la sala», una vez por sala y rival
+      if (abierta && abierta.status === "lobby") {
+        const ids = (st.jugadores[abierta.id] || []).map(j => j.user_id);
+        const antes = st.jugadoresSala && st.jugadoresSala.id === abierta.id ? st.jugadoresSala.ids : [];
+        const ido = antes.find(u => u !== st.yo && !ids.includes(u));
+        if (ido && !st.avisados.has(abierta.id + ":" + ido)) { st.avisados.add(abierta.id + ":" + ido); avisarSalidaSala(nombre(ido)); }
+        st.jugadoresSala = { id: abierta.id, ids };
+      } else st.jugadoresSala = null;
       if (st.vista === "sala" && !st.partidas.some(m => m.id === st.sala)) {
         st.vista = "lista"; st.sala = null;
         if (!st.msg) aviso("La sala ya no existe: se cerró o saliste de ella.", "ok");
@@ -112,7 +122,7 @@
   function montar(sb, yo) {
     if (st.yo === yo && st.canal) return;
     desmontar();
-    Object.assign(st, { sb, yo, partidas: [], jugadores: {}, perfiles: {}, amigos: new Set(), cargado: false, vista: "lista", sala: null, msg: "", confirmar: false });
+    Object.assign(st, { sb, yo, partidas: [], jugadores: {}, perfiles: {}, amigos: new Set(), cargado: false, vista: "lista", sala: null, msg: "", confirmar: false, jugadoresSala: null, avisados: new Set() });
     // Realtime: cualquier cambio en mis partidas o en sus jugadores recarga la lista (los DELETE llegan sin filtrar).
     st.canal = sb.channel("partidas-" + yo)
       .on("postgres_changes", { event: "*", schema: "public", table: "matches" }, recargarPronto)
@@ -262,6 +272,15 @@
       const id = await rpc("join_match", { p_code: st.codigo });
       st.codigo = ""; st.sala = id; st.vista = "sala";
     });
+  }
+
+  function avisarSalidaSala(quien) {
+    // panelInfo y cerrarInfo son constantes de index.html (no propiedades de window)
+    if (typeof panelInfo === "function") {
+      panelInfo({ sello: "Partida online", color: "var(--naranja)", tit: "Tu rival ha abandonado la sala",
+        txt: `${quien} ha salido de la sala de espera. Puedes esperar a que vuelva con el mismo código o salir de la sala.`,
+        botones: [{ txt: "Entendido", fn: () => cerrarInfo() }] });
+    } else aviso("Tu rival ha abandonado la sala.", "ok");
   }
 
   async function entrarPartida(id) {

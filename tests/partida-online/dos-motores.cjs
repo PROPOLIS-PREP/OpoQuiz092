@@ -233,6 +233,8 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
   ok(ab.srv.S.status === "finished" && ab.srv.S.motivo === "forfeit" && ab.srv.S.ganador === UA, `leave_match de B: gana A por abandono (${ab.srv.S.motivo}, ganador ${ab.srv.S.ganador === UA ? "A" : ab.srv.S.ganador})`);
   ok(!leer(ab.A, "estado.activa") && !leer(ab.B, "estado.activa"), "los dos motores se detienen");
   ok(/abandono/.test(ab.A.porIdGet("ganador").textContent) || /abandon/.test(ab.A.porIdGet("online-cierre").textContent), `A ve el final por abandono: «${ab.A.porIdGet("ganador").textContent}» · «${ab.A.porIdGet("online-cierre").textContent}»`);
+  ok(/Tu rival ha abandonado la sala/.test(ab.A.porIdGet("online-aviso-salida").innerHTML) && /Entendido/.test(ab.A.porIdGet("online-aviso-salida").innerHTML),
+    "A ve el aviso «Tu rival ha abandonado la sala» con «Entendido»");
 
   // ── 3. desconexión y «Reclamar victoria»
   console.log("── 3. Desconexión del rival y Reclamar victoria");
@@ -304,6 +306,26 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
     const r = await jugar({ semilla: 64, turnos: 5, inactivoB: { desde: 6 }, conInactividad: false, limite: 120000 });
     ok(r.ina.aviso5 && r.srv.S.motivo === "forfeit" && r.srv.S.ganador === UA && !r.ina.botonA,
       "sin la migración: B pierde igual por inactividad (leave_match) y A no ve el botón de inactividad");
+  }
+
+  // ── 7. aviso cuando el rival se va de la pantalla final (una vez por partida, sin tapar los puntos)
+  console.log("── 7. Aviso de salida del rival");
+  const avanzar = async (reloj, ms) => { const fin = reloj.ahora + ms; for (let i = 0; i < 5000 && reloj.ahora < fin; i++) { await vaciar(); if (!reloj.paso()) break; } await vaciar(); };
+  for (const [tipo, texto, sem] of [["cuartel", "Tu rival ha abandonado la sala", 71], ["local", "Tu rival ha decidido jugar en modo local", 72]]) {
+    const r = await jugar({ semilla: sem, turnos: 5, semillaServidor: sem });
+    const av = () => r.B.porIdGet("online-aviso-salida");
+    const antes = r.B.porIdGet("podio").innerHTML;
+    ok(r.srv.S.motivo === "completed" && leer(r.B, "pantalla") === "fin", `partida terminada y B en la pantalla de puntos (${r.srv.S.motivo})`);
+    r.A.ctx.PartidaOnline.despedirse(tipo);                     // A pulsa «${tipo === "local" ? "Otra partida" : "Volver al cuartel"}»
+    await avanzar(r.reloj, 500);
+    ok(new RegExp(texto).test(av().innerHTML) && !av().classList.contains("oculto") && r.B.porIdGet("podio").innerHTML === antes,
+      `B ve «${texto}» y los puntos siguen en pantalla`);
+    r.B.porIdGet("online-aviso-ok").onclick(); const html = av().innerHTML;
+    ok(av().classList.contains("oculto"), "«Entendido» cierra el aviso");
+    r.A.ctx.PartidaOnline.despedirse(tipo); await avanzar(r.reloj, 500);
+    ok(av().classList.contains("oculto") && av().innerHTML === html, "el aviso sale una sola vez");
+    ok(r.srv.S.enviados.filter(e => e.startsWith(UA.slice(-1) + ":salida:" + tipo)).length >= 1 && !r.srv.S.enviados.some(e => e.startsWith(UB.slice(-1) + ":")),
+      "solo avisa quien se va");
   }
 
   console.log(fallos ? `\n${fallos} FALLO(S)` : "\nTODO OK");
