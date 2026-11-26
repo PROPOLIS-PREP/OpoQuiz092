@@ -100,7 +100,7 @@ function crearPersona(E, srv, semilla, op = {}) {
   };
 }
 
-async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true }) {
+async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true, sinToques = false }) {
   const { reloj, A, B, srv } = montar(semilla, turnos, semillaServidor, conInactividad);
   const ina = { aviso5: false, oculto: false, cancelado: false, reclamado: false, botonA: false };
   await A.ctx.PartidaOnline.entrar(srv.cliente(UA), "M1", UA);
@@ -109,6 +109,9 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
   if (preparar) { vm.runInContext(preparar, A.ctx); vm.runInContext(preparar, B.ctx); }
   // control negativo: un cambio solo en B (los motores deben dejar de coincidir y notarse)
   if (trampaB) vm.runInContext(trampaB, B.ctx);
+  // sin toques: «tocar» solo renueva el reloj local (no salta la cuenta atrás) y no envía nada al servidor;
+  // así todo lo que recibe mark_activity son latidos y avisos de cambio
+  if (sinToques) for (const E of [A, B]) E.ctx.PartidaOnline.actividad = () => vm.runInContext("PartidaOnline._act.local = Date.now()", E.ctx);
   const roto = E => { const a = E.ctx.PartidaOnline.actual(); return !!(a && a.puente._estado.roto); };
   const PERFIL = "JSON.stringify({m:perfil.monedas,t:perfil.trofeos,e:perfil.estrellas,s:perfil.sobres,st:perfil.stats,d:perfil.diario.prog,tp:perfil.temp.prog,liga:perfil.liga&&perfil.liga.pts,g:perfil.grupo})";
   const perfilAntes = { A: leer(A, PERFIL), B: leer(B, PERFIL) };
@@ -316,6 +319,30 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
     const r = await jugar({ semilla: 64, turnos: 5, inactivoB: { desde: 6 }, conInactividad: false, limite: 120000 });
     ok(r.ina.aviso5 && r.srv.S.motivo === "forfeit" && r.srv.S.ganador === UA && !r.ina.botonA,
       "sin la migración: B pierde igual por inactividad (leave_match) y A no ve el botón de inactividad");
+  }
+
+  // ── 8. qué declara cada latido (mark_activity) en los cuatro casos
+  console.log("── 8. Latidos: acción pendiente, esperando al rival, sin interacción y toque real");
+  {
+    const r = await jugar({ semilla: 81, turnos: 5, semillaServidor: 81, sinToques: true });
+    // fuera el instante de entrada: entrar() registra una actividad real (se acaba de pulsar «Entrar» o «Empezar»)
+    const m = r.srv.S.marcas.filter(x => x.t > EPOCA);
+    const caso = (p, a) => m.filter(x => x.p_pendiente === p && x.p_actividad === a);
+    ok(r.srv.S.motivo === "completed", `la partida sin toques registrados termina con normalidad (${r.srv.S.motivo})`);
+    ok(caso(true, false).length > 0 && caso(true, true).length === 0,
+      `1) con acción pendiente propia: p_pendiente true, p_actividad false (${caso(true, false).length} latidos; ninguno con p_actividad true)`);
+    const espera = caso(false, true);
+    ok(espera.length > 0 && espera.every(x => x.rivalPend),
+      `2) esperando al rival: p_actividad true solo si el servidor sabe que el rival tiene algo pendiente (${espera.length} latidos, todos con el rival pendiente)`);
+    const sinNada = caso(false, false);
+    ok(sinNada.length > 0 && m.filter(x => x.p_pendiente === false && !x.rivalPend).every(x => x.p_actividad === false),
+      `3) sin nada pendiente ni el rival: p_pendiente false, p_actividad false (${sinNada.length} latidos; ninguno así cuenta como actividad)`);
+  }
+  {
+    const r = await jugar({ semilla: 82, turnos: 5, semillaServidor: 82 });
+    const toques = r.srv.S.marcas.filter(x => x.p_actividad === true && !x.rivalPend && x.p_pendiente === false);
+    // un toque real sin nada pendiente (caso 3 + toque): solo un toque puede llevar p_actividad true sin el rival pendiente
+    ok(toques.length > 0, `4) un toque real lleva p_actividad true aunque no haya nada pendiente (${toques.length} toques así)`);
   }
 
   // ── 7. aviso cuando el rival se va de la pantalla final (una vez por partida, sin tapar los puntos)

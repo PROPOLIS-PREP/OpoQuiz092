@@ -134,7 +134,10 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
     mark_activity(u, a) {
       if (!conInactividad) return err("Could not find the function public.mark_activity(p_match) in the schema cache", "PGRST202");
       if (!jugadores.includes(u)) return err("No estás en esa partida");
-      S.marcas.push({ u, t: ahora(), p_pendiente: a.p_pendiente, p_actividad: a.p_actividad });
+      // rivalPend: lo que el servidor sabe del rival en ese momento (pendiente_desde o pregunta suya abierta en plazo)
+      const otro = jugadores.find(j => j !== u), q = S.current != null ? S.qs[S.current] : null;
+      const rivalPend = S.pendiente[otro] != null || !!(q && q.player === otro && !q.closed && q.cierra > ahora());
+      S.marcas.push({ u, t: ahora(), p_pendiente: a.p_pendiente, p_actividad: a.p_actividad, rivalPend });
       if (!S.fuera.has(u)) {
         S.latido[u] = ahora();
         if (a.p_actividad !== false) S.actividad[u] = ahora();

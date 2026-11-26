@@ -155,10 +155,10 @@
       // para el motor y la pantalla
       marcarTurnoRival(v) { if (v && !st.turnoRival) st.ultimaRival = R.ahora(); st.turnoRival = v; },
       // true: la pantalla no espera nada de este jugador. Al cambiar, se avisa al servidor en el momento
-      // (pendiente_desde preciso); esperar cuenta como actividad, quedarse pendiente no.
+      // (pendiente_desde preciso). Ver estadoLatido() para cuándo cuenta como actividad.
       marcarEspera(v) {
         const antes = st.esperando; st.esperando = v;
-        if (antes !== v && !st.sinMarcar && !st.terminado) marcar({ p_pendiente: !v, p_actividad: v });
+        if (antes !== v && !st.sinMarcar && !st.terminado) leerRival().then(() => { if (st.esperando === v && !st.terminado) marcar(estadoLatido()); });
       },
       _estado: st, _recibir: recibir, _leer: leerNuevas,
     };
@@ -172,16 +172,41 @@
         return r;
       }, () => null);
     }
+    // ¿El servidor sabe que el rival tiene una acción pendiente? (su pendiente_desde, leído en el último latido,
+    // o una pregunta suya repartida y todavía sin resultado en el registro)
+    function rivalPendiente() {
+      if (st.rivalPendDesde) return true;
+      let abierta = null;
+      for (const a of st.log.values()) {
+        if (a.kind === "pregunta" && a.user_id && a.user_id !== cfg.yo) abierta = +a.payload.question_index;
+        else if (a.kind === "resultado" && +a.payload.question_index === abierta) abierta = null;
+      }
+      return abierta != null;
+    }
+    // Lo que declara cada latido (y cada cambio de lo que espera la pantalla):
+    //   · acción pendiente propia → p_pendiente true, p_actividad false (informa sin contar como actividad);
+    //   · esperando al rival, que tiene una acción pendiente que el servidor conoce → p_pendiente false, p_actividad true;
+    //   · nada pendiente y el rival tampoco (pestaña abierta sin interacción) → p_pendiente false, p_actividad false.
+    // Un toque real (actividad()) siempre lleva p_actividad true.
+    function estadoLatido() {
+      const pendiente = !st.esperando;
+      return { p_pendiente: pendiente, p_actividad: !pendiente && rivalPendiente() };
+    }
+    // estado del rival en el servidor justo antes de declarar el propio («*»: con y sin la migración de inactividad)
+    async function leerRival() {
+      try {
+        const { data } = await sb.from("match_players").select("*").eq("match_id", M);
+        const rival = (data || []).find(j => j.user_id !== cfg.yo) || null;
+        st.rivalPendDesde = rival && rival.pendiente_desde ? rival.pendiente_desde : null;
+        return rival;
+      } catch (e) { return null; }
+    }
     async function latir() {
       if (st.terminado) return;
-      // cada latido declara si la pantalla espera algo de este jugador (p_pendiente). Esperar sin nada pendiente
-      // cuenta como actividad; con algo pendiente solo se informa (no renueva la actividad: así cuentan los 60 s)
-      const r = st.sinMarcar ? null : await marcar({ p_pendiente: !st.esperando, p_actividad: !!st.esperando });
+      const rival = await leerRival();
+      const r = st.sinMarcar ? null : await marcar(estadoLatido());
       if (!r || r.error) { try { await rpc("heartbeat", { p_match: M }); } catch (e) { /* sin conexión */ } }
       try {
-        // «*»: así funciona con y sin la columna ultima_actividad_at (migración de inactividad)
-        const { data } = await sb.from("match_players").select("*").eq("match_id", M);
-        const rival = (data || []).find(j => j.user_id !== cfg.yo);
         if (rival && cfg.alEstado) {
           const silencio = R.ahora() - Date.parse(rival.last_heartbeat);
           // mismas reglas que claim_inactivity: con algo pendiente, 60 s; sin nada pendiente, 180 s
