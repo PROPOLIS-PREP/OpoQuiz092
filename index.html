@@ -7956,7 +7956,7 @@ function regMax(m,v){
   perfil.diario.prog[m]=Math.max(perfil.diario.prog[m]||0,v);
   perfil.temp.prog[m]=Math.max(perfil.temp.prog[m]||0,v);
 }
-const hito=(p,m,n=1)=>{if(p&&p.id===0)reg(m,n)};
+const hito=(p,m,n=1)=>{if(!estado.online&&p&&p.id===0)reg(m,n)};   /* online: sin retos ni estadísticas locales */
 function premioTxt(pr){const a=[];if(pr.mon)a.push(pr.mon+" 🪙");if(pr.sobres)a.push(pr.sobres+(pr.sobres===1?" sobre":" sobres"));if(pr.est)a.push(pr.est+" ⭐");if(pr.acc)a.push("🎁 "+ACC[pr.acc].n);return a.join(" · ")}
 function darPremio(pr){
   if(pr.mon)perfil.monedas+=pr.mon;
@@ -8358,6 +8358,7 @@ const CARTA_FX={
   tribunal:{ico:"juzgado"},tunel:{ico:"tunel"},esquina:{ico:"comisaria"},distrito:{ico:"libro"},
   tienda:{ico:"comisaria"},despliegue:{ico:"divisa"}
 };
+let autoCarta=0;
 function abrirPanel(pref,{sello,color,tit,txt,extra,efecto,botones,tipo,ico}){
   const q=s=>$("#"+pref+"-"+s),velo=$("#velo-"+pref),panel=velo.firstElementChild,c=CARTA_FX[tipo]||{},abierto=velo.classList.contains("on");
   q("sello").textContent=sello;q("sello").style.background=color||"var(--morado)";
@@ -8383,6 +8384,10 @@ function abrirPanel(pref,{sello,color,tit,txt,extra,efecto,botones,tipo,ico}){
     if(c.fx==="golpe"){reanimar(panel,"golpe");sfx.sancion()}
     if(c.fx==="destello")FX.destello(q("arte"));
   },voltea?680:450);
+  if(estado.online&&estado.activa&&pref==="carta"&&(botones||[]).length===1&&jugActual()&&jugActual().remoto){
+    const b0=pie.children[0],serie=++autoCarta;
+    luego(()=>{if(serie===autoCarta&&velo.classList.contains("on")&&pie.children[0]===b0&&!b0.disabled)b0.onclick()},(efecto?(voltea?680:450):0)+3500);
+  }
 }
 const panelCarta=o=>abrirPanel("carta",o);
 const cerrarCarta=()=>$("#velo-carta").classList.remove("on");
@@ -8689,6 +8694,8 @@ const segundosBase=()=>25;  /* tiempo base por pregunta, igual en todos los nive
 const dots=n=>"●".repeat(n)+"○".repeat(7-n);
 const azarJugador=()=>azarJ(estado.jugadores);
 const jugActual=()=>estado.jugadores[estado.turno];
+/* el jugador de este móvil: en local, el 0; en una partida online, el de su asiento (estado.yo) */
+const jugYo=()=>estado.jugadores[estado.yo||0];
 const todos=fn=>estado.jugadores.forEach(fn);
 const lider=()=>[...estado.jugadores].sort((a,b)=>b.puntos-a.puntos)[0];
 const colista=()=>[...estado.jugadores].sort((a,b)=>a.puntos-b.puntos)[0];
@@ -8737,9 +8744,14 @@ function fxChips(f){
 function iniciar(modo,op={}){
   /* partida local: el azar de siempre. Una partida online pasa {semilla}: se fija ANTES de la primera decisión */
   if(op.semilla!=null)fijarSemilla(op.semilla);else rngJuego=Math.random;
+  const on=op.online||null;               /* partida online: {yo, jugadores:[{id,nombre}], turnos, …puente} */
+  estado.online=on;estado.yo=on?on.yo:0;
   estado.modo=modo;
   let nombres,avs;
-  if(modo==="grupo"&&perfil.grupo){
+  if(on){
+    nombres=on.jugadores.map(j=>j.nombre);
+    avs=on.jugadores.map((_,i)=>i===on.yo?perfil.avatar:AV_GENERICO);   /* el rival, con avatar genérico */
+  }else if(modo==="grupo"&&perfil.grupo){
     const g=perfil.grupo;nombres=[perfil.nombre,...g.miembros];
     avs=[perfil.avatar,...g.miembros.map(n=>(perfil.amigos.find(a=>a.n===n)||{}).av||avAzar())];
   }else{
@@ -8747,10 +8759,10 @@ function iniciar(modo,op={}){
     nombres=[perfil.nombre,"Bravo","Charlie","Delta","Eco"].slice(0,cfg.nJug);
     avs=[perfil.avatar,...Array.from({length:cfg.nJug-1},avAzar)];
   }
-  RONDAS=cfg.rondas;
-  estado.objetivoAscenso=cfg.modo==="ascenso"?cfg.categoria:null;
+  RONDAS=on?on.turnos:cfg.rondas;
+  estado.objetivoAscenso=!on&&cfg.modo==="ascenso"?cfg.categoria:null;
   estado.jugadores=nombres.map((n,i)=>({
-    id:i,nombre:n,color:COLORES[i],bot:i>0,av:avs[i],
+    id:i,nombre:n,color:COLORES[i],bot:on?false:i>0,remoto:on?i!==on.yo:false,uid:on?on.jugadores[i].id:null,av:avs[i],
     pos:0,puntos:0,racha:0,mejorRacha:0,aciertos:0,fallos:0,
     cat:0,meritos:0,ascensos:0,saltar:false,doble:false,escudos:1,fx:FX0(),vis:0,casillas:0,sancionado:0,
     com:{mitad:1,tiempo:1,sirena:0},reserva:[0,0,0,0,0,0]
@@ -8766,7 +8778,15 @@ function iniciar(modo,op={}){
   setTimeout(pintarFichas,350);
   inicioDeRonda();
 }
+/* avatar del rival en las partidas online (genérico, sin datos del perfil del otro) */
+const AV_GENERICO={agente:"agente_m",fondo:"retiro",gorra:"plato",extra:"nada",marco:"basico",figura:"f_coche",base:"b_clasica"};
 function salirPartida(){
+  if(estado.online&&estado.activa){
+    panelInfo({sello:"Abandonar la partida online",color:"var(--rojo)",tit:"¿Abandonas la partida?",
+      txt:"Si sales ahora, abandonas: pierdes la partida y gana tu rival.",
+      botones:[{txt:"Seguir jugando",sec:true,fn:cerrarInfo},{txt:"Abandonar",cls:"rojo",fn:()=>{cerrarInfo();estado.online.abandonar()}}]});
+    return;
+  }
   panelInfo({sello:"Salir de la partida",color:"var(--rojo)",tit:"¿Abandonas el servicio?",
     txt:"Si sales ahora la partida no cuenta: no ganas monedas ni trofeos, pero tampoco los pierdes. El progreso de tus retos se conserva.",
     botones:[{txt:"Seguir jugando",sec:true,fn:cerrarInfo},{txt:"Salir",cls:"rojo",fn:()=>{
@@ -9021,7 +9041,7 @@ function pintarRondas(){
 }
 /* escalafón: en la esquina, tu divisa y tus méritos; al tocar, el escalafón entero */
 function pintarEscalafon(){
-  const yo=estado.jugadores[0],c=$("#chip-esc");if(!yo||!c)return;
+  const yo=jugYo(),c=$("#chip-esc");if(!yo||!c)return;
   const sig=ESCALAFON[yo.cat+1],listo=!!sig&&yo.meritos>=sig.req;
   const h=`${divisaSVG(yo.cat,yo.color,26)}<span>★ ${sig?`${yo.meritos}<small>/${sig.req}</small>`:yo.meritos}</span>`;
   if(c.dataset.h!==h){c.dataset.h=h;c.innerHTML=h}
@@ -9030,7 +9050,7 @@ function pintarEscalafon(){
   pintarHud();
 }
 function verEscalafon(){
-  const yo=estado.jugadores[0];if(!yo)return;
+  const yo=jugYo();if(!yo)return;
   const sig=ESCALAFON[yo.cat+1],listo=sig&&yo.meritos>=sig.req;
   const extra=`<div class="escala-fila">${ESCALAFON.map((g,i)=>`
     <div class="grado ${i===yo.cat?"actual":i<yo.cat?"logrado":""}">
@@ -9043,14 +9063,14 @@ function verEscalafon(){
 }
 /* plantilla: en la esquina, cuántos efectivos tienes; al tocar, dónde está cada uno */
 function pintarPlantilla(){
-  const yo=estado.jugadores[0],c=$("#chip-pla");if(!yo||!c)return;
+  const yo=jugYo(),c=$("#chip-pla");if(!yo||!c)return;
   const res=unidadesDe(yo).reduce((a,o)=>a+o.n,0),des=misDestacamentos(yo).length,top=Math.max(0,...yo.reserva.map((n,t)=>n?t:0),...misDestacamentos(yo).map(d=>d.tier));
   const h=`${divisaSVG(top,yo.color,26)}<span>×${res}</span>${des?`<b class="cal">${des}</b>`:""}`;
   if(c.dataset.h!==h){if(c.dataset.h)reanimar(c,"nuevo");c.dataset.h=h;c.innerHTML=h}
   c.setAttribute("aria-label",`Efectivos: ${res} en reserva, ${des} desplegados`);
 }
 function verPlantilla(){
-  const yo=estado.jugadores[0];if(!yo)return;
+  const yo=jugYo();if(!yo)return;
   const des=misDestacamentos(yo);
   const filas=yo.reserva.map((n,t)=>{
     const fuera=des.filter(d=>d.tier===t);
@@ -9075,7 +9095,7 @@ function desplegarEn(p,tier,i){
   hito(p,"despliegues");sfx.desplegar();pintarDestacamentos();pintarPlantilla();pintarHud();
 }
 function pintarBandeja(){
-  const b=$("#bandeja"),p=estado.jugadores[0],on=estado.fase==="despliegue"&&p&&jugActual()===p,serie=++bandejaSerie;
+  const b=$("#bandeja"),p=jugYo(),on=estado.fase==="despliegue"&&p&&jugActual()===p,serie=++bandejaSerie;
   if(!on){
     /* la bandeja baja antes de desaparecer */
     if(b.classList.contains("on")&&!Anim.reducida()){b.classList.add("sale");setTimeout(()=>{if(serie===bandejaSerie){b.classList.remove("on","sale");b.innerHTML=""}},190)}
@@ -9096,7 +9116,7 @@ function casillaEn(x,y){
   return el?+el.dataset.i:-1;
 }
 function intentarDespliegue(tier,i){
-  const p=estado.jugadores[0];
+  const p=jugYo();
   if(estado.fase!=="despliegue"||jugActual()!==p||i<0)return false;
   if(!validaDespliegue(i)){
     const t=TABLERO[i].t;
@@ -9104,6 +9124,7 @@ function intentarDespliegue(tier,i){
     return false;
   }
   if(!unidadesDe(p).some(o=>o.t===tier))return false;
+  if(estado.online){estado.online.enviar("desplegar",{tier,casilla:i});seleccion=null;pintarBandeja();marcarLibres(false);return true}
   desplegarEn(p,tier,i);
   toast(`${nombreUnidad(tier)} en ${TABLERO[i].n}: +${TIERS[tier].bono.toFixed(1)} cuando tu ficha esté allí`,true);
   seleccion=null;pintarBandeja();marcarLibres(false);
@@ -9111,6 +9132,7 @@ function intentarDespliegue(tier,i){
   return true;
 }
 function faseDespliegue(p){
+  if(estado.online){despliegueOnline(p);return}
   if(p.bot){
     estado.fase="carta";
     let txt=`${p.nombre} reserva sus efectivos para más adelante.`,efe="Sin despliegue";
@@ -9126,6 +9148,25 @@ function faseDespliegue(p){
   estado.fase="despliegue";seleccion=null;pintarBandeja();pintarFichas();aplicarCam();
   $("#aviso").innerHTML=`<b style="color:var(--azul2)">Despliegue.</b> Arrastra tus efectivos hasta la casilla que quieras.`;
   accionBoton("Terminar despliegue",false,finDespliegue);
+}
+function despliegueOnline(p){
+  const on=estado.online;let finPedido=false;
+  const pedirFin=()=>{if(finPedido||p.remoto)return;finPedido=true;accionBoton("Terminando…",true);on.enviar("fin_despliegue",{})};
+  estado.fase="despliegue";seleccion=null;pintarBandeja();pintarFichas();aplicarCam();
+  $("#aviso").innerHTML=p.remoto?`<b>${escapar(p.nombre)}</b> despliega sus efectivos…`:`<b style="color:var(--azul2)">Despliegue.</b> Arrastra tus efectivos hasta la casilla que quieras.`;
+  if(p.remoto)accionBoton("Despliega "+p.nombre,true);else accionBoton("Terminar despliegue",false,pedirFin);
+  const bucle=()=>on.esperar(["desplegar","fin_despliegue"],a=>{
+    if(a.kind==="fin_despliegue"){finDespliegue();return}
+    const t=+a.payload.tier,i=+a.payload.casilla;
+    if(validaDespliegue(i)&&unidadesDe(p).some(o=>o.t===t)){   /* una jugada imposible la descartan todos igual */
+      desplegarEn(p,t,i);
+      toast(`${p.remoto?p.nombre+": ":""}${nombreUnidad(t)} en ${TABLERO[i].n}`,!p.remoto);
+    }
+    pintarBandeja();marcarLibres(false);
+    if(!puedeDesplegar(p))pedirFin();
+    bucle();
+  });
+  bucle();
 }
 function finDespliegue(){
   if(estado.fase!=="despliegue")return;
@@ -9157,7 +9198,7 @@ function finDespliegue(){
     if(!a.movido){
       if(Math.hypot(e.clientX-a.x0,e.clientY-a.y0)<8)return;
       a.movido=true;seleccion=null;a.el.classList.add("sel");
-      a.fan=document.createElement("div");a.fan.className="fantasma";a.fan.innerHTML=unidadHTML(a.tier,estado.jugadores[0].color,a.tier===0?48:62);
+      a.fan=document.createElement("div");a.fan.className="fantasma";a.fan.innerHTML=unidadHTML(a.tier,jugYo().color,a.tier===0?48:62);
       document.body.appendChild(a.fan);marcarLibres(true);visor.classList.add("arrastrando");
     }
     a.fan.style.left=e.clientX+"px";a.fan.style.top=e.clientY+"px";
@@ -9187,16 +9228,16 @@ function comodinesHTML(yo){
   return COMODINES.map(([k,e,n])=>`<button class="como ${yo.com[k]?"":"vacio"}" data-c="${k}" aria-label="${n}. Tienes ${yo.com[k]}">${e}<b>${yo.com[k]}</b></button>`).join("")
     +`<button class="como pasivo ${yo.escudos?"":"vacio"}" data-c="escudo" aria-label="Escudo de racha. Tienes ${yo.escudos}">🛡️<b>${yo.escudos}</b></button>`;
 }
-const comodinUsable=()=>estado.fase==="pregunta"&&preguntaActiva&&!preguntaActiva.p.bot&&!preguntaActiva.respondida&&!preguntaActiva.op.examen;
+const comodinUsable=()=>estado.fase==="pregunta"&&preguntaActiva&&!preguntaActiva.p.bot&&!preguntaActiva.p.remoto&&!preguntaActiva.respondida&&!preguntaActiva.op.examen;
 function pintarComodines(){
-  const yo=estado.jugadores[0];if(!yo)return;
+  const yo=jugYo();if(!yo)return;
   const h=comodinesHTML(yo),c=$("#comodines"),z=$("#preg-como");
   if(c.dataset.h!==h){c.dataset.h=h;c.innerHTML=h}
   z.innerHTML=comodinUsable()?h:"";
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest&&e.target.closest(".como[data-c]");if(!b)return;
-  const yo=estado.jugadores[0],k=b.dataset.c;if(!yo)return;
+  const yo=jugYo(),k=b.dataset.c;if(!yo)return;
   if(k==="escudo"){toast("🛡️ El escudo se usa solo: si fallas con racha, la salva");return}
   const nom=(COMODINES.find(c=>c[0]===k)||[])[2];
   if(preguntaActiva&&preguntaActiva.op.examen&&estado.fase==="pregunta"){toast("En el examen de ascenso no hay comodines");return}
@@ -9251,6 +9292,16 @@ function ofrecerExamen(p,origen){
   const c=p.cat+1,sig=ESCALAFON[c];
   const pre=origen==="vuelta"?"Vuelta completa al distrito: puedes presentarte sin esperar a la convocatoria. ":"";
   const cont=()=>origen==="ronda"?procesarColaAscenso():seguir();
+  if(estado.online){
+    const decide=v=>{desactivarPie();estado.online.enviar("examen",{acepta:v})};
+    panelCarta({tipo:"tribunal",sello:`Tribunal · ${p.nombre}`,color:"var(--naranja)",tit:`Ascenso a ${sig.n}`,
+      txt:p.remoto?pre+`${p.nombre} reúne los ${sig.req} méritos y decide si se presenta al examen…`
+        :pre+`Reúnes los ${sig.req} méritos exigidos. El examen son ${EXAMEN_PREG[c]} preguntas y necesitas acertar ${EXAMEN_MIN[c]}. Grupo ${sig.grupo}.`,
+      extra:balanceAscenso(p),
+      botones:p.remoto?[]:[{txt:"Esta no",sec:true,fn:()=>decide(false)},{txt:"Me presento",cls:"verde",fn:()=>decide(true)}]});
+    estado.online.esperar(["examen"],a=>{cerrarCarta();a.payload.acepta?empezarExamen(p,origen):cont()});
+    return;
+  }
   if(p.bot){
     const va=rngJuego()<(.85-p.cat*.08);
     panelCarta({tipo:"tribunal",sello:`Tribunal · ${p.nombre}`,color:"var(--naranja)",tit:`Ascenso a ${sig.n}`,
@@ -9297,7 +9348,7 @@ function evaluarExamen(){
 function ascender(p){
   p.cat++;p.ascensos++;
   const pl=PLANTILLA[p.cat];if(pl)p.reserva[pl.t]+=pl.n;
-  hito(p,"ascensos");if(p.id===0)regMax("maxCat",p.cat);
+  hito(p,"ascensos");if(!estado.online&&p.id===0)regMax("maxCat",p.cat);
   sfx.ascenso();confeti(60);FX.fanfarria(p);
   toast(`¡${p.nombre} asciende a ${ESCALAFON[p.cat].n}!`,true);
   pintarEscalafon();pintarPlantilla();pintarRondas();
@@ -9309,7 +9360,7 @@ function ascender(p){
 function nucleoEspera(){
   const p=jugActual(),kt=estado.ronda+":"+estado.turno;
   if(estado.cartelDe!==kt){estado.cartelDe=kt;FX.cartel(p)}
-  $("#turno-nom").textContent=p.nombre;$("#turno-nom").style.color=p.id===0?"var(--azul2)":"var(--tinta)";
+  $("#turno-nom").textContent=p.nombre;$("#turno-nom").style.color=p===jugYo()?"var(--azul2)":"var(--tinta)";
   const bd=bonoDesta(p),fx=fxChips(p.fx);
   $("#turno-cat").innerHTML=`${ESCALAFON[p.cat].n} · <b>×${multiplicador(p).toFixed(1)}</b>`
     +(bd?`<span class="fx" style="color:var(--verde2)">Destacamento propio +${bd.toFixed(1)}</span>`:"")
@@ -9322,6 +9373,11 @@ function nucleoEspera(){
   }
   estado.fase="esperaPregunta";
   $("#aviso").innerHTML=puedeAscender(p)?`Acierta para tirar el dado.<br><b style="color:var(--verde2)">Méritos listos: acción, convocatoria o vuelta completa</b>`:"Acierta la pregunta para tirar el dado.";
+  if(estado.online){
+    if(p.remoto){accionBoton("Turno de "+p.nombre,true);estado.online.esperar(["pregunta"],()=>preguntaDeTurno(p),{mirar:true})}
+    else accionBoton("Responder",false,()=>preguntaDeTurno(p));
+    return;
+  }
   if(p.bot){accionBoton("Responde "+p.nombre,true);luego(()=>preguntaDeTurno(p),800)}
   else accionBoton("Responder",false,()=>preguntaDeTurno(p));
 }
@@ -9378,6 +9434,11 @@ function prepararTirada(p,extra){
   estado.fase="esperaTirada";
   const m=p.fx.dado;
   $("#aviso").innerHTML=`<b style="color:var(--verde2)">${extra?"Tirada extra.":"Acierto."}</b> Tirada disponible${m?` (${m>0?"+":""}${m} al dado)`:""}`;
+  if(estado.online){
+    if(p.remoto)accionBoton("Tira "+p.nombre,true);
+    else accionBoton("Tirar dado",false,()=>{accionBoton("Tirando…",true);estado.online.enviar("tirar",{})});
+    estado.online.esperar(["tirar"],()=>tirar());return;
+  }
   if(p.bot){accionBoton("Tira "+p.nombre,true);luego(tirar,800)}
   else accionBoton("Tirar dado",false,tirar);
 }
@@ -9481,6 +9542,15 @@ function servicioDistrito(p,bloque){
   const col=BLOQUES[bloque].color,sello=`Servicio de distrito · ${p.nombre}`;
   /* bloque aún sin preguntas: la pregunta extra sale de cualquier otro */
   const nom=bloqueVacio(bloque)?`otro bloque (${BLOQUES[bloque].nombre} aún no tiene preguntas)`:BLOQUES[bloque].nombre;
+  if(estado.online){
+    const decide=v=>{desactivarPie();estado.online.enviar("distrito",{acepta:v})};
+    panelCarta({tipo:"distrito",sello,color:col,tit:TABLERO[p.pos].n,
+      txt:p.remoto?`${p.nombre} decide si pide una pregunta extra de ${nom}…`
+        :`Puedes pedir una pregunta extra de ${nom}. Si aciertas: puntos y +1 mérito. Si fallas, pierdes la racha${p.racha>=2?(p.escudos?` (ahora ×${p.racha}, y tienes escudo)`:` (ahora ×${p.racha})`):""}.`,
+      botones:p.remoto?[]:[{txt:"Paso",sec:true,fn:()=>decide(false)},{txt:"La acepto",cls:"verde",fn:()=>decide(true)}]});
+    estado.online.esperar(["distrito"],a=>{if(a.payload.acepta){cerrarCarta();lanzarPregunta(p,{bloque,extra:true})}else seguir()});
+    return;
+  }
   if(p.bot){
     const acepta=rngJuego()<.4;
     panelCarta({tipo:"distrito",sello,color:col,tit:TABLERO[p.pos].n,
@@ -9498,6 +9568,7 @@ function comprar(p,a){
 }
 function comisaria(p){
   estado.fase="carta";sumar(p,100);sfx.carta();
+  if(estado.online){comisariaOnline(p);return}
   if(p.bot){
     const a=TIENDA.slice().reverse().find(a=>p.puntos>=a.precio);if(a)comprar(p,a);
     panelCarta({tipo:"tienda",sello:"Comisaría Central",color:"var(--naranja)",tit:"Fichas y repostaje",
@@ -9517,6 +9588,28 @@ function comisaria(p){
     comprar(p,a);sfx.compra();toast("Comprado: "+a.et);FX.destello(b,7);
     $("#carta-extra").innerHTML=render();$("#carta-efecto").textContent=`Saldo: ${p.puntos} puntos`;
   };
+}
+
+function comisariaOnline(p){
+  const on=estado.online,mio=!p.remoto;
+  const render=()=>`<div class="lista-op">${TIENDA.map((a,i)=>`<button class="art" data-i="${i}" ${!mio||p.puntos<a.precio?"disabled":""}>${a.et}<span class="precio">${a.precio} pts</span></button>`).join("")}</div>`;
+  panelCarta({tipo:"tienda",sello:"Comisaría Central",color:"var(--naranja)",tit:"Fichas y repostaje",
+    txt:mio?"Cobras 100 puntos por fichar. Aquí cambias puntos de la partida por comodines y escudos.":`${p.nombre} ficha en comisaría, cobra 100 puntos y mira la tienda…`,
+    extra:render(),botones:mio?[{txt:"Salir de servicio",fn:()=>{desactivarPie();on.enviar("fin_comisaria",{})}}]:[]});
+  $("#carta-efecto").textContent=`Saldo: ${p.puntos} puntos`;
+  if(mio)$("#carta-extra").onclick=e=>{
+    const b=e.target.closest(".art");if(!b||b.disabled)return;
+    const a=TIENDA[+b.dataset.i];if(p.puntos<a.precio)return;
+    b.disabled=true;on.enviar("comprar",{i:+b.dataset.i});
+  };
+  const bucle=()=>on.esperar(["comprar","fin_comisaria"],a=>{
+    if(a.kind==="fin_comisaria"){seguir();return}
+    const art=TIENDA[+a.payload.i];
+    if(art&&p.puntos>=art.precio){comprar(p,art);if(mio){sfx.compra();toast("Comprado: "+art.et)}else toast(`${p.nombre} compra ${art.et}`)}
+    $("#carta-extra").innerHTML=render();$("#carta-efecto").textContent=`Saldo: ${p.puntos} puntos`;
+    bucle();
+  });
+  bucle();
 }
 
 /* ---- casillas de sanción ---- */
@@ -9542,6 +9635,20 @@ function lanzarARival(p,c,sello,color,tipo){
   const lista=`<div class="lista-op">${rivales.map(o=>`<button class="art" data-id="${o.id}">${avatarHTML(o.av,26)} ${escapar(o.nombre)}
     <span style="color:var(--gris);font-size:11px">${ESCALAFON[o.cat].corto}${o.racha>=2?" · 🔥"+o.racha:""}${o.escudos?" · 🛡️"+o.escudos:""}</span>
     <span class="precio">${o.puntos} pts</span></button>`).join("")}</div>`;
+  if(estado.online){
+    const on=estado.online,tit=(c.e?c.e+" ":"")+c.t;
+    if(p.remoto)panelCarta({tipo,sello,color,tit,txt:`${c.x} ${p.nombre} elige a quién se la lanza…`,botones:[]});
+    else{
+      panelCarta({tipo,sello,color,tit,txt:c.x+" Elige a quién se la lanzas.",extra:lista,botones:[]});
+      $("#carta-extra").onclick=e=>{const b=e.target.closest(".art");if(!b)return;$("#carta-extra").onclick=null;on.enviar("lanzar",{objetivo:+b.dataset.id})};
+    }
+    on.esperar(["lanzar"],a=>{
+      const o=rivales.find(j=>j.id===+a.payload.objetivo)||rivales[0];   /* objetivo imposible: el primer rival, igual en todos */
+      const r=c.f(p,o);hito(p,"lanzadas");refresco();
+      panelCarta({tipo,sello,color,tit,txt:p.remoto?`${p.nombre} se la lanza a ${o.nombre}.`:`Se la lanzas a ${o.nombre}.`,efecto:()=>r,botones:[{txt:"Continuar",fn:seguir}]});
+    });
+    return;
+  }
   panelCarta({tipo,sello,color,tit:(c.e?c.e+" ":"")+c.t,txt:c.x+" Elige a quién se la lanzas.",extra:lista,botones:[]});
   $("#carta-extra").onclick=e=>{
     const b=e.target.closest(".art");if(!b)return;
@@ -9609,6 +9716,29 @@ function accionRecolocar(p,c,sello){
   }
   const lista=`<div class="lista-op">${mios.map(d=>`<div class="reubi"><span class="et">${TIERS[d.tier].n} · <b>${TABLERO[d.casilla].n}</b></span>
     <button class="pri" data-mv="${d.casilla}" ${libre?"":"disabled"}>Traer aquí</button><button data-rt="${d.casilla}">Retirar</button></div>`).join("")}</div>`;
+  if(estado.online){
+    const on=estado.online;
+    panelCarta({tipo:"accion",sello,color:"var(--azul)",tit:c.t,
+      txt:p.remoto?`${c.x} ${p.nombre} revisa su despliegue…`:libre?`${c.x} Estás en ${TABLERO[p.pos].n}.`:`${c.x} Esta casilla ya está ocupada, así que solo puedes retirar efectivos a la reserva.`,
+      extra:p.remoto?"":lista,botones:p.remoto?[]:[{txt:"Dejarlo como está",sec:true,fn:()=>{desactivarPie();on.enviar("recolocar",{fin:true})}}]});
+    if(!p.remoto)$("#carta-extra").onclick=e=>{
+      const mv=e.target.closest("[data-mv]"),rt=e.target.closest("[data-rt]");
+      if(mv&&!mv.disabled){$("#carta-extra").onclick=null;desactivarPie();on.enviar("recolocar",{mover:+mv.dataset.mv})}
+      else if(rt){$("#carta-extra").onclick=null;desactivarPie();on.enviar("recolocar",{retirar:+rt.dataset.rt})}
+    };
+    on.esperar(["recolocar"],a=>{
+      const x=a.payload||{};
+      if(x.fin){seguir();return}
+      const i=+(x.mover!=null?x.mover:x.retirar),d=estado.destacamentos[i];
+      if(d&&d.jug===p.id){                                  /* solo sus propios efectivos */
+        if(x.mover!=null&&libre){delete estado.destacamentos[i];estado.destacamentos[p.pos]={jug:p.id,tier:d.tier,bono:d.bono};sfx.desplegar();toast(`Efectivos trasladados a ${TABLERO[p.pos].n}`,!p.remoto)}
+        else if(x.retirar!=null){delete estado.destacamentos[i];p.reserva[d.tier]+=d.tier===0?2:1;sfx.desplegar();toast(`Efectivos retirados de ${TABLERO[i].n}`)}
+      }
+      pintarDestacamentos();pintarPlantilla();pintarHud();
+      cerrarCarta();if(!comprobarVictoria())finDeTurno(p);
+    });
+    return;
+  }
   panelCarta({tipo:"accion",sello,color:"var(--azul)",tit:c.t,
     txt:libre?`${c.x} Estás en ${TABLERO[p.pos].n}.`:`${c.x} Esta casilla ya está ocupada, así que solo puedes retirar efectivos a la reserva.`,
     extra:lista,botones:[{txt:"Dejarlo como está",sec:true,fn:seguir}]});
@@ -9675,13 +9805,25 @@ function lanzarPregunta(p,op={}){
   let nivel=(op.turno||op.examen)?sortearNivel(cat):nivelAzar(),fx=null;
   if(op.turno){fx={...p.fx};if(fx.facil)nivel=Math.min(nivel,2);nivel=Math.min(7,nivel+fx.nivel);
     p.fx={...FX0(),dado:p.fx.dado}}            /* los efectos se consumen en la pregunta de turno */
+  if(estado.online){preguntaOnline(p,op,nivel,fx);return}
   const q=elegirPregunta(op.bloque,nivel,op.extra);
   if(op.extra)nivel=q.n;
+  const seg=segundosPregunta(nivel,op,fx);
+  preguntaActiva={q,p,op,nivel,seg,total:seg,respondida:false,fx,tok:estado.tok};
+  pintarPregunta(q,p,op,nivel,fx);
+  $$("#preg-ops .op").forEach(b=>b.onclick=()=>{if(!p.bot)responder(+b.dataset.i)});
+  if(fx&&fx.pista)descartarDos(q);
+  pintarHud();pintarComodines();arrancarCrono();
+  if(p.bot)turnoBot();
+}
+function segundosPregunta(nivel,op,fx){
   let seg=segundosBase(nivel);
   if(op.radar)seg=Math.max(8,seg-6);
   if(op.examen)seg=Math.max(9,seg-3);
   if(fx)seg=Math.max(6,seg+fx.tiempo);
-  preguntaActiva={q,p,op,nivel,seg,total:seg,respondida:false,fx,tok:estado.tok};
+  return seg;
+}
+function pintarPregunta(q,p,op,nivel,fx){
   const e=estado.examen;
   const etiqueta=op.examen?`Examen · ${ESCALAFON[op.catObjetivo].n}`:op.turno?`Pregunta de turno · ${BLOQUES[q.b].nombre}`
     :op.radar?"Radar móvil · doble puntuación":op.juzgado?"Juzgado de guardia":`Servicio de distrito · ${BLOQUES[q.b].nombre}`;
@@ -9696,17 +9838,86 @@ function lanzarPregunta(p,op={}){
   $("#preg-ops").innerHTML=q.o.map((t,i)=>`<button class="op" data-i="${i}"><span class="letra">${"ABCD"[i]}</span><span>${t}</span></button>`).join("");
   $("#velo-preg .panel").classList.remove("resuelta","tiembla");$("#velo-preg .panel-cuerpo").scrollTop=0;
   $("#velo-preg").classList.add("on");
-  $$("#preg-ops .op").forEach(b=>b.onclick=()=>{if(!p.bot)responder(+b.dataset.i)});
-  if(fx&&fx.pista)descartarDos(q);
-  pintarHud();pintarComodines();arrancarCrono();
-  if(p.bot)turnoBot();
 }
+/* ---- pregunta en una partida online: la reparte el servidor (draw_question) y el resultado llega del registro.
+   Quien no responde solo ve «X está respondiendo…» y, al cerrarse, la revisión con la respuesta. ---- */
+function preguntaOnline(p,op,nivel,fx){
+  const on=estado.online,mio=!p.remoto;
+  const seg=Math.min(60,Math.max(5,segundosPregunta(nivel,op,fx)));
+  const tipo=op.turno?"turno":op.examen?"examen":"casilla",bloque=op.bloque||null;
+  estado.fase="pregunta";
+  if(mio)on.pedirPregunta({bloque,nivel,segundos:seg,tipo});
+  else{accionBoton("Responde "+p.nombre,true);$("#aviso").innerHTML=`<b>${escapar(p.nombre)}</b> está respondiendo…`}
+  on.esperar(["pregunta"],a=>{
+    const x=a.payload||{};
+    /* los dos motores calculan lo mismo: si el servidor repartió otra cosa, la partida está desincronizada */
+    if(+x.nivel_pedido!==nivel||+x.segundos!==seg||x.tipo!==tipo||(bloque&&!bloqueVacio(bloque)&&x.bloque!==bloque)){
+      on.error("La pregunta repartida no coincide con la que calcula este móvil.");return;
+    }
+    if(op.extra)nivel=+x.nivel;
+    const q={b:x.bloque,n:+x.nivel,q:"",o:[],a:-1,d:""};
+    const pa=preguntaActiva={q,p,op,nivel,seg,total:seg,respondida:false,fx,tok:estado.tok,idx:+x.question_index,online:true,fuera:[],pistaUsada:false};
+    if(mio){
+      on.abrir(pa.idx).then(d=>{
+        if(preguntaActiva!==pa||pa.respondida)return;
+        if(d){q.q=d.texto;q.o=d.opciones;(d.descartadas||[]).forEach(i=>{if(!pa.fuera.includes(i))pa.fuera.push(i)})}
+        pintarPregunta(q,p,op,nivel,fx);marcarFuera(pa);
+        $$("#preg-ops .op").forEach(b=>b.onclick=()=>responderOnline(+b.dataset.i));
+        if(fx&&fx.pista)on.comodin(pa.idx,"mitad");             /* el chivatazo: 50/50 del servidor */
+        pintarHud();pintarComodines();arrancarCrono();
+      });
+    }
+    esperarEnPregunta(pa);
+  });
+}
+function marcarFuera(pa){pa.fuera.forEach(i=>{const b=$(`#preg-ops .op[data-i="${i}"]`);if(b)b.classList.add("fuera")})}
+function esperarEnPregunta(pa){
+  const on=estado.online,p=pa.p;
+  on.esperar(["comodin","sirena","resultado"],a=>{
+    if(preguntaActiva!==pa){on.error("Llegó una jugada de pregunta fuera de sitio.");return}
+    const x=a.payload||{};
+    if(a.kind==="sirena"){
+      if(p.com.sirena>0){p.com.sirena--;p.doble=true;toast(p.remoto?`🚨 ${p.nombre} usa la sirena`:"🚨 Puntuación doble")}
+      sfx.comodin();pintarComodines();esperarEnPregunta(pa);return;
+    }
+    if(a.kind==="comodin"){
+      if(x.kind==="mitad"){
+        if(pa.fx&&pa.fx.pista&&!pa.pistaUsada)pa.pistaUsada=true;else if(p.com.mitad>0)p.com.mitad--;
+        (x.descartadas||[]).forEach(i=>{if(!pa.fuera.includes(+i))pa.fuera.push(+i)});marcarFuera(pa);
+        if(!p.remoto)toast("50/50 activado");
+      }
+      if(x.kind==="tiempo"){if(p.com.tiempo>0)p.com.tiempo--;pa.seg+=10;pa.total+=10;if(!p.remoto)toast("+10 segundos")}
+      sfx.comodin();pintarComodines();esperarEnPregunta(pa);return;
+    }
+    /* resultado: los puntos salen de los segundos que dio el servidor, iguales en los dos móviles */
+    clearInterval(temporizador);
+    on.resultado(pa.idx).then(d=>{
+      if(preguntaActiva!==pa)return;
+      const q=pa.q;
+      if(d){q.a=+d.respuesta_correcta;q.d=d.explicacion||"";if(!q.o.length&&d.opciones){q.q=d.texto||"";q.o=d.opciones}}
+      if(!$("#velo-preg").classList.contains("on")){pintarPregunta(q,p,pa.op,pa.nivel,pa.fx);marcarFuera(pa)}
+      pa.seg=+x.segundos_restantes||0;
+      responder(x.result==="timeout"?-1:+x.option);
+    });
+  });
+}
+function responderOnline(i){
+  const pa=preguntaActiva;
+  if(!pa||!pa.online||pa.respondida||pa.enviada||pa.p.remoto||pa.fuera.includes(i))return;
+  pa.enviada=true;$$("#preg-ops .op").forEach(b=>{b.disabled=true});
+  estado.online.responder(pa.idx,i);
+}
+const desactivarPie=()=>[...$("#carta-pie").children].forEach(b=>{b.disabled=true});
 function arrancarCrono(){
   clearInterval(temporizador);actualizarCrono();
   temporizador=setInterval(()=>{
     if(!preguntaActiva){clearInterval(temporizador);return}
     preguntaActiva.seg-=.1;
-    if(preguntaActiva.seg<=0){clearInterval(temporizador);responder(-1)}else actualizarCrono();
+    if(preguntaActiva.seg<=0){
+      clearInterval(temporizador);
+      if(!preguntaActiva.online)responder(-1);
+      else{preguntaActiva.seg=0;actualizarCrono();if(!preguntaActiva.p.remoto)estado.online.vencido()}
+    }else actualizarCrono();
   },100);
 }
 function actualizarCrono(){
@@ -9718,6 +9929,13 @@ function actualizarCrono(){
 }
 function usarComodin(tipo){
   const {p,q}=preguntaActiva;if(!p.com[tipo])return;
+  if(preguntaActiva.online){                                  /* online: lo anota el servidor y se aplica al llegar */
+    const pa=preguntaActiva;if(pa.enviada)return;
+    if(tipo==="sirena")estado.online.enviar("sirena",{});
+    else if(tipo==="mitad"&&pa.fx&&pa.fx.pista){toast("El chivatazo ya ha quitado opciones");return}
+    else estado.online.comodin(pa.idx,tipo);
+    return;
+  }
   p.com[tipo]--;
   if(tipo==="mitad"){descartarDos(q);toast("50/50 activado")}
   if(tipo==="tiempo"){preguntaActiva.seg+=10;preguntaActiva.total+=10;toast("+10 segundos")}
@@ -9807,10 +10025,10 @@ function responder(idx){
     }
     sumar(p,puntos);
     hito(p,"aciertos");hito(p,"ac_"+q.b);if(nivel>=5)hito(p,"dificiles");if(p.racha===3)hito(p,"racha3");
-    if(p.id===0)regMax("mejorRacha",p.racha);
+    if(!estado.online&&p.id===0)regMax("mejorRacha",p.racha);
     msg=p.racha>=3?`¡Racha ×${p.racha}!`:"¡Correcto!";
     p.racha>=3?sfx.racha():sfx.bien();
-    if(!p.bot)confeti(p.racha>=3?46:26);
+    if(!p.bot&&!p.remoto)confeti(p.racha>=3?46:26);
   }else{
     p.fallos++;
     const tenia=p.racha,rota=perderRacha(p);
@@ -9820,7 +10038,7 @@ function responder(idx){
     else if(op.turno)msg=idx===-1?"Se acabó el tiempo: sin tirada":"Incorrecto: sin tirada";
     else msg=idx===-1?"Se acabó el tiempo":"Incorrecto";
     if(rota)sfx.mal();
-    if(!p.bot&&navigator.vibrate)navigator.vibrate(120);
+    if(!p.bot&&!p.remoto&&navigator.vibrate)navigator.vibrate(120);
   }
   const bd=bonoDesta(p);
   $("#preg-result").innerHTML=`
@@ -9843,6 +10061,10 @@ function responder(idx){
     if(era.turno)bien?prepararTirada(p):finTurnoSinTirada(p);
     else finDeTurno(p);
   };
+  if(preguntaActiva.online){                                  /* online: la revisión no bloquea, se cierra sola */
+    const pa=preguntaActiva,b=$("#preg-seguir");
+    luego(()=>{if(preguntaActiva===pa&&$("#velo-preg").classList.contains("on"))b.onclick()},10000);
+  }
   pintarHud();pintarComodines();
 }
 
@@ -9876,12 +10098,29 @@ const LOGROS=[
 ];
 function logrosHTML(orden){
   const h=LOGROS.map(l=>{const g=[...orden].sort((a,b)=>l.v(b)-l.v(a))[0],v=l.v(g);return v>=l.min?{l,g,v}:null}).filter(Boolean)
-    .map((x,i)=>`<div class="logro ${x.g.id===0?"mio":""}" style="--i:${i}">${icono("medalla",30)}<div><b>${x.l.t}</b><span><i style="--c:${x.g.color}"></i>${escapar(x.g.nombre)} · ${x.l.f(x.v)}</span></div></div>`).join("");
+    .map((x,i)=>`<div class="logro ${x.g===jugYo()?"mio":""}" style="--i:${i}">${icono("medalla",30)}<div><b>${x.l.t}</b><span><i style="--c:${x.g.color}"></i>${escapar(x.g.nombre)} · ${x.l.f(x.v)}</span></div></div>`).join("");
   return h||`<div class="vacio">Partida sin logros destacados.</div>`;
 }
 function trofeosPor(pos,n){if(pos===1)return 30;if(pos===n)return-12;return[0,0,10,0,-6][pos]||0}
 const comprobarVictoria=()=>estado.fase==="fin";
+function finPartidaOnline(){
+  estado.fase="fin";estado.activa=false;clearInterval(temporizador);
+  cerrarCarta();cerrarInfo();Ruleta.cerrar();$("#velo-preg").classList.remove("on");pintarRondas();
+  sfx.fin();
+  const orden=[...estado.jugadores].sort((a,b)=>b.puntos-a.puntos||b.cat-a.cat||b.meritos-a.meritos);
+  seleccion=null;pintarBandeja();
+  const yo=jugYo(),g=orden[0],empate=orden.length>1&&orden[1].puntos===g.puntos;
+  $("#ganador").textContent=empate?"Empate a puntos":g===yo?"¡Has ganado la partida!":`Gana ${g.nombre}`;
+  $("#logros").innerHTML=logrosHTML(orden);
+  $("#podio").innerHTML=orden.map((p,i)=>`<li style="--i:${i}"><span class="pos">${i+1}º</span>${avatarHTML(p.av,34)}
+    <span class="n"><b>${escapar(p.nombre)}</b><span>${ESCALAFON[p.cat].n} · ${p.ascensos} ascenso${p.ascensos===1?"":"s"} · ${misDestacamentos(p).length} destac.</span></span>
+    <span class="p">${p.puntos} pts<br>${p.aciertos}/${p.aciertos+p.fallos} · 🔥${p.mejorRacha}</span></li>`).join("");
+  $("#premios").innerHTML=`<div style="--i:0">Partida online: sin premios en esta versión</div><div style="--i:1" id="online-cierre">Comprobando el resultado con el servidor…</div>`;
+  ir("fin");
+  estado.online.terminar(Object.fromEntries(estado.jugadores.map(j=>[j.uid,j.puntos])));
+}
 function finPartida(ganadorAscenso=null){
+  if(estado.online){finPartidaOnline();return}   /* online: sin monedas, trofeos, estrellas, sobres, liga ni retos */
   estado.fase="fin";estado.activa=false;clearInterval(temporizador);
   cerrarCarta();cerrarInfo();Ruleta.cerrar();$("#velo-preg").classList.remove("on");pintarRondas();
   sfx.fin();confeti(70);
@@ -9891,7 +10130,7 @@ function finPartida(ganadorAscenso=null){
     :porPuntos);
   const g=orden[0];
   seleccion=null;pintarBandeja();
-  const yo=estado.jugadores[0],n=orden.length,pos=orden.indexOf(yo)+1;
+  const yo=jugYo(),n=orden.length,pos=orden.indexOf(yo)+1;
   const dt=trofeosPor(pos,n),mon=30+yo.aciertos*3+(pos===1?60:pos===2&&n>2?25:0),est=5+(pos===1?10:0);
   revisarFechas();
   const antes=perfil.trofeos;
