@@ -14,7 +14,8 @@
 --   del día (hora de Madrid) contra el mismo rival dan monedas; los puntos cuentan siempre. Una partida se cobra
 --   una sola vez (índice único por jugador, motivo y partida).
 -- · Logros online (20 monedas cada uno): primera victoria, 10 victorias, 5 victorias seguidas (un empate o una
---   derrota cortan la racha) y llegar a Bronce (100 puntos, el tramo «Bronce» de game_config.ligas).
+--   derrota cortan la racha) y llegar a Bronce. El umbral de Bronce no está en el logro: se lee del tramo «Bronce»
+--   de game_config.ligas (achievements.liga), así que cambiar el tramo cambia también el logro.
 -- · disputed: no cambia nada (ni puntos, ni monedas, ni progreso).
 -- · La jugada «fin» lleva «premios»: por jugador, resultado, puntos (cambio real), total, monedas y logros nuevos,
 --   para que los dos móviles enseñen lo mismo.
@@ -84,15 +85,17 @@ create table public.achievements (
   nombre text not null,
   descripcion text not null,
   metrica text not null,                     -- victorias_online, mejor_racha_online, puntos
-  objetivo integer not null constraint achievements_objetivo check (objetivo > 0),
+  objetivo integer constraint achievements_objetivo check (objetivo > 0),
+  liga text,                                 -- con liga, el objetivo es el «desde» de ese tramo de game_config.ligas
+  constraint achievements_objetivo_o_liga check ((objetivo is null) <> (liga is null)),
   premio_monedas integer not null default 0 constraint achievements_premio check (premio_monedas >= 0),
   activo boolean not null default true
 );
-insert into public.achievements (id, nombre, descripcion, metrica, objetivo, premio_monedas) values
-  ('online_primera_victoria', 'Primera victoria online', 'Gana tu primera partida online', 'victorias_online', 1, 20),
-  ('online_10_victorias', '10 victorias online', 'Gana 10 partidas online', 'victorias_online', 10, 20),
-  ('online_racha_5', '5 victorias seguidas online', 'Gana 5 partidas online seguidas', 'mejor_racha_online', 5, 20),
-  ('online_bronce', 'Llegar a Bronce', 'Llega a 100 puntos en el marcador online', 'puntos', 100, 20);
+insert into public.achievements (id, nombre, descripcion, metrica, objetivo, liga, premio_monedas) values
+  ('online_primera_victoria', 'Primera victoria online', 'Gana tu primera partida online', 'victorias_online', 1, null, 20),
+  ('online_10_victorias', '10 victorias online', 'Gana 10 partidas online', 'victorias_online', 10, null, 20),
+  ('online_racha_5', '5 victorias seguidas online', 'Gana 5 partidas online seguidas', 'mejor_racha_online', 5, null, 20),
+  ('online_bronce', 'Llegar a Bronce', 'Llega a la liga Bronce del marcador online', 'puntos', null, 'Bronce', 20);
 
 create table public.user_progress (
   user_id uuid not null references public.profiles (id) on delete cascade,
@@ -173,14 +176,14 @@ $$;
 -- (disputed, partida que no es de 2, o ya repartida).
 create function private.apply_match_rewards(p_match uuid, p_winner uuid, p_reason text) returns jsonb
 language plpgsql volatile security definer set search_path = '' as $$
-declare pc jsonb; mc jsonb; j record; a record; v_rival uuid; v_res text; v_delta integer; v_antes integer;
+declare pc jsonb; mc jsonb; lc jsonb; j record; a record; v_rival uuid; v_res text; v_delta integer; v_antes integer;
         v_despues integer; v_mon integer; v_premiadas integer; v_racha integer; v_desde timestamptz;
         v_logros jsonb; v_out jsonb := '{}'::jsonb;
 begin
   if p_reason not in ('completed', 'forfeit') then return v_out; end if;      -- disputed: sin cambios
   if (select count(*) from public.match_players where match_id = p_match) <> 2 then return v_out; end if;   -- solo 1 contra 1
   if exists (select 1 from public.score_changes where match_id = p_match) then return v_out; end if;        -- ya repartida
-  pc := private.cfg('puntos_1v1'); mc := private.cfg('monedas_1v1');
+  pc := private.cfg('puntos_1v1'); mc := private.cfg('monedas_1v1'); lc := private.cfg('ligas');
   v_desde := date_trunc('day', now() at time zone (mc ->> 'zona_horaria')) at time zone (mc ->> 'zona_horaria');
   -- en orden de user_id: dos partidas que terminan a la vez bloquean las filas en el mismo orden
   for j in select mp.user_id, mp.forfeited from public.match_players mp where mp.match_id = p_match order by mp.user_id loop
@@ -229,11 +232,15 @@ begin
     perform private.set_progress(j.user_id, 'puntos', v_despues, false);
     -- logros nuevos
     v_logros := '[]'::jsonb;
-    for a in select ac.id, ac.nombre, ac.premio_monedas from public.achievements ac
-               join public.user_progress up on up.user_id = j.user_id and up.metrica = ac.metrica
-              where ac.activo and up.valor >= ac.objetivo
-                and not exists (select 1 from public.user_achievements ua where ua.user_id = j.user_id and ua.achievement_id = ac.id)
-              order by ac.objetivo, ac.id loop
+    -- el objetivo de un logro de liga es el «desde» de ese tramo en game_config.ligas (si el tramo no existe, no se da)
+    for a in select x.id, x.nombre, x.premio_monedas from (
+               select ac.id, ac.nombre, ac.premio_monedas, ac.metrica, ac.activo,
+                      coalesce(ac.objetivo, (select (l ->> 'desde')::integer from jsonb_array_elements(lc) l where l ->> 'nombre' = ac.liga)) as meta
+                 from public.achievements ac) x
+               join public.user_progress up on up.user_id = j.user_id and up.metrica = x.metrica
+              where x.activo and x.meta is not null and up.valor >= x.meta
+                and not exists (select 1 from public.user_achievements ua where ua.user_id = j.user_id and ua.achievement_id = x.id)
+              order by x.meta, x.id loop
       insert into public.user_achievements (user_id, achievement_id, match_id) values (j.user_id, a.id, p_match);
       if a.premio_monedas > 0 then
         insert into public.coin_movements (user_id, delta, motivo, match_id, item_id) values (j.user_id, a.premio_monedas, 'logro', p_match, a.id);
