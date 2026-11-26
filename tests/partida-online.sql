@@ -276,12 +276,29 @@ do $$ declare m uuid; v text; f record; begin
   perform pg_temp.ok('inactividad: pendiente a los 61 s se reclama (gana el rival); sin pendiente, a los 181 s también');
 end $$;
 
-do $$ begin
-  if exists (select 1 from information_schema.tables where table_schema = 'public'
-              and table_name in ('scores', 'score_changes', 'wallets', 'coin_movements', 'achievements', 'user_achievements', 'user_progress', 'game_config')) then
-    raise exception 'FALLO: existe alguna tabla de puntuación, monedas o logros (no debería en la 3c)';
+-- 3d (migración 20261128120000_marcador.sql): el final reparte puntos, monedas y logros una sola vez; disputed no.
+-- Sin la migración, report_result solo cierra la partida. (tests/marcador.sql prueba todos los casos.)
+do $$ declare p jsonb; begin
+  if to_regclass('public.score_changes') is null then
+    perform pg_temp.ok('sin la migración del marcador: report_result solo cierra la partida');
+    return;
   end if;
-  perform pg_temp.ok('no existen tablas de marcador, monedas ni logros: report_result solo cierra la partida');
+  select payload -> 'premios' into p from public.match_actions where match_id = current_setting('test.m2')::uuid and kind = 'fin';
+  if (p -> '00000000-0000-0000-0000-0000000000e1' ->> 'resultado') <> 'win' or (p -> '00000000-0000-0000-0000-0000000000e1' ->> 'puntos')::int <> 30
+     or (p -> '00000000-0000-0000-0000-0000000000e2' ->> 'resultado') <> 'loss' or (p -> '00000000-0000-0000-0000-0000000000e2' ->> 'monedas')::int <> 20 then
+    raise exception 'FALLO: premios de la partida completed: %', p;
+  end if;
+  if (select count(*) from public.score_changes where match_id = current_setting('test.m2')::uuid) <> 2 then raise exception 'FALLO: completed no puntuó'; end if;
+  if exists (select 1 from public.score_changes where match_id = current_setting('test.m3')::uuid)
+     or exists (select 1 from public.coin_movements where match_id = current_setting('test.m3')::uuid)
+     or (select payload -> 'premios' from public.match_actions where match_id = current_setting('test.m3')::uuid and kind = 'fin') <> '{}'::jsonb then
+    raise exception 'FALLO: disputed repartió algo';
+  end if;
+  if (select (payload -> 'premios' -> '00000000-0000-0000-0000-0000000000e1' ->> 'monedas')::int from public.match_actions
+       where match_id = current_setting('test.mid')::uuid and kind = 'fin') <> 0 then
+    raise exception 'FALLO: quien abandonó (claim_forfeit) cobró monedas';
+  end if;
+  perform pg_temp.ok('marcador: completed reparte (fin con premios), disputed no reparte nada, el abandono no cobra');
 end $$;
 
 select current_setting('test.informe') || 'TODOS LOS TESTS OK' as informe;
