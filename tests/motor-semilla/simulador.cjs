@@ -108,7 +108,9 @@ function crearEntorno(rutaHtml, op = {}) {
     navigator: { language: "es-ES", userAgent: "node" }, location: { protocol: "file:", hash: "", search: "", href: "file:///index.html", pathname: "/index.html", origin: "null" },
     localStorage: { getItem: k => mem[k] ?? null, setItem: (k, v) => { mem[k] = String(v); }, removeItem: k => { delete mem[k]; } },
     sessionStorage: { getItem: () => null, setItem() {}, removeItem() {} },
-    setTimeout: reloj.setTimeout, setInterval: reloj.setInterval, clearTimeout: reloj.clearTimeout, clearInterval: reloj.clearInterval,
+    // como en el navegador: fallan con «Illegal invocation» si se llaman sobre otro objeto (p. ej. obj.setInterval(…))
+    setTimeout: comoNavegador(reloj.setTimeout, "setTimeout"), setInterval: comoNavegador(reloj.setInterval, "setInterval"),
+    clearTimeout: comoNavegador(reloj.clearTimeout, "clearTimeout"), clearInterval: comoNavegador(reloj.clearInterval, "clearInterval"),
     requestAnimationFrame: fn => reloj.setTimeout(() => fn(reloj.ahora), 16), cancelAnimationFrame: reloj.clearTimeout,
     innerWidth: 400, innerHeight: 800, devicePixelRatio: 1, scrollTo() {}, addEventListener() {}, removeEventListener() {},
     matchMedia: () => ({ matches: false, addEventListener() {}, addListener() {} }),
@@ -118,6 +120,14 @@ function crearEntorno(rutaHtml, op = {}) {
   };
   Object.assign(ctx, op.ctxExtra || {});
   ctx.window = ctx; ctx.self = ctx; ctx.globalThis = ctx;
+  // las funciones de temporizador solo aceptan como «this» la ventana (o nada, en una llamada directa)
+  function comoNavegador(fn, nombre) {
+    return function () {
+      "use strict";
+      if (this !== undefined && this !== null && this !== ctx) throw new TypeError(`Failed to execute '${nombre}' on 'Window': Illegal invocation`);
+      return fn.apply(null, arguments);
+    };
+  }
   vm.createContext(ctx);
   for (const s of scripts) vm.runInContext(s, ctx, { filename: rutaHtml });
   for (const f of op.scriptsExtra || []) vm.runInContext(fs.readFileSync(f, "utf8"), ctx, { filename: f });

@@ -49,6 +49,9 @@
     if (/rate limit|too many|429/i.test(cod + " " + msg) || e.status === 429) return "Demasiados intentos. Espera unos minutos y vuelve a probar.";
     if (cod === "signup_disabled") return "El registro está cerrado en este momento.";
     if (/failed to fetch|network|load failed/i.test(msg)) return "No hay conexión con el servidor. Comprueba tu internet.";
+    // DIAGNÓSTICO · QUITAR ANTES DE LA BETA (ver online/config.js): código y mensaje reales del error
+    if (typeof window !== "undefined" && window.PATRULLAN2_ONLINE && window.PATRULLAN2_ONLINE.diagnostico)
+      return `[diagnóstico] ${e.code || e.name || "sin código"}: ${msg}`;
     return e.contexto === "registro" ? GENERICO_REGISTRO : "No se pudo completar. Inténtalo de nuevo.";
   }
   const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));

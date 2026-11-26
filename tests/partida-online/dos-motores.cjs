@@ -225,6 +225,23 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
   vm.runInContext(`cfg.nJug=2;cfg.rondas=2;cfg.modo="puntos";iniciar("rapida");`, L.ctx);
   ok(leer(L, "estado.online===null&&estado.yo===0&&jugYo()===estado.jugadores[0]&&estado.jugadores[1].bot&&!estado.jugadores[1].remoto"), "partida local: estado.online null, jugYo() es el jugador 0 y los rivales son bots");
 
+  // ── 5. arranque que falla: entrar() cierra el canal de Realtime antes de dar el error
+  console.log("── 5. Arranque que falla");
+  {
+    const { reloj, A, srv } = montar(5, 5, 5);
+    const sbA = srv.cliente(UA); let canales = 0, cerrados = 0;
+    const canal0 = sbA.channel.bind(sbA);
+    sbA.channel = n => { canales++; return canal0(n); };
+    sbA.removeChannel = () => { cerrados++; };
+    A.ctx.setInterval = function () { throw new TypeError("Failed to execute 'setInterval' on 'Window': Illegal invocation"); };   // fallo al arrancar el latido
+    let error = null;
+    try { await A.ctx.PartidaOnline.entrar(sbA, "M1", UA); } catch (e) { error = e; }
+    ok(error && /Illegal invocation/.test(error.message), `entrar() devuelve el error real: «${error && error.message}»`);
+    ok(canales === 1 && cerrados === 1, `el canal de Realtime abierto se cierra (abiertos ${canales}, cerrados ${cerrados})`);
+    ok(!A.ctx.PartidaOnline.actual() && !leer(A, "estado.online"), "no queda ninguna partida a medias en el motor");
+    void reloj;
+  }
+
   console.log(fallos ? `\n${fallos} FALLO(S)` : "\nTODO OK");
   process.exit(fallos ? 1 : 0);
 })().catch(e => { console.log("ERROR", e && e.stack || e); process.exit(1); });

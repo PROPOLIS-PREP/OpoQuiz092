@@ -6,4 +6,7 @@
 window.PATRULLAN2_ONLINE = {
   url: "https://nuktczrndortdfgtnzdy.supabase.co",
   clave: "sb_publishable_2aIo3IDLvh0j0e0-qTnFaA_l5VFnpul",
+  // DIAGNÓSTICO · QUITAR ANTES DE LA BETA: los errores sin mensaje propio enseñan su código y su mensaje reales
+  // («[diagnóstico] código: mensaje») en lugar de «No se pudo completar. Inténtalo de nuevo.».
+  diagnostico: true,
 };

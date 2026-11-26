@@ -23,7 +23,14 @@
   // ───────────────────────────── Núcleo del puente (sin DOM: se prueba en Node con un servidor falso)
   function crearPuente(cfg) {
     // cfg: { sb, matchId, yo (uuid), alFin(fin), alError(texto), alAviso(texto), alEstado(info), reloj? }
-    const R = cfg.reloj || { setTimeout, setInterval, clearInterval, ahora: () => Date.now() };
+    // Flechas que llaman a las funciones globales: guardadas tal cual en un objeto, el navegador lanza
+    // «Illegal invocation» al llamarlas como R.setInterval(…) (solo admiten la ventana como «this»).
+    const R = cfg.reloj || {
+      setTimeout: (f, ms) => setTimeout(f, ms),
+      setInterval: (f, ms) => setInterval(f, ms),
+      clearInterval: id => clearInterval(id),
+      ahora: () => Date.now(),
+    };
     const sb = cfg.sb, M = cfg.matchId;
     const st = {
       log: new Map(), ultimo: -1, aplicado: 1, espera: null, cola: Promise.resolve(),
@@ -240,7 +247,8 @@
       alAviso: t => toast(t),
       alEstado: info => pintarBarra(info),
     });
-    await puente.arrancar();
+    try { await puente.arrancar(); }
+    catch (e) { puente.parar(); throw e; }   // si el arranque falla, no quedan abiertos el canal de Realtime ni los intervalos
     const ini = puente.inicio();
     if (!ini) { puente.parar(); throw { message: "La partida todavía no ha empezado" }; }
     const orden = ini.payload.players || ids;
