@@ -168,8 +168,101 @@ language sql volatile security definer set search_path = '' as $$
         updated_at = now();
 $$;
 
--- (el reparto en private.finish_match llega en el siguiente commit)
+-- Reparte puntos, monedas y logros de una partida 1 contra 1 recién terminada. Devuelve los premios por jugador
+-- ({"<user_id>": {resultado, puntos, total, monedas, logros: [{id, nombre, monedas}]}}), o {} si no reparte nada
+-- (disputed, partida que no es de 2, o ya repartida).
+create function private.apply_match_rewards(p_match uuid, p_winner uuid, p_reason text) returns jsonb
+language plpgsql volatile security definer set search_path = '' as $$
+declare pc jsonb; mc jsonb; j record; a record; v_rival uuid; v_res text; v_delta integer; v_antes integer;
+        v_despues integer; v_mon integer; v_premiadas integer; v_racha integer; v_desde timestamptz;
+        v_logros jsonb; v_out jsonb := '{}'::jsonb;
+begin
+  if p_reason not in ('completed', 'forfeit') then return v_out; end if;      -- disputed: sin cambios
+  if (select count(*) from public.match_players where match_id = p_match) <> 2 then return v_out; end if;   -- solo 1 contra 1
+  if exists (select 1 from public.score_changes where match_id = p_match) then return v_out; end if;        -- ya repartida
+  pc := private.cfg('puntos_1v1'); mc := private.cfg('monedas_1v1');
+  v_desde := date_trunc('day', now() at time zone (mc ->> 'zona_horaria')) at time zone (mc ->> 'zona_horaria');
+  -- en orden de user_id: dos partidas que terminan a la vez bloquean las filas en el mismo orden
+  for j in select mp.user_id, mp.forfeited from public.match_players mp where mp.match_id = p_match order by mp.user_id loop
+    insert into public.scores (user_id) values (j.user_id) on conflict (user_id) do nothing;
+    perform 1 from public.scores where user_id = j.user_id for update;
+  end loop;
+  for j in select mp.user_id, mp.forfeited from public.match_players mp where mp.match_id = p_match order by mp.seat loop
+    select mp.user_id into v_rival from public.match_players mp where mp.match_id = p_match and mp.user_id <> j.user_id;
+    v_res := case when p_winner is null and p_reason = 'completed' then 'draw'
+                  when j.user_id = p_winner then 'win' else 'loss' end;
+    -- puntos (con el suelo de 0)
+    v_delta := case v_res when 'win' then (pc ->> 'ganador')::integer when 'draw' then (pc ->> 'empate')::integer
+                          else (pc ->> 'perdedor')::integer end;
+    select puntos into v_antes from public.scores where user_id = j.user_id;
+    v_despues := greatest(0, v_antes + v_delta);
+    update public.scores
+       set puntos = v_despues, partidas = partidas + 1, ganadas = ganadas + (v_res = 'win')::integer,
+           perdidas = perdidas + (v_res = 'loss')::integer, empatadas = empatadas + (v_res = 'draw')::integer, updated_at = now()
+     where user_id = j.user_id;
+    insert into public.score_changes (match_id, user_id, antes, despues, delta, resultado)
+    values (p_match, j.user_id, v_antes, v_despues, v_despues - v_antes, v_res);
+    -- monedas (con el límite diario contra el mismo rival)
+    v_mon := case when v_res = 'win' then (mc ->> 'jugar')::integer + (mc ->> 'ganar')::integer
+                  when v_res = 'draw' then (mc ->> 'empate')::integer
+                  when j.forfeited then (mc ->> 'abandonar')::integer
+                  else (mc ->> 'jugar')::integer end;
+    if v_mon > 0 then
+      select count(*) into v_premiadas
+        from public.coin_movements c join public.match_players r on r.match_id = c.match_id and r.user_id = v_rival
+       where c.user_id = j.user_id and c.motivo = 'partida_online' and c.delta > 0 and c.created_at >= v_desde;
+      if v_premiadas >= (mc ->> 'max_diarias_mismo_rival')::integer then v_mon := 0; end if;
+    end if;
+    if v_mon > 0 then
+      insert into public.coin_movements (user_id, delta, motivo, match_id) values (j.user_id, v_mon, 'partida_online', p_match);
+      perform private.add_coins(j.user_id, v_mon);
+    end if;
+    -- progreso online
+    perform private.bump_progress(j.user_id, 'partidas_online', 1);
+    if v_res = 'win' then
+      perform private.bump_progress(j.user_id, 'victorias_online', 1);
+      v_racha := private.bump_progress(j.user_id, 'racha_online', 1);
+      perform private.set_progress(j.user_id, 'mejor_racha_online', v_racha, true);
+    else
+      perform private.set_progress(j.user_id, 'racha_online', 0, false);
+    end if;
+    perform private.set_progress(j.user_id, 'puntos', v_despues, false);
+    -- logros nuevos
+    v_logros := '[]'::jsonb;
+    for a in select ac.id, ac.nombre, ac.premio_monedas from public.achievements ac
+               join public.user_progress up on up.user_id = j.user_id and up.metrica = ac.metrica
+              where ac.activo and up.valor >= ac.objetivo
+                and not exists (select 1 from public.user_achievements ua where ua.user_id = j.user_id and ua.achievement_id = ac.id)
+              order by ac.objetivo, ac.id loop
+      insert into public.user_achievements (user_id, achievement_id, match_id) values (j.user_id, a.id, p_match);
+      if a.premio_monedas > 0 then
+        insert into public.coin_movements (user_id, delta, motivo, match_id, item_id) values (j.user_id, a.premio_monedas, 'logro', p_match, a.id);
+        perform private.add_coins(j.user_id, a.premio_monedas);
+      end if;
+      v_logros := v_logros || jsonb_build_object('id', a.id, 'nombre', a.nombre, 'monedas', a.premio_monedas);
+    end loop;
+    v_out := v_out || jsonb_build_object(j.user_id::text, jsonb_build_object(
+      'resultado', v_res, 'puntos', v_despues - v_antes, 'total', v_despues, 'monedas', v_mon, 'logros', v_logros));
+  end loop;
+  return v_out;
+end $$;
+
+-- Igual que antes (cierra la pregunta abierta, marca la partida terminada y anota «fin»), y además reparte los
+-- premios una sola vez. La jugada «fin» lleva los premios para que los dos móviles enseñen lo mismo.
+create or replace function private.finish_match(p_match uuid, p_winner uuid, p_reason text) returns void
+language plpgsql volatile security definer set search_path = '' as $$
+declare m public.matches; v_premios jsonb;
+begin
+  select * into m from public.matches where id = p_match for update;
+  if m.status = 'finished' then return; end if;
+  if m.current_index is not null then perform private.close_question(p_match, m.current_index, 'timeout', null); end if;
+  update public.matches set status = 'finished', finished_at = now(), winner_id = p_winner, finish_reason = p_reason
+   where id = p_match;
+  v_premios := private.apply_match_rewards(p_match, p_winner, p_reason);
+  perform private.append_action(p_match, null, 'fin', jsonb_build_object('winner', p_winner, 'reason', p_reason, 'premios', v_premios));
+end $$;
 
 revoke execute on function private.cfg(text), private.add_coins(uuid, integer), private.bump_progress(uuid, text, integer),
-  private.set_progress(uuid, text, integer, boolean)
+  private.set_progress(uuid, text, integer, boolean), private.apply_match_rewards(uuid, uuid, text),
+  private.finish_match(uuid, uuid, text)
   from public, anon, authenticated;
