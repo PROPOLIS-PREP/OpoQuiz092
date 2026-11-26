@@ -268,6 +268,18 @@ El backend está listo para el modelo lockstep, pero el juego todavía no lo usa
   Termina en `ROLLBACK`, así que no deja datos. Si todo va bien, el último aviso es «TODOS LOS TESTS OK».
 - **Datos:** `node tools/cargar-preguntas.mjs --seco` cuenta las preguntas sin cargar nada.
 
+## Partida online en el cliente (3c, hecha)
+
+- **Archivos:** `online/partida.js` (puente con Supabase) y, en `index.html`, el modo online del motor. `online/partidas.js` activa «Empezar»: solo el anfitrión, con el rival en la sala y en su lista de amigos (comprobación de la app). Quien mira la sala cuando empieza entra solo; si no, con «Entrar».
+- **Arranque:** el puente lee el registro desde la jugada 0 (`inicio`: semilla, turnos y jugadores por asiento) y llama a `iniciar("online", {semilla, online})`. La semilla se fija antes de la primera decisión.
+- **Lockstep:** cada decisión de una persona es una jugada (`submit_action` con el número esperado) y el motor solo avanza cuando la jugada vuelve del registro, también las propias. Jugadas: `tirar`, `desplegar`, `fin_despliegue`, `examen`, `distrito`, `comprar`, `fin_comisaria`, `lanzar`, `recolocar`, `sirena`. El 50/50 y el +10 s van por `use_lifeline` (jugada `comodin`), y la respuesta por `submit_answer` (jugada `resultado`). Las jugadas imposibles las descartan los dos motores igual.
+- **Jugador de este móvil:** `jugYo()` sustituye a «el jugador 0». En local devuelve el 0; online, el del asiento. En el motor, `p.remoto` marca al rival.
+- **Preguntas:** quien responde llama a `draw_question` con el bloque, el nivel y los segundos que calcula su motor; el otro motor comprueba que la jugada `pregunta` coincide con lo suyo y, si no, la partida se detiene por desincronización. `get_current_question` abre la pregunta. La respuesta correcta solo llega con `get_question_result`, cuando la pregunta está cerrada (lo que devuelve `submit_answer` no se usa). Los puntos salen de `segundos_restantes` de la jugada `resultado`.
+- **Lo que ve el rival:** «X está respondiendo…» y, al cerrarse, la revisión con la respuesta. Nunca la pregunta mientras se responde. La revisión se cierra sola a los 10 s; las cartas de un solo botón del turno del rival, a los 3,5 s (solo marcan el ritmo de cada móvil).
+- **Latido y abandono:** `heartbeat` cada 15 s. Una barra arriba indica si el rival está conectado, si lleva tiempo sin jugar o si no da señal; a los 60 s sin latido aparece «Reclamar victoria» (`claim_forfeit`, solo al pulsarlo). «Salir» durante la partida es abandonar (`leave_match`).
+- **Final:** pantalla con los puntos de cada jugador, sin premios; `report_result` solo cierra la partida (`completed`, `forfeit` o `disputed`). Durante una partida online no se ejecutan `hito()`, `regMax()` ni los premios de `finPartida()`, y el perfil local no cambia.
+- **Pruebas:** `tests/partida-online.sql` (RPC, RLS y que nadie lee la respuesta antes de responder), `tests/partida-online/dos-motores.cjs` (dos motores reales con un servidor falso) y `tests/motor-semilla` (el modo local no cambia).
+
 ## Plan de subfases del cliente online
 
 - **3c · Partida online.** Tablero, turnos, semilla (`iniciar(modo, {semilla})`) y tiempo del servidor. Al terminar, `report_result` solo cierra la partida. No da monedas, puntos del marcador, trofeos ni progreso de retos, y no escribe en el perfil local: en una partida online, `hito()`, `regMax()` y el reparto de premios de `finPartida()` no se ejecutan.
@@ -343,7 +355,8 @@ Dos conjuntos separados: los **locales** siguen en el móvil sin cambios, y los 
 - **Jugador inactivo pero conectado (3d).** Si el rival no juega pero sigue enviando latidos, la partida espera. En la 3c la app solo avisa de que el rival lleva tiempo sin jugar.
 - **Respuestas en el cliente (antes de la beta pública).** El `index.html` lleva el banco local con la respuesta correcta de cada pregunta, así que en una partida online se podría buscar el enunciado y ver la respuesta. Se acepta mientras las partidas sean entre amigos. Antes de la beta pública habrá que servir el modo online sin respuestas en el cliente.
 - **Partidas `disputed`:** qué hacer cuando los motores no coinciden en el resultado. Hoy terminan sin ganador.
-- **Reconexión:** un jugador que vuelve antes de 60 s sigue jugando; tiene que releer el registro y reconstruir el estado.
+- **Desincronización que acaba en bloqueo (3d).** Si los dos motores dejan de coincidir (por ejemplo, dos versiones distintas del juego en los móviles), puede que cada uno espere una jugada del otro y ninguno juegue: solo se ve el aviso de rival inactivo. Propuesta: que cada móvil anote al entrar la versión de su motor y una huella del estado en cada jugada, para detenerlo en cuanto no coincidan.
+- **Reconexión (3d):** si se recarga la página a mitad de partida, el motor se pierde. Al volver a entrar, el puente repasa el registro desde el principio sin repetir llamadas al servidor, pero falta probarlo y pasar rápido las pantallas ya vistas.
 - **Limpieza** de partidas del lobby abandonadas y de partidas terminadas antiguas.
 - **Realtime Authorization** para canales de Presence privados.
 - **Proyecto de producción:** crearlo cuando la v2 esté lista y aplicarle la misma migración.
@@ -358,5 +371,5 @@ Dos conjuntos separados: los **locales** siguen en el móvil sin cambios, y los 
 Pendientes de llevar al backend antes de la beta: quien llame a las RPC directamente con la clave publicable y una sesión puede saltárselas.
 
 - **Máximo 3 partidas simultáneas por jugador** (en sala de espera o en curso). `create_match` y `join_match` no lo comprueban; `tests/partidas.sql` deja constancia de que el backend permite una cuarta.
-- **Solo partidas contra amigos.** La app solo deja crear una partida eligiendo a un amigo y avisa si en la sala hay alguien que no lo es, pero `join_match` acepta a cualquiera que tenga el código. Arreglo posible: que `join_match` exija amistad aceptada con el anfitrión (y quizá un `invited_user` en `matches`).
+- **Solo partidas contra amigos.** La app solo deja crear una partida eligiendo a un amigo, avisa si en la sala hay alguien que no lo es y solo deja empezar (`start_match`, 3c) si el rival es amigo, pero `join_match` y `start_match` aceptan a cualquiera que tenga el código. Arreglo posible: que `join_match` exija amistad aceptada con el anfitrión (y quizá un `invited_user` en `matches`).
 - **Cierre de salas de espera de más de 30 minutos.** Lo hace cada cliente al abrir la lista (sale con `leave_match`; la sala se borra cuando no queda nadie). Si nadie la abre, la sala sigue en la base de datos. Arreglo posible: una tarea programada (pg_cron) que borre las salas `lobby` antiguas.

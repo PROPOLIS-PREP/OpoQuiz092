@@ -1,5 +1,12 @@
 # Cambios
 
+## v2 en desarrollo · subfase 3c · 2026-11-26 · Partida online 1 contra 1
+
+- Migración `20261125120000_resultado_segundos_restantes.sql` (aplicada en patrullan2-dev): la jugada `resultado` lleva los segundos restantes en décimas, para que los dos móviles calculen los mismos puntos.
+- Motor (`index.html`): modo online con `iniciar("online", {semilla, online})`, `jugYo()` en lugar del jugador 0 y espera de jugadas del rival en cada decisión (dado, despliegue, examen, distrito, comisaría, lanzar, recolocar, preguntas y comodines). Preguntas del servidor: el rival solo ve «X está respondiendo…» y luego la revisión. Sin premios, retos ni estadísticas locales en las partidas online. El modo local no cambia.
+- `online/partida.js`: puente lockstep con Supabase (registro de jugadas por Realtime y sondeo, latido cada 15 s, aviso de rival sin señal o inactivo, «Reclamar victoria» a los 60 s, abandono y `report_result` que solo cierra la partida). En «Partidas», «Empezar» (solo contra un amigo) y «Entrar». Service worker `v14.16-online6`.
+- Pruebas: `tests/partida-online.sql` y `tests/partida-online/dos-motores.cjs` (dos motores con servidor falso).
+
 ## v2 en desarrollo · subfase 3b · 2026-11-25 · Motor con semilla
 
 - Las decisiones de la partida (dado, bloque de la ruleta, nivel, cartas de evento, regalos, acciones y sanciones, jugador afectado por un evento, pregunta elegida y decisiones de los bots) usan `rngJuego`. En el modo local es `Math.random`, así que la partida se juega exactamente igual; `iniciar(modo, {semilla})` (vía `fijarSemilla`) lo cambia por `semilla(String(seed))` para las partidas online. Siguen con `Math.random` el 50/50, los efectos visuales, los tiempos, la liga simulada, el álbum, los avatares y los amigos simulados.

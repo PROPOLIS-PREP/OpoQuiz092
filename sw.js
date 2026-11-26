@@ -1,10 +1,10 @@
 // Service worker de Patrullan2: hace la app instalable y la deja abrir sin conexión.
 // Estrategia: la página y los iconos se sirven de la red y se guardan; sin red, se usa lo guardado.
 // Si cambias algo que deba renovarse a la fuerza, sube VERSION.
-const VERSION = "v14.16-online5";
+const VERSION = "v14.16-online6";
 const CACHE = "patrullan2-" + VERSION;
 const BASE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png",
-  "./lib/supabase.min.js", "./online/config.js", "./online/cuenta.js", "./online/amigos.js", "./online/partidas.js", "./online/confirmado.html"];
+  "./lib/supabase.min.js", "./online/config.js", "./online/cuenta.js", "./online/amigos.js", "./online/partidas.js", "./online/partida.js", "./online/confirmado.html"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASE)).then(() => self.skipWaiting()));

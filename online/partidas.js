@@ -1,7 +1,8 @@
-// Partidas online de Patrullan2 (v2, subfase 3a): lobby 1 contra 1 por código de 5 letras.
+// Partidas online de Patrullan2 (v2, subfases 3a y 3c): lobby 1 contra 1 por código de 5 letras.
 // Crear partida para un amigo, unirse con código, sala de espera en tiempo real, salir y lista de mis partidas.
-// Todavía NO se empieza a jugar: «Empezar» está desactivado y la app no llama a start_match (llega en la 3c).
-// Solo usa RPCs existentes: create_match, join_match y leave_match. Lee matches, match_players,
+// 3c: el anfitrión empieza (start_match) cuando el rival está en la sala y es su amigo; los dos entran en la
+// partida (online/partida.js). Quien está mirando la sala cuando empieza entra solo; si no, con «Entrar».
+// Solo usa RPCs existentes: create_match, join_match, leave_match y start_match. Lee matches, match_players,
 // friendships y profiles (RLS: cada uno solo ve sus partidas y sus amistades).
 //
 // Reglas que controla SOLO la app (pendientes de backend, ver docs/backend-v2.md):
@@ -92,6 +93,11 @@
         if (e4) throw e4;
         (ps || []).forEach(p => { st.perfiles[p.id] = p; });
       }
+      const abierta = st.vista === "sala" && st.partidas.find(m => m.id === st.sala);
+      if (abierta && abierta.status === "in_progress" && st.estadoSala === "lobby" && !st.entrando) {
+        st.entrando = true; setTimeout(() => entrarPartida(abierta.id), 0);
+      }
+      st.estadoSala = abierta ? abierta.status : null;
       if (st.vista === "sala" && !st.partidas.some(m => m.id === st.sala)) {
         st.vista = "lista"; st.sala = null;
         if (!st.msg) aviso("La sala ya no existe: se cerró o saliste de ella.", "ok");
@@ -135,7 +141,7 @@
       const quien = rival ? `contra <b>${esc(nombre(rival.user_id))}</b>` : para ? `esperando a <b>${esc(nombre(para))}</b>` : "esperando rival";
       const estado = m.status === "lobby" ? `Sala de espera · ${minutosRestantes(m, Date.now())} min` : "En curso";
       return `<li><span><b class="partida-cod">${esc(m.code)}</b> ${quien}<br><span class="cuenta-letra">${estado} · ${m.turns} turnos</span></span>
-        <span class="amigo-acc">${boton("abrir", "Abrir", "azul", m.id)}</span></li>`;
+        <span class="amigo-acc">${m.status === "in_progress" ? boton("entrar", "Entrar", "verde", m.id) : ""}${boton("abrir", m.status === "in_progress" ? "Ver" : "Abrir", "azul", m.id)}</span></li>`;
     }).join("");
     return `
 <div class="tarjeta">
@@ -190,11 +196,13 @@
       return `<li><span><b>${esc(nombre(j.user_id))}</b>${j.user_id === m.host_id ? " · anfitrión" : ""}</span><span class="cuenta-letra">${marca}</span></li>`;
     }).join("");
     const extrano = js.some(j => j.user_id !== st.yo && !st.amigos.has(j.user_id));
+    const rivalSala = js.find(j => j.user_id !== st.yo);
+    const puedeEmpezar = soyHost && js.length === 2 && !!rivalSala && st.amigos.has(rivalSala.user_id);   /* solo en la app (ver docs) */
     if (m.status === "in_progress") return `<div class="tarjeta">
   <h3 style="margin:0 0 6px">Partida ${esc(m.code)} · en curso</h3>
   <ul class="amigos-lista">${filas}</ul>
-  <p class="cuenta-letra">El tablero online llegará en la próxima versión.</p>
   ${htmlMsg()}
+  <div class="cuenta-botones">${boton("entrar", "Entrar en la partida", "verde", m.id)}</div>
   <div class="cuenta-botones">${st.confirmar
       ? `${boton("abandonar", "Sí, abandonar (pierdes la partida)", "rojo", m.id)}${boton("noabandonar", "Cancelar", "sec")}`
       : `${boton("pedirabandono", "Abandonar", "rojo")}`}${boton("vista", "Volver a la lista", "sec", "lista")}</div>
@@ -209,8 +217,8 @@
   <ul class="amigos-lista">${filas}</ul>
   ${extrano ? `<p class="cuenta-msg error">En la sala hay alguien que no está en tu lista de amigos.${soyHost ? " Sal de la sala y crea otra si no lo conoces." : ""}</p>` : ""}
   ${htmlMsg()}
-  <div class="cuenta-botones"><button class="btn verde peq" disabled title="Disponible en la próxima versión">Empezar</button>${boton("salir", "Salir de la sala", "rojo", m.id)}</div>
-  <p class="cuenta-letra centrar">«Empezar»: disponible en la próxima versión.</p>
+  <div class="cuenta-botones">${soyHost ? boton("empezar", "Empezar", "verde", m.id, puedeEmpezar ? "" : " disabled") : ""}${boton("salir", "Salir de la sala", "rojo", m.id)}</div>
+  ${soyHost && !puedeEmpezar ? `<p class="cuenta-letra centrar">${js.length < 2 ? "«Empezar» se activa cuando tu amigo entre en la sala." : "Solo puedes empezar contra alguien de tu lista de amigos."}</p>` : ""}
   <div class="cuenta-botones">${boton("vista", "Volver a la lista", "sec", "lista")}</div>
 </div>`;
   }
@@ -256,8 +264,21 @@
     });
   }
 
+  async function entrarPartida(id) {
+    try { await window.PartidaOnline.entrar(st.sb, id, st.yo); }
+    catch (e) { aviso(mensajeError(e)); pintarSiVisible(); }
+    st.entrando = false;
+  }
+
   function accion(que, id) {
     switch (que) {
+      case "empezar": return ejecutar(async () => {
+        const m = st.partidas.find(x => x.id === id), js = (m && st.jugadores[id]) || [], rival = js.find(j => j.user_id !== st.yo);
+        if (!m || m.host_id !== st.yo || js.length !== 2 || !rival || !st.amigos.has(rival.user_id)) throw { code: "P0001", message: "Solo puedes empezar con tu amigo en la sala" };
+        await rpc("start_match", { p_match: id });
+        st.estadoSala = "in_progress"; st.entrando = true; setTimeout(() => entrarPartida(id), 0);
+      });
+      case "entrar": entrarPartida(id); return;
       case "vista": st.vista = id; st.confirmar = false; aviso(""); if (id === "crear" && !st.amigoElegido) st.amigoElegido = [...st.amigos][0] || ""; pintarSiVisible(); return;
       case "abrir": st.sala = id; st.vista = "sala"; st.confirmar = false; aviso(""); pintarSiVisible(); return;
       case "turnos": {
