@@ -277,7 +277,7 @@ do $$ declare m uuid; v text; f record; begin
 end $$;
 
 -- 3d (migración 20261128120000_marcador.sql): el final reparte puntos, monedas y logros una sola vez; disputed no.
--- Sin la migración, report_result solo cierra la partida. (tests/marcador.sql prueba todos los casos.)
+-- Sin la migración, report_result solo cierra la partida. (tests/marcador/ prueba todos los casos.)
 do $$ declare p jsonb; begin
   if to_regclass('public.score_changes') is null then
     perform pg_temp.ok('sin la migración del marcador: report_result solo cierra la partida');
