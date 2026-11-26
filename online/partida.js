@@ -247,6 +247,8 @@
           .on("postgres_changes", { event: "INSERT", schema: "public", table: "match_actions", filter: "match_id=eq." + M }, p => recibir(p.new))
           // aviso efímero del rival al salir de la pantalla final (no se guarda en la base de datos)
           .on("broadcast", { event: "salida" }, m => { const p = (m && m.payload) || {}; if (p.de !== cfg.yo && cfg.alSalida) cfg.alSalida(p); })
+          // revancha: el rival la ha pedido (pedida) o ya está creada (creada, con su id)
+          .on("broadcast", { event: "revancha" }, m => { const p = (m && m.payload) || {}; if (p.de !== cfg.yo && cfg.alRevancha) cfg.alRevancha(p); })
           .subscribe();
       }
       latido = R.setInterval(latir, LATIDO_MS);
@@ -266,6 +268,18 @@
     api.avisarSalida = tipo => {
       try { if (api._canal && api._canal.send) return Promise.resolve(api._canal.send({ type: "broadcast", event: "salida", payload: { tipo, de: cfg.yo } })).catch(() => {}); }
       catch (e) { /* sin canal: el rival no recibe el aviso */ }
+      return Promise.resolve();
+    };
+    // revancha (request_rematch): «esperando» con los segundos que vale la petición, o «creada» con la partida nueva
+    api.pedirRevancha = async () => fila(await rpc("request_rematch", { p_match: M }));
+    // ¿ya existe la revancha de esta partida? (la ven los dos jugadores por RLS)
+    api.buscarRevancha = async () => {
+      const { data, error } = await sb.from("matches").select("id, status").eq("rematch_of", M);
+      return !error && data && data.length ? data[0] : null;
+    };
+    api.avisarRevancha = payload => {
+      try { if (api._canal && api._canal.send) return Promise.resolve(api._canal.send({ type: "broadcast", event: "revancha", payload: Object.assign({ de: cfg.yo }, payload) })).catch(() => {}); }
+      catch (e) { /* sin canal: el rival lo verá al consultar */ }
       return Promise.resolve();
     };
     api.inicio = () => st.log.get(0) || null;
@@ -342,11 +356,12 @@
     if (actual) {
       // la partida ha terminado: sin latido ni sondeo, pero con el canal abierto un rato para el aviso de salida del rival
       cerrarDespedida();
-      despedida = { puente: actual.puente, cierre: setTimeout(cerrarDespedida, 10 * 60 * 1000) };
+      despedida = { puente: actual.puente, sb: actual.sb, yo: actual.yoUid, cierre: setTimeout(cerrarDespedida, 10 * 60 * 1000) };
       actual.puente.parar({ mantenerCanal: true }); actual = null;
     }
     pintarBarra(null);
     if (AVISO.pendiente) avisoSalida(AVISO.pendiente);
+    pintarFinOnline();
   }
 
   // ───────────────────────────── Aviso cuando el rival se va (una vez por partida, sin tapar los puntos)
@@ -368,7 +383,79 @@
     if (ok) ok.onclick = () => el.classList.add("oculto");
   }
   function alSalidaRival(p) {
+    pararEspera();                                               // si esperaba la revancha, ya no llegará
+    if (REV.lineaRival) lineaRevancha("");
     avisoSalida(p.tipo === "local" ? "Tu rival ha decidido jugar en modo local." : "Tu rival ha abandonado la sala.");
+  }
+
+  // ───────────────────────────── Revancha: «Otra partida» en la pantalla final de una partida online
+  // Llama a request_rematch. Si el rival aún no la ha pedido: «Esperando a tu rival…» (la petición vale 2 minutos;
+  // al caducar, «La revancha ha caducado» y el botón vuelve). Si la revancha se crea, los dos entran en ella.
+  // Nunca va al modo local por sí sola: para eso está «Jugar en local».
+  const REV = { esperando: false, sondeo: null, caduca: null, entrando: false, lineaRival: false };
+  function lineaRevancha(texto) {
+    let el = document.getElementById("online-revancha");
+    if (!el) {
+      barra();                                                   // estilos
+      el = document.createElement("div"); el.id = "online-revancha"; el.className = "tarjeta online-aviso"; el.setAttribute("role", "status");
+      const fin = document.getElementById("s-fin"); if (fin) fin.prepend(el);
+    }
+    REV.lineaRival = false;
+    el.classList.toggle("oculto", !texto);
+    el.innerHTML = texto ? "<b>" + window.CuentaOnline.util.esc(texto) + "</b>" : "";
+  }
+  function botonOtra() { const f = document.getElementById("s-fin"); return f && f.querySelector('[data-act="otra"]'); }
+  function botonOtraListo(listo) {
+    const b = botonOtra(); if (!b) return;
+    b.disabled = !listo; b.textContent = listo ? "Otra partida" : "Esperando a tu rival…";
+  }
+  // en la pantalla final de una partida online: «Jugar en local» junto a «Otra partida» (que pasa a ser la revancha)
+  function pintarFinOnline() {
+    const b = botonOtra(); if (!b || document.getElementById("online-local")) return;
+    const l = document.createElement("button");
+    l.className = "btn sec"; l.id = "online-local"; l.dataset.act = "jugar"; l.textContent = "Jugar en local";
+    if (b.parentNode) b.parentNode.insertBefore(l, b);
+  }
+  function limpiarFinOnline() {
+    pararEspera(); lineaRevancha("");
+    const l = document.getElementById("online-local"); if (l) l.remove();
+  }
+  function pararEspera() {
+    REV.esperando = false; clearInterval(REV.sondeo); clearTimeout(REV.caduca); REV.sondeo = REV.caduca = null;
+    botonOtraListo(true);
+  }
+  async function entrarEnRevancha(id) {
+    if (REV.entrando || !despedida) return;
+    REV.entrando = true;
+    const { sb, yo } = despedida;
+    pararEspera(); lineaRevancha("Empieza la revancha…");
+    try { await window.PartidaOnline.entrar(sb, id, yo); limpiarFinOnline(); }
+    catch (e) { lineaRevancha("No se pudo entrar en la revancha: " + ((e && e.message) || "sin conexión")); }
+    REV.entrando = false;
+  }
+  async function pedirRevancha() {
+    if (REV.esperando || REV.entrando) return;
+    if (!despedida) { toast("Espera a que el servidor confirme el resultado."); return; }
+    const p = despedida.puente;
+    botonOtraListo(false); lineaRevancha("Esperando a tu rival…");
+    let r;
+    try { r = await p.pedirRevancha(); }
+    catch (e) { botonOtraListo(true); lineaRevancha((e && e.message) ? e.message.replace(/.?$/, ".") : "No hay conexión con el servidor."); return; }
+    if (r && r.estado === "creada") { p.avisarRevancha({ tipo: "creada", match: r.match_id }); entrarEnRevancha(r.match_id); return; }
+    // esperando: aviso al rival, sondeo por si el aviso se pierde y caducidad
+    REV.esperando = true;
+    botonOtraListo(false);
+    p.avisarRevancha({ tipo: "pedida" });
+    REV.sondeo = setInterval(async () => { const m = await p.buscarRevancha(); if (m && REV.esperando) entrarEnRevancha(m.id); }, 2000);
+    REV.caduca = setTimeout(async () => {
+      const m = await p.buscarRevancha();
+      if (m) { entrarEnRevancha(m.id); return; }
+      pararEspera(); lineaRevancha("La revancha ha caducado.");
+    }, ((r && +r.segundos) || 120) * 1000);
+  }
+  function alRevanchaRival(p) {
+    if (p.tipo === "creada" && p.match) { entrarEnRevancha(p.match); return; }
+    if (p.tipo === "pedida" && !REV.esperando) { lineaRevancha("Tu rival quiere la revancha: pulsa «Otra partida»."); REV.lineaRival = true; }
   }
   // quien pulsa «Volver al cuartel» u «Otra partida» en la pantalla final se lo dice a su rival
   function despedirse(tipo) {
@@ -382,12 +469,24 @@
     clearTimeout(despedida.cierre); despedida.puente.cerrarCanal(); despedida = null;
   }
   document.addEventListener("click", e => {
-    const b = e.target && e.target.closest && e.target.closest('#s-fin [data-act="volver"], #s-fin [data-act="otra"]');
-    if (b && (despedida || actual)) despedirse(b.dataset.act === "otra" ? "local" : "cuartel");
+    const b = e.target && e.target.closest && e.target.closest('#s-fin [data-act="volver"], #s-fin [data-act="otra"], #s-fin #online-local');
+    if (!b || !(despedida || actual)) return;
+    if (b.dataset.act === "otra") {
+      // «Otra partida» online es la revancha: el juego no arranca una partida local
+      e.stopImmediatePropagation(); e.preventDefault();
+      pedirRevancha(); return;
+    }
+    const local = b.id === "online-local";
+    despedirse(local ? "local" : "cuartel");
+    limpiarFinOnline();
   }, true);
 
   async function entrar(sb, matchId, yoUid) {
-    if (!actual || actual.matchId !== matchId) { cerrarDespedida(); Object.assign(AVISO, { mostrado: false, pendiente: null }); }
+    if (!actual || actual.matchId !== matchId) {
+      cerrarDespedida();
+      Object.assign(AVISO, { mostrado: false, pendiente: null });
+      const av = document.getElementById("online-aviso-salida"); if (av) av.classList.add("oculto");
+    }
     if (actual) {
       if (actual.matchId === matchId) { if (typeof estado !== "undefined" && estado.online && estado.activa) ir("juego"); return; }   // ya dentro: volver al tablero
       actual.puente.parar(); actual = null;
@@ -404,6 +503,7 @@
       alAviso: t => toast(t),
       alEstado: info => pintarBarra(info),
       alSalida: alSalidaRival,
+      alRevancha: alRevanchaRival,
       alAccion: () => window.PartidaOnline.actividad(),   // la exportada (las pruebas pueden sustituirla)
     });
     try { await puente.arrancar(); }
@@ -414,7 +514,7 @@
     const jugadores = orden.map(id => ({ id, nombre: nombre(id) }));
     const yo = orden.indexOf(yoUid);
     if (yo < 0) { puente.parar(); throw { message: "No juegas en esta partida" }; }
-    actual = { matchId, yoUid, jugadores, puente };
+    actual = { matchId, yoUid, jugadores, puente, sb };
     const on = Object.assign(puente, { yo, jugadores, turnos: +ini.payload.turns });
     iniciar("online", { semilla: ini.payload.seed, online: on });
     pintarBarra(null);
@@ -485,5 +585,5 @@
     return false;
   }
 
-  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, despedirse, SEL_ACCION, _act: ACT, _necesitoActuar: necesitoActuar };
+  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, despedirse, pedirRevancha, SEL_ACCION, _act: ACT, _necesitoActuar: necesitoActuar };
 })();
