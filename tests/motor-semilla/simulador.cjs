@@ -74,15 +74,19 @@ function crearReloj() {
       if (t.rep) { t.cuando = ahora + t.rep; t.orden = ++sec; } else cola.delete(id);
       t.fn(); return true;
     },
+    // ¿queda algún setTimeout (no intervalo)? Los intervalos (reloj de la pregunta, latido…) no cuentan como trabajo pendiente
+    hayTimeouts() { for (const t of cola.values()) if (!t.rep) return true; return false; },
     get pendientes() { return cola.size; }, get ahora() { return ahora; },
   };
 }
 
-function simular(rutaHtml, op = {}) {
+// Un motor en su propio contexto vm. op.reloj permite compartir el reloj virtual entre varios motores;
+// op.ctxExtra añade globales; op.scriptsExtra carga más archivos después del index.html (p. ej. online/partida.js).
+function crearEntorno(rutaHtml, op = {}) {
   const html = fs.readFileSync(rutaHtml, "utf8");
   const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
   const { document, porIdGet } = crearDOM();
-  const reloj = crearReloj();
+  const reloj = op.reloj || crearReloj();
   const llamadas = [], traza = [];
   const azarBase = mulberry(op.semillaRandom ?? 1);
   const mathFalso = Object.create(Math);
@@ -112,9 +116,11 @@ function simular(rutaHtml, op = {}) {
     Date, JSON, Object, Array, String, Number, Boolean, Set, Map, WeakMap, Promise, RegExp, Error, TypeError, Symbol, Proxy, Reflect, Intl, URL, parseInt, parseFloat, isNaN, isFinite, encodeURIComponent, decodeURIComponent,
     Image: function () { return {}; }, Audio: function () { return { play: () => Promise.resolve(), pause() {} }; },
   };
+  Object.assign(ctx, op.ctxExtra || {});
   ctx.window = ctx; ctx.self = ctx; ctx.globalThis = ctx;
   vm.createContext(ctx);
   for (const s of scripts) vm.runInContext(s, ctx, { filename: rutaHtml });
+  for (const f of op.scriptsExtra || []) vm.runInContext(fs.readFileSync(f, "utf8"), ctx, { filename: f });
 
   // trazas de decisiones (envolviendo funciones globales y métodos de objetos; no cambian su comportamiento)
   vm.runInContext(`
@@ -127,6 +133,11 @@ function simular(rutaHtml, op = {}) {
     const __dado = FX.dado; FX.dado = function (n, fin) { __traza.push("dado " + n); return __dado.apply(this, arguments); };
     const __girar = Ruleta.girar; Ruleta.girar = function (b, fin) { __traza.push("ruleta " + b); return __girar.apply(this, arguments); };
   `, ctx);
+  return { ctx, reloj, porIdGet, llamadas, traza };
+}
+
+function simular(rutaHtml, op = {}) {
+  const { ctx, reloj, porIdGet, llamadas, traza } = crearEntorno(rutaHtml, op);
 
   // partida local, todos bots
   vm.runInContext(`cfg.nJug=${op.jugadores ?? 4}; cfg.rondas=${op.rondas ?? 6}; cfg.modo="puntos";`, ctx);
@@ -152,4 +163,4 @@ function simular(rutaHtml, op = {}) {
   const final = vm.runInContext("({ronda: estado.ronda, fase: estado.fase, activa: estado.activa, pantalla, usadas: estado.usadas.slice(), jugadores: estado.jugadores.map(j => ({p: j.puntos, cat: j.cat, m: j.meritos, a: j.aciertos, f: j.fallos, pos: j.pos}))})", ctx);
   return { traza: t.concat(traza.length ? [] : []), clics: traza, llamadas, final, atascos, pasos };
 }
-module.exports = { simular };
+module.exports = { simular, crearEntorno, crearReloj, mulberry };
