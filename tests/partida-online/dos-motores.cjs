@@ -21,7 +21,7 @@ let fallos = 0;
 const ok = (c, m) => { console.log((c ? "OK   " : "FALLO") + " " + m); if (!c) fallos++; };
 const vaciar = () => new Promise(r => setImmediate(r));
 
-function montar(semilla, turnos, semillaServidor) {
+function montar(semilla, turnos, semillaServidor, conInactividad = true) {
   const reloj = crearReloj();
   class FDate extends Date {
     constructor(...a) { if (a.length) super(...a); else super(EPOCA + reloj.ahora); }
@@ -31,7 +31,7 @@ function montar(semilla, turnos, semillaServidor) {
   const A = crearEntorno(HTML, { reloj, semillaRandom: 11, ctxExtra: extra(), scriptsExtra: [PUENTE] });
   const B = crearEntorno(HTML, { reloj, semillaRandom: 22, ctxExtra: extra(), scriptsExtra: [PUENTE] });
   const banco = JSON.parse(vm.runInContext("JSON.stringify(PREGUNTAS.map(q=>({b:q.b,n:q.n,q:q.q,o:q.o,a:q.a,d:q.d||''})))", A.ctx));
-  const srv = crearServidor({ reloj, banco, jugadores: [UA, UB], turnos, semilla, semillaServidor, EPOCA });
+  const srv = crearServidor({ reloj, banco, jugadores: [UA, UB], turnos, semilla, semillaServidor, EPOCA, conInactividad });
   A.uid = UA; B.uid = UB; A.nom = "A"; B.nom = "B";
   return { reloj, A, B, srv };
 }
@@ -59,6 +59,7 @@ function crearPersona(E, srv, semilla, op = {}) {
       E.reloj.setTimeout(() => {
         const fuera = leer(E, "preguntaActiva&&preguntaActiva.fuera?preguntaActiva.fuera.slice():[]");
         const malas = q.o.map((_, k) => k).filter(k => k !== q.a && !fuera.includes(k));
+        E.ctx.PartidaOnline.actividad();   // tocar una opción cuenta como actividad
         E.ctx.responderOnline(bien || !malas.length ? q.a : malas[Math.floor(rng() * malas.length)]);
       }, retraso);
       return true;
@@ -99,8 +100,9 @@ function crearPersona(E, srv, semilla, op = {}) {
   };
 }
 
-async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null }) {
-  const { reloj, A, B, srv } = montar(semilla, turnos, semillaServidor);
+async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true }) {
+  const { reloj, A, B, srv } = montar(semilla, turnos, semillaServidor, conInactividad);
+  const ina = { aviso5: false, oculto: false, cancelado: false, reclamado: false, botonA: false };
   await A.ctx.PartidaOnline.entrar(srv.cliente(UA), "M1", UA);
   await B.ctx.PartidaOnline.entrar(srv.cliente(UB), "M1", UB);
   // mismo ajuste en los dos motores antes de la primera jugada (para probar despliegue, comisaría y sirena)
@@ -134,18 +136,44 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
       personaB.dormida = true; B.ctx.eval ? 0 : 0; vm.runInContext("estado.online.abandonar()", B.ctx);
     }
     if (desconectaB != null && srv.S.log.length >= desconectaB && !personaB.dormida) {
-      personaB.dormida = true; B.ctx.PartidaOnline.actual().puente.parar();   // sin latidos ni sondeo: como si cerrara la app
+      personaB.dormida = true; B.ctx.PartidaOnline._act.autoPerder = false; B.ctx.PartidaOnline.actual().puente.parar();   // sin latidos ni sondeo: como si cerrara la app
     }
     if (desconectaB != null && personaB.dormida && !reclamado && /online-reclamar/.test(A.porIdGet("online-barra").innerHTML)) {
       reclamado = true; A.porIdGet("online-reclamar").onclick(); continue;
     }
+    // una persona de verdad pulsa aunque haya animaciones en marcha: si su pantalla lleva más de 3 s esperándola, actúa
+    let actuo = false;
+    for (const [E, act] of [[A, actA], [B, actB]]) {
+      const P = E.ctx.PartidaOnline;
+      if (!P.actual() || !leer(E, "estado.activa") || !P._necesitoActuar()) { E.nec = null; continue; }
+      if (E.nec == null) E.nec = reloj.ahora;
+      else if (reloj.ahora - E.nec > 3000 && act()) { P.actividad(); E.nec = null; actuo = true; break; }
+    }
+    if (actuo) continue;
     if (reloj.hayTimeouts()) { reloj.paso(); pasos++; continue; }
-    if (actA() || actB()) continue;
+    // inactividad: B deja de tocar la pantalla en su turno (la pestaña sigue abierta y enviando latidos)
+    if (inactivoB && !personaB.dormida && !ina.cancelado && srv.S.status === "in_progress" && srv.S.log.length >= inactivoB.desde && leer(B, "estado.activa&&jugActual()===jugYo()")) {
+      personaB.dormida = true; B.ctx.PartidaOnline._act.autoPerder = inactivoB.autoPerder !== false;
+    }
+    if (inactivoB && personaB.dormida) {
+      const av = B.porIdGet("online-inactivo"), visible = !av.classList.contains("oculto") && /Vas a perder por inactividad/.test(av.innerHTML);
+      if (visible && /en 5…/.test(av.innerHTML)) ina.aviso5 = true;
+      if (visible && inactivoB.cancelar && /en 3…/.test(av.innerHTML)) {
+        B.ctx.PartidaOnline.actividad(); personaB.dormida = false; ina.cancelado = true;        // un toque cancela la cuenta atrás
+        ina.oculto = av.classList.contains("oculto"); continue;
+      }
+    }
+    if (inactivoB && /data-tipo="inactividad"/.test(A.porIdGet("online-barra").innerHTML)) {
+      ina.botonA = true;
+      if (inactivoB.reclamar && !ina.reclamado) { ina.reclamado = true; A.porIdGet("online-reclamar").onclick(); continue; }
+    }
+    if (actA()) { A.ctx.PartidaOnline.actividad(); continue; }
+    if (actB()) { B.ctx.PartidaOnline.actividad(); continue; }
     if (reloj.paso()) { pasos++; continue; }
     break;
   }
   const perfilIntacto = leer(A, PERFIL) === perfilAntes.A && leer(B, PERFIL) === perfilAntes.B;
-  return { A, B, srv, pasos, reclamado, reloj, rotoA: roto(A), rotoB: roto(B), perfilIntacto,
+  return { A, B, srv, pasos, reclamado, ina, reloj, rotoA: roto(A), rotoB: roto(B), perfilIntacto,
     vistas: vistas.size, preguntas: Object.keys(srv.S.qs).length, malVista, respuestasAjenas: srv.S.respuestasAjenas || 0 };
 }
 
@@ -250,6 +278,32 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
     ok(canales === 1 && cerrados === 1, `el canal de Realtime abierto se cierra (abiertos ${canales}, cerrados ${cerrados})`);
     ok(!A.ctx.PartidaOnline.actual() && !leer(A, "estado.online"), "no queda ninguna partida a medias en el motor");
     void reloj;
+  }
+
+  // ── 6. inactividad (60 s sin tocar en su turno; distinto del corte de red)
+  console.log("── 6. Inactividad");
+  {
+    const r = await jugar({ semilla: 61, turnos: 5, inactivoB: { desde: 6 }, limite: 120000 });
+    const cl = r.srv.S.llamadas;
+    ok(r.ina.aviso5, "a los 60 s sin actividad en su turno, B ve «Vas a perder por inactividad en 5…»");
+    ok(r.srv.S.motivo === "forfeit" && r.srv.S.ganador === UA && cl.includes(UB.slice(-1) + ":leave_match") && !cl.some(l => /claim_/.test(l)),
+      `al llegar a 0 pierde B (forfeit, gana A) sin que nadie reclame: ${r.srv.S.motivo}, ganador ${r.srv.S.ganador === UA ? "A" : r.srv.S.ganador}`);
+  }
+  {
+    const r = await jugar({ semilla: 62, turnos: 5, inactivoB: { desde: 6, cancelar: true } });
+    ok(r.ina.cancelado && r.ina.oculto, "un toque durante la cuenta atrás la cancela (el aviso desaparece)");
+    ok(r.srv.S.motivo === "completed" && estadoFinal(r.A) === estadoFinal(r.B), `la partida sigue y termina con normalidad: ${r.srv.S.motivo}`);
+  }
+  {
+    const r = await jugar({ semilla: 63, turnos: 5, inactivoB: { desde: 6, autoPerder: false, reclamar: true }, limite: 120000 });
+    const n = r.srv.S.llamadas.filter(l => l === UA.slice(-1) + ":claim_inactivity").length;
+    ok(r.ina.botonA, "con la pestaña de B abierta pero sin actividad, A ve «Reclamar victoria» por inactividad");
+    ok(n === 1 && r.srv.S.motivo === "forfeit" && r.srv.S.ganador === UA, `claim_inactivity (al pulsar, ${n} vez) da la victoria a A`);
+  }
+  {
+    const r = await jugar({ semilla: 64, turnos: 5, inactivoB: { desde: 6 }, conInactividad: false, limite: 120000 });
+    ok(r.ina.aviso5 && r.srv.S.motivo === "forfeit" && r.srv.S.ganador === UA && !r.ina.botonA,
+      "sin la migración: B pierde igual por inactividad (leave_match) y A no ve el botón de inactividad");
   }
 
   console.log(fallos ? `\n${fallos} FALLO(S)` : "\nTODO OK");

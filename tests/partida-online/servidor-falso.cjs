@@ -5,14 +5,15 @@
 // Las jugadas nuevas llegan a los suscritos por «Realtime» con un retraso virtual.
 const { mulberry } = require("../motor-semilla/simulador.cjs");
 
-function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServidor = 99, latencia = 40, EPOCA = Date.parse("2026-11-26T10:00:00Z") }) {
+function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServidor = 99, latencia = 40, EPOCA = Date.parse("2026-11-26T10:00:00Z"), conInactividad = true }) {
   const rnd = mulberry(semillaServidor);
   const ahora = () => EPOCA + reloj.ahora;
   const S = {
     status: "in_progress", current: null, log: [], qs: {}, usadas: new Set(), latido: {}, fuera: new Set(),
     informes: {}, ganador: null, motivo: null, subs: [], llamadas: [],
   };
-  jugadores.forEach(u => { S.latido[u] = ahora(); });
+  S.actividad = {}; S.empezada = ahora();
+  jugadores.forEach(u => { S.latido[u] = ahora(); S.actividad[u] = ahora(); });
   const err = (message, code = "P0001") => ({ data: null, error: { code, message } });
   const ok = data => ({ data, error: null });
 
@@ -127,6 +128,21 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
       if (!q || !q.closed) return ok([]);
       return ok([{ question_index: a.p_index, player_id: q.player, result: q.result, respuesta_correcta: q.q.a, explicacion: q.q.d || "" }]);
     },
+    // migración 20261126120000_inactividad.sql (si conInactividad es false, el servidor se comporta como sin aplicarla)
+    mark_activity(u) {
+      if (!conInactividad) return err("Could not find the function public.mark_activity(p_match) in the schema cache", "PGRST202");
+      if (!jugadores.includes(u)) return err("No estás en esa partida");
+      if (!S.fuera.has(u)) { S.actividad[u] = ahora(); S.latido[u] = ahora(); }
+      avanzar(); return ok(null);
+    },
+    claim_inactivity(u, a) {
+      if (!conInactividad) return err("Could not find the function public.claim_inactivity(p_match, p_user) in the schema cache", "PGRST202");
+      const e = activo(u); if (e) return err(e);
+      if (a.p_user === u) return err("Para abandonar usa leave_match");
+      if (S.fuera.has(a.p_user) || !jugadores.includes(a.p_user)) return err("Ese jugador no sigue en la partida");
+      if (Math.max(S.actividad[a.p_user], S.empezada) > ahora() - 60000) return err("Ese jugador sigue activo");
+      abandono(a.p_user); return ok(null);
+    },
     heartbeat(u) {
       if (!jugadores.includes(u)) return err("No estás en esa partida");
       if (!S.fuera.has(u)) S.latido[u] = ahora();
@@ -172,7 +188,8 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
           then(res, rej) {
             let d = [];
             if (tabla === "match_actions") d = S.log.filter(a => a.seq > (f.gt_seq ?? -1)).map(a => ({ ...a, payload: JSON.parse(JSON.stringify(a.payload)) }));
-            if (tabla === "match_players") d = jugadores.map((id, seat) => ({ user_id: id, seat, forfeited: S.fuera.has(id), last_heartbeat: new Date(S.latido[id]).toISOString() }));
+            if (tabla === "match_players") d = jugadores.map((id, seat) => Object.assign({ user_id: id, seat, forfeited: S.fuera.has(id), last_heartbeat: new Date(S.latido[id]).toISOString() },
+              conInactividad ? { ultima_actividad_at: new Date(S.actividad[id]).toISOString() } : {}));
             if (tabla === "profiles") d = (f.in_id || []).map(id => ({ id, username: "agente_" + id.slice(-4) }));
             return Promise.resolve({ data: d, error: null }).then(res, rej);
           },

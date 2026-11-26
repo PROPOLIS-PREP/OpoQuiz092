@@ -192,6 +192,64 @@ do $$ declare a record; b record; begin
   perform pg_temp.ok('report_result: iguales → completed con ganador; distintos → disputed sin ganador');
 end $$;
 reset role;
+
+-- ─────────────────────────────── 8. inactividad: 60 s sin actividad (requiere 20261126120000_inactividad.sql)
+-- Si la migración no está aplicada, el bloque se salta y lo anota como pendiente.
+do $$ declare r record; m record; v_mid uuid; begin
+  if to_regprocedure('public.claim_inactivity(uuid,uuid)') is null then
+    perform pg_temp.ok('inactividad: PENDIENTE (migración 20261126120000_inactividad.sql sin aplicar)'); return;
+  end if;
+  execute 'set local role authenticated';
+  perform pg_temp.como('e1');
+  select * into r from public.create_match('points', 2, 5); v_mid := r.match_id;
+  perform pg_temp.como('e2'); perform public.join_match(r.code);
+  perform pg_temp.como('e1'); perform public.start_match(v_mid);
+  -- a) recién empezada: nadie puede reclamar (cuenta desde el comienzo aunque la sala esperase mucho)
+  execute 'reset role';
+  update public.match_players set ultima_actividad_at = now() - interval '30 minutes' where match_id = v_mid;
+  execute 'set local role authenticated';
+  perform pg_temp.como('e2');
+  begin perform public.claim_inactivity(v_mid, '00000000-0000-0000-0000-0000000000e1'); raise exception 'FALLO: se reclamó la inactividad de una partida recién empezada';
+  exception when raise_exception then if sqlerrm not like 'Ese jugador sigue activo%' then raise; end if; end;
+  -- b) 61 s sin actividad, pero toca la pantalla (mark_activity): la reclamación falla
+  execute 'reset role';
+  update public.matches set started_at = now() - interval '5 minutes' where id = v_mid;
+  update public.match_players set ultima_actividad_at = now() - interval '61 seconds' where match_id = v_mid;
+  execute 'set local role authenticated';
+  perform pg_temp.como('e1'); perform public.mark_activity(v_mid);
+  perform pg_temp.como('e2');
+  begin perform public.claim_inactivity(v_mid, '00000000-0000-0000-0000-0000000000e1'); raise exception 'FALLO: se reclamó tras una actividad reciente';
+  exception when raise_exception then if sqlerrm not like 'Ese jugador sigue activo%' then raise; end if; end;
+  perform pg_temp.ok('inactividad: se cancela con actividad (mark_activity) y no cuenta antes del comienzo');
+  -- c) seguridad: no contra uno mismo, ni un intruso, ni anon
+  begin perform public.claim_inactivity(v_mid, '00000000-0000-0000-0000-0000000000e2'); raise exception 'FALLO: se reclamó contra uno mismo';
+  exception when raise_exception then if sqlerrm not like 'Para abandonar usa leave_match%' then raise; end if; end;
+  perform pg_temp.como('e3');
+  begin perform public.claim_inactivity(v_mid, '00000000-0000-0000-0000-0000000000e1'); raise exception 'FALLO: un intruso reclamó';
+  exception when raise_exception then if sqlerrm not like 'No estás en esa partida%' then raise; end if; end;
+  begin perform public.mark_activity(v_mid); raise exception 'FALLO: un intruso registró actividad';
+  exception when raise_exception then if sqlerrm not like 'No estás en esa partida%' then raise; end if; end;
+  execute 'reset role'; execute 'set local role anon';
+  begin perform public.claim_inactivity(v_mid, '00000000-0000-0000-0000-0000000000e1'); raise exception 'FALLO: anon reclamó';
+  exception when insufficient_privilege then null; end;
+  execute 'reset role';
+  perform pg_temp.ok('inactividad: ni contra uno mismo, ni un intruso, ni anon');
+  -- d) 61 s sin actividad de verdad: el rival reclama y gana
+  update public.match_players set ultima_actividad_at = now() - interval '61 seconds'
+   where match_id = v_mid and user_id = '00000000-0000-0000-0000-0000000000e1';
+  execute 'set local role authenticated';
+  perform pg_temp.como('e2'); perform public.claim_inactivity(v_mid, '00000000-0000-0000-0000-0000000000e1');
+  execute 'reset role';
+  select status, finish_reason, winner_id into m from public.matches where id = v_mid;
+  if m.status <> 'finished' or m.finish_reason <> 'forfeit' or m.winner_id <> '00000000-0000-0000-0000-0000000000e2' then
+    raise exception 'FALLO: claim_inactivity no dio la victoria al rival: % % %', m.status, m.finish_reason, m.winner_id;
+  end if;
+  if (select string_agg(kind, ',' order by seq) from (select kind, seq from public.match_actions where match_id = v_mid order by seq desc limit 2) x) <> 'abandono,fin' then
+    raise exception 'FALLO: el registro no acaba en abandono y fin';
+  end if;
+  perform pg_temp.ok('inactividad: a los 60 s sin actividad, claim_inactivity da la victoria al rival');
+end $$;
+
 do $$ begin
   if exists (select 1 from information_schema.tables where table_schema = 'public'
               and table_name in ('scores', 'score_changes', 'wallets', 'coin_movements', 'achievements', 'user_achievements', 'user_progress', 'game_config')) then

@@ -18,6 +18,8 @@
   "use strict";
 
   const LATIDO_MS = 15000, SONDEO_MS = 3000, SIN_SENAL_MS = 60000, INACTIVO_MS = 60000;
+  const MARCA_MS = 10000;          // mark_activity como mucho cada 10 s
+  const AVISO_S = 5;               // cuenta atrás «Vas a perder por inactividad en 5…»
   const GLOBALES = ["abandono", "fin"];
 
   // ───────────────────────────── Núcleo del puente (sin DOM: se prueba en Node con un servidor falso)
@@ -35,6 +37,7 @@
     const st = {
       log: new Map(), ultimo: -1, aplicado: 1, espera: null, cola: Promise.resolve(),
       cache: {}, terminado: false, ultimaRival: R.ahora(), turnoRival: false, roto: false,
+      ultimaMarca: -Infinity, sinMarcar: false,   // sinMarcar: el servidor aún no tiene mark_activity (migración pendiente)
     };
     const rpc = async (f, args) => { const r = await sb.rpc(f, args); if (r.error) throw r.error; return r.data; };
     const fila = d => Array.isArray(d) ? d[0] : d;
@@ -137,9 +140,20 @@
       terminar(puntos) { enFila(async () => { await rpc("report_result", { p_match: M, p_scores: puntos }); await leerNuevas(); }); },
       abandonar() { enFila(async () => { await rpc("leave_match", { p_match: M }); await leerNuevas(); }); },
       reclamar(uid) { return enFila(async () => { await rpc("claim_forfeit", { p_match: M, p_user: uid }); await leerNuevas(); }); },
+      // actividad de la persona (toque, clic o tecla): mark_activity como mucho cada 10 s; forzar, sin esperar
+      actividad(forzar) {
+        const t = R.ahora();
+        if (st.sinMarcar || st.terminado || (!forzar && t - st.ultimaMarca < MARCA_MS)) return;
+        st.ultimaMarca = t;
+        sb.rpc("mark_activity", { p_match: M }).then(r => {
+          if (r && r.error && (r.error.code === "PGRST202" || /mark_activity/.test(r.error.message || ""))) st.sinMarcar = true;   // sin migración
+        }, () => { /* sin conexión: el siguiente toque lo reintenta */ });
+      },
+      reclamarInactividad(uid) { return enFila(async () => { await rpc("claim_inactivity", { p_match: M, p_user: uid }); await leerNuevas(); }); },
       error,
       // para el motor y la pantalla
       marcarTurnoRival(v) { if (v && !st.turnoRival) st.ultimaRival = R.ahora(); st.turnoRival = v; },
+      marcarEspera(v) { st.esperando = v; },   // true: la pantalla no espera nada de este jugador
       _estado: st, _recibir: recibir, _leer: leerNuevas,
     };
 
@@ -148,12 +162,20 @@
     async function latir() {
       if (st.terminado) return;
       try { await rpc("heartbeat", { p_match: M }); } catch (e) { /* sin conexión */ }
+      // mientras la pantalla no espera nada de este jugador, esperar cuenta como actividad:
+      // solo puede perder por inactividad quien tiene que actuar
+      if (st.esperando) api.actividad(true);
       try {
-        const { data } = await sb.from("match_players").select("user_id, last_heartbeat, forfeited").eq("match_id", M);
+        // «*»: así funciona con y sin la columna ultima_actividad_at (migración de inactividad)
+        const { data } = await sb.from("match_players").select("*").eq("match_id", M);
         const rival = (data || []).find(j => j.user_id !== cfg.yo);
         if (rival && cfg.alEstado) {
           const silencio = R.ahora() - Date.parse(rival.last_heartbeat);
-          cfg.alEstado({ rival: rival.user_id, sinSenal: silencio >= SIN_SENAL_MS, silencio, inactivo: st.turnoRival && R.ahora() - st.ultimaRival >= INACTIVO_MS });
+          const ref = rival.ultima_actividad_at ? Math.max(Date.parse(rival.ultima_actividad_at), st.ultimaRival) : null;
+          cfg.alEstado({ rival: rival.user_id, sinSenal: silencio >= SIN_SENAL_MS, silencio,
+            inactivo: st.turnoRival && R.ahora() - st.ultimaRival >= INACTIVO_MS,
+            // el móvil del rival envía actividad mientras espera: si está atrasada, es que tenía que actuar y no lo ha hecho
+            sinActividad: ref != null && R.ahora() - ref >= INACTIVO_MS, quieto: ref != null ? R.ahora() - ref : null });
         }
       } catch (e) { /* se reintenta en el siguiente latido */ }
     }
@@ -191,7 +213,11 @@
         display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;background:rgba(6,27,69,.88);color:#fff;border:2px solid #f7bf42;border-radius:14px;
         padding:4px 10px;font-size:12.5px;font-weight:800;box-shadow:0 3px 8px #0006}
         #online-barra .btn{font-size:13px;padding:4px 10px}
-        #online-barra.oculto{display:none}`;
+        #online-barra.oculto{display:none}
+        #online-inactivo{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:60;max-width:calc(100% - 32px);text-align:center;
+          background:#b60928;color:#fff;border:3px solid #ffcb2e;border-radius:18px;padding:16px 20px;font-family:var(--display);font-size:22px;box-shadow:0 6px 18px #000a}
+        #online-inactivo small{display:block;font-family:inherit;font-size:13px;opacity:.9;margin-top:4px}
+        #online-inactivo.oculto{display:none}`;
       document.head.appendChild(s);
       document.body.appendChild(b);
     }
@@ -205,13 +231,17 @@
     const nom = rival ? window.CuentaOnline.util.esc(rival.nombre) : "tu rival";
     let txt = `🌐 Online · ${nom}: `;
     if (info && info.sinSenal) txt += `sin señal desde hace ${Math.round(info.silencio / 1000)} s`;
+    else if (info && info.sinActividad) txt += `sin actividad desde hace ${Math.round(info.quieto / 1000)} s`;
     else if (info && info.inactivo) txt += "lleva tiempo sin jugar";
     else txt += "conectado";
-    b.innerHTML = `<span>${txt}</span>` + (info && info.sinSenal ? `<button class="btn rojo peq" id="online-reclamar">Reclamar victoria</button>` : "");
+    // corte de red → claim_forfeit; pestaña abierta pero 60 s sin actividad en su turno → claim_inactivity
+    const tipo = info && info.sinSenal ? "red" : info && info.sinActividad ? "inactividad" : null;
+    b.innerHTML = `<span>${txt}</span>` + (tipo ? `<button class="btn rojo peq" id="online-reclamar" data-tipo="${tipo}">Reclamar victoria</button>` : "");
     const r = document.getElementById("online-reclamar");
     if (r) r.onclick = () => {
       r.disabled = true;
-      actual.puente.reclamar(info.rival).then(() => { r.disabled = false; });
+      const p = tipo === "inactividad" ? actual.puente.reclamarInactividad(info.rival) : actual.puente.reclamar(info.rival);
+      p.then(() => { r.disabled = false; });
     };
   }
 
@@ -265,13 +295,62 @@
     const on = Object.assign(puente, { yo, jugadores, turnos: +ini.payload.turns });
     iniciar("online", { semilla: ini.payload.seed, online: on });
     pintarBarra(null);
-    // el aviso de inactividad: se marca cuándo le toca al rival
+    Object.assign(ACT, { local: Date.now(), inicioTurno: Date.now(), eraMio: false, perdido: false });
+    puente.actividad(true);
+    // de quién es el turno (aviso de rival inactivo) y la inactividad propia: 60 s sin tocar en tu turno → 5…1 → pierdes
     const vigilar = setInterval(() => {
-      if (!actual || actual.puente !== puente) { clearInterval(vigilar); return; }
+      if (!actual || actual.puente !== puente) { clearInterval(vigilar); ocultarAviso(); return; }
       const p = typeof jugActual === "function" ? jugActual() : null;
       puente.marcarTurnoRival(!!(p && p.remoto));
-    }, 1000);
+      // solo cuenta la inactividad mientras la pantalla espera algo de este jugador (no mientras espera al rival)
+      const mio = estado.online && estado.activa && necesitoActuar(), t = Date.now();
+      puente.marcarEspera(!mio);
+      if (mio && !ACT.eraMio) ACT.inicioTurno = t;               // el reloj empieza cuando se te pide algo
+      ACT.eraMio = mio;
+      if (!mio) { ocultarAviso(); return; }
+      const quieto = t - Math.max(ACT.local, ACT.inicioTurno);
+      if (quieto < INACTIVO_MS) { ocultarAviso(); return; }
+      const n = AVISO_S - Math.floor((quieto - INACTIVO_MS) / 1000);
+      if (n > 0) avisoInactividad(n);
+      else if (ACT.autoPerder && !ACT.perdido) {
+        ACT.perdido = true; ocultarAviso();
+        toast("Has perdido la partida por inactividad.");
+        puente.abandonar();                                      // para el servidor, la pierde el jugador inactivo
+      }
+    }, 250);
   }
 
-  window.PartidaOnline = { entrar, crearPuente, actual: () => actual };
+  // ───────────────────────────── Actividad: cualquier toque, clic o tecla (también «Continuar» en una ventana)
+  const ACT = { local: 0, inicioTurno: 0, eraMio: false, perdido: false, autoPerder: true };
+  function actividad() {
+    ACT.local = Date.now();
+    ocultarAviso();
+    if (actual) actual.puente.actividad();
+  }
+  ["pointerdown", "keydown", "touchstart", "wheel"].forEach(t => document.addEventListener(t, actividad, { capture: true, passive: true }));
+  function avisoInactividad(n) {
+    barra();                                                     // crea también los estilos
+    let a = document.getElementById("online-inactivo");
+    if (!a) { a = document.createElement("div"); a.id = "online-inactivo"; a.setAttribute("role", "alert"); document.body.appendChild(a); }
+    a.classList.remove("oculto");
+    a.innerHTML = `Vas a perder por inactividad en ${n}…<small>Toca la pantalla para seguir jugando</small>`;
+  }
+  function ocultarAviso() { const a = document.getElementById("online-inactivo"); if (a) a.classList.add("oculto"); }
+  // ¿la pantalla espera algo de este jugador? (botón de acción activo, carta propia con botones o lista, su pregunta, su despliegue)
+  function necesitoActuar() {
+    const pa = typeof preguntaActiva !== "undefined" ? preguntaActiva : null;
+    if (pa && pa.online && !pa.p.remoto && !pa.respondida && !pa.enviada && pa.q && pa.q.o && pa.q.o.length) return true;
+    const p = jugActual(), mio = p && !p.remoto;
+    const b = document.getElementById("btn-accion");
+    if (b && !b.disabled && b.onclick) return true;            // Responder, Tirar dado, Terminar despliegue (solo salen activos para ti)
+    const velo = document.getElementById("velo-carta"), pie = document.getElementById("carta-pie"), ex = document.getElementById("carta-extra");
+    if (mio && velo && velo.classList.contains("on")) {
+      if (pie && [...pie.children].some(x => !x.disabled && x.onclick)) return true;   // carta de tu turno esperando tu botón
+      if (ex && ex.onclick) return true;                         // elegir en una lista (comisaría, lanzar, recolocar)
+    }
+    if (mio && estado.fase === "despliegue") return true;
+    return false;
+  }
+
+  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, _act: ACT, _necesitoActuar: necesitoActuar };
 })();
