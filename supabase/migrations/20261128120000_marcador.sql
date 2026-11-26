@@ -6,7 +6,7 @@
 -- · game_config: cantidades y límites (se cambian desde el panel, sin tocar código).
 --     puntos_1v1  {"ganador": 30, "perdedor": -5, "empate": 30}
 --     monedas_1v1 {"jugar": 20, "ganar": 30, "abandonar": 0, "empate": 20}
---     ligas       tramos del marcador (para la 3e; aquí solo se guardan)
+--     ligas       Sin liga 0–49, Bronce 50–99, Plata 100–199, Oro desde 200 (el logro Bronce lee su tramo)
 -- · Puntos: empiezan en 0, sin temporadas; el saldo no baja de 0 (despues = greatest(0, antes + delta) y
 --   score_changes.delta guarda el cambio real). Ganador +30, perdedor −5, abandono = derrota, empate +30 para los dos.
 -- · Monedas: 20 por jugar, +30 por ganar, 0 por abandonar, 20 por empate, en todas las partidas (sin límite diario).
@@ -29,7 +29,7 @@ create table public.game_config (
 insert into public.game_config (clave, valor) values
   ('puntos_1v1', '{"ganador": 30, "perdedor": -5, "empate": 30}'),
   ('monedas_1v1', '{"jugar": 20, "ganar": 30, "abandonar": 0, "empate": 20}'),
-  ('ligas', '[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 100}, {"nombre": "Plata", "desde": 200}, {"nombre": "Oro", "desde": 300}]');
+  ('ligas', '[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 50}, {"nombre": "Plata", "desde": 100}, {"nombre": "Oro", "desde": 200}]');
 
 create table public.scores (
   user_id uuid primary key references public.profiles (id) on delete cascade,

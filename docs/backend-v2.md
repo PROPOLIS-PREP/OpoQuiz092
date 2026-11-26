@@ -304,7 +304,7 @@ Todas las tablas llevan RLS. El cliente solo lee; escriben únicamente funciones
 
 - **`public.game_config`**: `clave` (texto, clave primaria), `valor` (jsonb), `updated_at`. La leen los usuarios con sesión y se cambia desde el panel, sin tocar código. Valores previstos:
   - `puntos_1v1`: `{"ganador": 30, "perdedor": -5}`. El abandono cuenta como derrota.
-  - `ligas`: `[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 100}, {"nombre": "Plata", "desde": 200}, {"nombre": "Oro", "desde": 300}]`.
+  - `ligas`: `[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 50}, {"nombre": "Plata", "desde": 100}, {"nombre": "Oro", "desde": 200}]`.
   - `monedas`: cantidades y límites, **pendientes** (ver abajo).
 
 ### Marcador de puntos (3d)
@@ -322,7 +322,7 @@ Sin Elo y sin temporadas: un marcador permanente que empieza en 0.
 
 ### Ligas (3e)
 
-Calculadas a partir de `scores.puntos` con los tramos de `game_config.ligas`, sin tabla propia: una función `public.liga_de(puntos)` o una vista de clasificación con `username`, `puntos` y `liga`. Tramos: Sin liga 0–99, Bronce 100–199, Plata 200–299, Oro desde 300.
+Calculadas a partir de `scores.puntos` con los tramos de `game_config.ligas`, sin tabla propia: una función `public.liga_de(puntos)` o una vista de clasificación con `username`, `puntos` y `liga`. Tramos: Sin liga 0–49, Bronce 50–99, Plata 100–199, Oro desde 200.
 
 ### Monedas (3d)
 
