@@ -339,7 +339,7 @@
     const yo = actual && actual.yoUid;
     let texto;
     if (fin.reason === "forfeit") texto = fin.winner === yo ? "Tu rival ha abandonado: ganas la partida." : "Has abandonado: la partida la gana tu rival.";
-    else if (fin.reason === "disputed") texto = "Los dos móviles no coinciden en el resultado: la partida queda en revisión, sin ganador.";
+    else if (fin.reason === "disputed") texto = "La partida queda en revisión, sin ganador.";
     else texto = fin.winner ? (fin.winner === yo ? "Resultado confirmado: ¡has ganado!" : "Resultado confirmado por el servidor.") : "Resultado confirmado: empate.";
     if (typeof estado !== "undefined" && estado.online && estado.activa) {
       // la partida termina antes de los turnos (abandono): se detiene el motor y se enseña el final
@@ -351,6 +351,7 @@
       document.getElementById("premios").innerHTML = `<div style="--i:0">Partida online: sin premios en esta versión</div><div style="--i:1" id="online-cierre"></div>`;
       ir("fin");
     }
+    pintarPremios(fin, actual ? actual.jugadores : []);
     const c = document.getElementById("online-cierre"); if (c) c.textContent = texto;
     if (fin.reason === "forfeit" && fin.winner === yo) avisoSalida("Tu rival ha abandonado la sala.");
     if (actual) {
@@ -362,6 +363,31 @@
     pintarBarra(null);
     if (AVISO.pendiente) avisoSalida(AVISO.pendiente);
     pintarFinOnline();
+  }
+
+  // ───────────────────────────── Premios de la partida (3d): los calcula el servidor y llegan en la jugada «fin»
+  // Los dos móviles enseñan lo mismo: cada jugador con sus puntos (cambio real y total), monedas y logros nuevos.
+  // disputed: «Resultado en revisión» para los dos, sin puntos ni monedas.
+  function textoPremios(fin, jugadores) {
+    const esc = s => window.CuentaOnline.util.esc(String(s));
+    if (fin.reason === "disputed") {
+      return `<div style="--i:0"><b>Resultado en revisión</b>: los dos móviles no coinciden. Sin puntos ni monedas hasta que se resuelva.</div>`;
+    }
+    const pr = fin.premios || {};
+    const ids = (jugadores || []).map(j => j.id).filter(id => pr[id]);
+    Object.keys(pr).forEach(id => { if (!ids.includes(id)) ids.push(id); });
+    if (!ids.length) return `<div style="--i:0">Partida online: sin premios en esta versión</div>`;
+    const nombre = id => ((jugadores || []).find(j => j.id === id) || {}).nombre || "Agente";
+    const signo = n => n > 0 ? "+" + n : n < 0 ? "−" + Math.abs(n) : "0";
+    return ids.map((id, k) => {
+      const p = pr[id], logros = (p.logros || []).map(l => ` · 🏅 ${esc(l.nombre)}${l.monedas ? ` (+${l.monedas} monedas)` : ""}`).join("");
+      return `<div style="--i:${k}" data-premio="${esc(id)}"><b>${esc(nombre(id))}</b>: ${signo(+p.puntos)} puntos (total ${+p.total}) · +${+p.monedas} monedas${logros}</div>`;
+    }).join("");
+  }
+  function pintarPremios(fin, jugadores) {
+    const pr = document.getElementById("premios"); if (!pr) return;
+    pr.innerHTML = textoPremios(fin, jugadores) + `<div style="--i:3" id="online-cierre"></div>`;
+    if (fin.reason === "disputed") { const g = document.getElementById("ganador"); if (g) g.textContent = "Resultado en revisión"; }
   }
 
   // ───────────────────────────── Aviso cuando el rival se va (una vez por partida, sin tapar los puntos)

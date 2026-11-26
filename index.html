@@ -10150,7 +10150,7 @@ function finPartidaOnline(){
   $("#podio").innerHTML=orden.map((p,i)=>`<li style="--i:${i}"><span class="pos">${i+1}º</span>${avatarHTML(p.av,34)}
     <span class="n"><b>${escapar(p.nombre)}</b><span>${ESCALAFON[p.cat].n} · ${p.ascensos} ascenso${p.ascensos===1?"":"s"} · ${misDestacamentos(p).length} destac.</span></span>
     <span class="p">${p.puntos} pts<br>${p.aciertos}/${p.aciertos+p.fallos} · 🔥${p.mejorRacha}</span></li>`).join("");
-  $("#premios").innerHTML=`<div style="--i:0">Partida online: sin premios en esta versión</div><div style="--i:1" id="online-cierre">Comprobando el resultado con el servidor…</div>`;
+  $("#premios").innerHTML=`<div style="--i:0">Puntos y monedas: los reparte el servidor al confirmar el resultado.</div><div style="--i:1" id="online-cierre">Comprobando el resultado con el servidor…</div>`;
   ir("fin");
   estado.online.terminar(Object.fromEntries(estado.jugadores.map(j=>[j.uid,j.puntos])));
 }
@@ -10199,7 +10199,7 @@ $("#selector-ascenso").addEventListener("keydown",e=>{
    así el juego local funciona igual sin conexión y sin cuenta.
    ===================================================================== */
 let promesaOnline=null;
-const VERSION_ONLINE="online13";            /* súbela (y la de sw.js) cada vez que cambie online/*.js */
+const VERSION_ONLINE="online14";            /* súbela (y la de sw.js) cada vez que cambie online/*.js */
 function cargarOnline(){
   if(promesaOnline)return promesaOnline;
   /* ?v=: cada versión pide sus scripts de nuevo (sin esto, la caché del navegador podía servir un partida.js viejo) */
