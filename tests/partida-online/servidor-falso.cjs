@@ -13,6 +13,8 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
     informes: {}, ganador: null, motivo: null, subs: [], llamadas: [], bcast: [], enviados: [],
   };
   S.actividad = {}; S.pendiente = {}; S.marcas = []; S.empezada = ahora();
+  // revancha (20261127120000_revancha.sql): peticiones de 2 minutos, una sola partida nueva, máximo de 3 activas
+  S.revancha = { pet: {}, nueva: null, creadas: 0, activas: {} };
   jugadores.forEach(u => { S.latido[u] = ahora(); S.actividad[u] = ahora(); });
   const err = (message, code = "P0001") => ({ data: null, error: { code, message } });
   const ok = data => ({ data, error: null });
@@ -54,6 +56,19 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
   };
 
   const RPC = {
+    request_rematch(u, a) {
+      const Rv = S.revancha;
+      if (a.p_match !== "M1" || !jugadores.includes(u)) return err("No jugaste esa partida");
+      if (S.status !== "finished") return err("La partida aún no ha terminado");
+      if (Rv.nueva) return ok([{ estado: "creada", match_id: Rv.nueva, code: "RVNCH", segundos: 0 }]);
+      if ((Rv.activas[u] || 0) >= 3) return err("Ya tienes 3 partidas a la vez: sal de alguna para jugar la revancha");
+      Rv.pet[u] = ahora();
+      const rival = jugadores.find(j => j !== u);
+      if (Rv.pet[rival] == null || ahora() - Rv.pet[rival] >= 120000) return ok([{ estado: "esperando", match_id: null, code: null, segundos: 120 }]);
+      if ((Rv.activas[rival] || 0) >= 3) { delete Rv.pet[u]; return err("Tu rival ya tiene 3 partidas a la vez: no se puede crear la revancha"); }
+      Rv.nueva = "M2"; Rv.creadas++; Rv.pet = {};
+      return ok([{ estado: "creada", match_id: Rv.nueva, code: "RVNCH", segundos: 0 }]);
+    },
     submit_action(u, a) {
       const e = activo(u); if (e) return err(e);
       if (["inicio", "pregunta", "resultado", "comodin", "abandono", "fin"].includes(a.p_kind)) return err("Esa jugada la anota el servidor");
@@ -207,6 +222,7 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
             if (tabla === "match_actions") d = S.log.filter(a => a.seq > (f.gt_seq ?? -1)).map(a => ({ ...a, payload: JSON.parse(JSON.stringify(a.payload)) }));
             if (tabla === "match_players") d = jugadores.map((id, seat) => Object.assign({ user_id: id, seat, forfeited: S.fuera.has(id), last_heartbeat: new Date(S.latido[id]).toISOString() },
               conInactividad ? { ultima_actividad_at: new Date(S.actividad[id]).toISOString(), pendiente_desde: S.pendiente[id] != null ? new Date(S.pendiente[id]).toISOString() : null } : {}));
+            if (tabla === "matches") d = f.rematch_of === "M1" && S.revancha.nueva ? [{ id: S.revancha.nueva, status: "in_progress" }] : [];
             if (tabla === "profiles") d = (f.in_id || []).map(id => ({ id, username: "agente_" + id.slice(-4) }));
             return Promise.resolve({ data: d, error: null }).then(res, rej);
           },

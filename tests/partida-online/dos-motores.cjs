@@ -447,6 +447,74 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
       "solo avisa quien se va");
   }
 
+  // ── 10. revancha: «Otra partida» llama a request_rematch (nunca va al modo local por sí sola)
+  console.log("── 10. Revancha");
+  // avanza exactamente ms (un temporizador centinela impide saltar más allá, p. ej. al cierre del canal a los 10 min)
+  const esperarMs = async (reloj, ms) => { let listo = false; reloj.setTimeout(() => { listo = true; }, ms); for (let i = 0; i < 50000 && !listo; i++) { await vaciar(); if (!reloj.paso()) break; } await vaciar(); };
+  const pulsar = (E, sel, el) => E.ctx.document.disparar("click", { target: { closest: q => q.includes(sel) ? el : null } });
+  const otra = E => { const b = E.ctx.document.querySelector('[data-act="otra"]'); b.dataset.act = "otra"; return b; };
+  const pulsarOtra = E => pulsar(E, '[data-act="otra"]', otra(E));
+  const pulsarLocal = E => pulsar(E, "#online-local", Object.assign(E.ctx.document.createElement("button"), { id: "online-local" }));
+  const linea = E => E.porIdGet("online-revancha").innerHTML;
+  const preparar = r => {
+    const entradas = { A: [], B: [] };
+    for (const [n, E] of [["A", r.A], ["B", r.B]]) E.ctx.PartidaOnline.entrar = async (sb, id) => { entradas[n].push(id); };
+    return entradas;
+  };
+  {
+    // a) los dos pulsan: partida nueva entre los dos, una sola
+    const r = await jugar({ semilla: 81, turnos: 5, semillaServidor: 81 }), en = preparar(r);
+    ok(r.srv.S.motivo === "completed" && leer(r.A, "pantalla") === "fin" && leer(r.B, "pantalla") === "fin", "partida terminada, los dos en la pantalla final");
+    pulsarOtra(r.A); await esperarMs(r.reloj, 600);
+    ok(/Esperando a tu rival/.test(linea(r.A)) && otra(r.A).disabled && /Esperando a tu rival/.test(otra(r.A).textContent), `A pulsa «Otra partida»: «${otra(r.A).textContent}» y la línea «Esperando a tu rival…»`);
+    ok(r.srv.S.revancha.creadas === 0 && !en.A.length, "con una sola petición no se crea nada");
+    ok(/Tu rival quiere la revancha/.test(linea(r.B)), "B ve «Tu rival quiere la revancha: pulsa «Otra partida»»");
+    pulsarOtra(r.B); await esperarMs(r.reloj, 3000);
+    ok(r.srv.S.revancha.creadas === 1 && en.A.join() === "M2" && en.B.join() === "M2", `B pulsa: se crea una partida (${r.srv.S.revancha.creadas}) y entran los dos en ella (A ${en.A.join() || "-"}, B ${en.B.join() || "-"})`);
+    ok(leer(r.A, "estado.modo") === "online" && leer(r.B, "estado.modo") === "online", "ninguno arranca una partida local");
+    pulsarOtra(r.A); await esperarMs(r.reloj, 600);
+    ok(r.srv.S.revancha.creadas === 1, "pulsar otra vez no crea otra partida");
+  }
+  {
+    // b) uno pulsa y el otro se va al modo local
+    const r = await jugar({ semilla: 82, turnos: 5, semillaServidor: 82 }), en = preparar(r);
+    pulsarOtra(r.A); await esperarMs(r.reloj, 600);
+    pulsarLocal(r.B); await esperarMs(r.reloj, 600);
+    const av = r.A.porIdGet("online-aviso-salida");
+    ok(/Tu rival ha decidido jugar en modo local/.test(av.innerHTML) && !av.classList.contains("oculto"), "A, que esperaba, ve «Tu rival ha decidido jugar en modo local»");
+    ok(!otra(r.A).disabled && otra(r.A).textContent === "Otra partida", "A deja de esperar: el botón vuelve a estar disponible");
+    await esperarMs(r.reloj, 5000);
+    ok(r.srv.S.revancha.creadas === 0 && !en.A.length && !en.B.length, "no se crea ninguna partida");
+  }
+  {
+    // c) la petición caduca a los 2 minutos
+    const r = await jugar({ semilla: 83, turnos: 5, semillaServidor: 83 }), en = preparar(r);
+    pulsarOtra(r.A); await esperarMs(r.reloj, 119000);
+    ok(/Esperando a tu rival/.test(linea(r.A)) && otra(r.A).disabled, `a los 119 s A sigue esperando (${linea(r.A)} · ${otra(r.A).disabled} · t=${r.reloj.ahora})`);
+    await esperarMs(r.reloj, 2000);
+    ok(/La revancha ha caducado/.test(linea(r.A)) && !otra(r.A).disabled && otra(r.A).textContent === "Otra partida", "a los 2 min: «La revancha ha caducado» y el botón vuelve a estar disponible");
+    pulsarOtra(r.B); await esperarMs(r.reloj, 1000);
+    ok(r.srv.S.revancha.creadas === 0 && !en.A.length && !en.B.length && /Esperando a tu rival/.test(linea(r.B)), "B pulsa después: la petición caducada de A no cuenta y B queda esperando");
+  }
+  {
+    // d) máximo de 3 partidas activas
+    const r = await jugar({ semilla: 84, turnos: 5, semillaServidor: 84 }), en = preparar(r);
+    r.srv.S.revancha.activas[UB] = 3;
+    pulsarOtra(r.B); await esperarMs(r.reloj, 600);
+    ok(/Ya tienes 3 partidas a la vez/.test(linea(r.B)) && !otra(r.B).disabled, "B, con 3 partidas activas: «Ya tienes 3 partidas a la vez…» y el botón sigue disponible");
+    pulsarOtra(r.A); await esperarMs(r.reloj, 600);
+    ok(/Esperando a tu rival/.test(linea(r.A)) && r.srv.S.revancha.creadas === 0 && !en.A.length, `A pide la revancha y espera: no se crea nada (${linea(r.A)})`);
+  }
+
+  {
+    // e) pasados 10 minutos (canal cerrado): «Otra partida» no arranca el modo local
+    const r = await jugar({ semilla: 85, turnos: 5, semillaServidor: 85 }), en = preparar(r);
+    await esperarMs(r.reloj, 11 * 60 * 1000);
+    pulsarOtra(r.A); await esperarMs(r.reloj, 600);
+    ok(/Ya no se puede pedir la revancha/.test(linea(r.A)) && leer(r.A, "estado.modo") === "online" && leer(r.A, "pantalla") === "fin" && !en.A.length,
+      "a los 11 min: «Ya no se puede pedir la revancha…», sigue en la pantalla final y no arranca el modo local");
+  }
+
   console.log(fallos ? `\n${fallos} FALLO(S)` : "\nTODO OK");
   process.exit(fallos ? 1 : 0);
 })().catch(e => { console.log("ERROR", e && e.stack || e); process.exit(1); });

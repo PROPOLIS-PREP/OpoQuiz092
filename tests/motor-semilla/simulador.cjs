@@ -55,8 +55,15 @@ function crearDOM() {
     getElementById: porIdGet, querySelector: consulta, querySelectorAll: () => [], createElement: t => Elemento(t), createElementNS: (_, t) => Elemento(t),
     createTextNode: t => ({ textContent: t }), createDocumentFragment: () => Elemento("fragment"),
     // los oyentes del documento se guardan para poder simular toques y clics (disparar)
-    _oyentes: [], addEventListener(t, fn) { this._oyentes.push([t, fn]); }, removeEventListener(t, fn) { this._oyentes = this._oyentes.filter(o => o[0] !== t || o[1] !== fn); },
-    disparar(t, ev) { for (const [k, fn] of this._oyentes.slice()) if (k === t) fn(ev); },
+    // (primero los de captura; stopImmediatePropagation corta, como en el navegador)
+    _oyentes: [], addEventListener(t, fn, op) { this._oyentes.push([t, fn, op === true || !!(op && op.capture)]); },
+    removeEventListener(t, fn) { this._oyentes = this._oyentes.filter(o => o[0] !== t || o[1] !== fn); },
+    disparar(t, ev) {
+      let parado = false;
+      ev.stopImmediatePropagation = ev.stopPropagation = () => { parado = true; }; ev.preventDefault = () => {};
+      const os = this._oyentes.filter(o => o[0] === t);
+      for (const [, fn] of [...os.filter(o => o[2]), ...os.filter(o => !o[2])]) { if (parado) break; fn(ev); }
+    },
     fonts: { ready: Promise.resolve(), load: () => Promise.resolve() },
   };
   return { document, porIdGet };
