@@ -62,7 +62,7 @@ create function pg_temp.logro_en(u text, l text) returns uuid language sql as
 
 set local role authenticated;
 select set_config('test.m1', pg_temp.jugar('d1', 'd2', 900, 400)::text, true);   -- d1 gana: d1 30, d2 0
-select set_config('test.m2', pg_temp.abandona('d1', 'd2')::text, true);          -- d2 (con 0 puntos) abandona
+select set_config('test.m2', pg_temp.abandona('d1', 'd2')::text, true);          -- d2 (con 0 puntos) abandona; d1 llega a 60 (Bronce)
 select set_config('test.m3', pg_temp.jugar('d2', 'd1', 900, 400)::text, true);   -- d2 gana: d2 30, d1 55
 select set_config('test.m4', pg_temp.abandona('d1', 'd2')::text, true);          -- d2 (con 30 puntos) abandona
 reset role;
@@ -79,8 +79,8 @@ do $$ declare m2 uuid := current_setting('test.m2')::uuid; m4 uuid := current_se
     raise exception 'FALLO 4: monedas del abandono'; end if;
   if (pg_temp.premios(m4) -> pg_temp.uid('d2')::text ->> 'monedas')::int <> 0 or (pg_temp.premios(m4) -> pg_temp.uid('d2')::text ->> 'puntos')::int <> -5 then
     raise exception 'FALLO 4: premios del abandono: %', pg_temp.premios(m4); end if;
-  -- saldos: d1 = 50 + 20 (logro) + 50 + 20 (derrota en m3) + 50; d2 = 20 + 0 + 50 + 20 (logro) + 0
-  if pg_temp.puntos('d1') <> 85 or pg_temp.puntos('d2') <> 25 or pg_temp.monedas('d1') <> 190 or pg_temp.monedas('d2') <> 90 then
+  -- saldos: d1 = 50 + 20 (primera victoria) + 50 + 20 (Bronce, 60 puntos) + 20 (derrota en m3) + 50; d2 = 20 + 0 + 50 + 20 (primera victoria) + 0
+  if pg_temp.puntos('d1') <> 85 or pg_temp.puntos('d2') <> 25 or pg_temp.monedas('d1') <> 210 or pg_temp.monedas('d2') <> 90 then
     raise exception 'FALLO 4: saldos: puntos % % monedas % %', pg_temp.puntos('d1'), pg_temp.puntos('d2'), pg_temp.monedas('d1'), pg_temp.monedas('d2'); end if;
   perform pg_temp.ok('4 abandono: quien abandona −5 (0 si ya tenía 0) y 0 monedas; el rival +30 y 50 monedas');
 end $$;

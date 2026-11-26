@@ -60,9 +60,9 @@ create function pg_temp.logros(u text) returns text language sql as
 create function pg_temp.logro_en(u text, l text) returns uuid language sql as
   $$ select match_id from public.user_achievements where user_id = pg_temp.uid(u) and achievement_id = l $$;
 
--- El tramo «Bronce» se mueve a 150 puntos en game_config.ligas: el logro debe seguirlo (no hay un 100 fijo).
+-- El tramo «Bronce» se mueve de 50 a 70 puntos en game_config.ligas: el logro debe seguirlo (no hay un umbral fijo).
 update public.game_config
-   set valor = '[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 150}, {"nombre": "Plata", "desde": 200}, {"nombre": "Oro", "desde": 300}]'
+   set valor = '[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 70}, {"nombre": "Plata", "desde": 100}, {"nombre": "Oro", "desde": 200}]'
  where clave = 'ligas';
 
 -- d1 contra d2: w1 gana (30), w2 empata (60, corta la racha), w3–w7 gana (90, 120, 150, 180, 210; racha de 5 en w7)
@@ -80,14 +80,14 @@ reset role;
 -- ─────────────────────────────── 7a. Bronce sigue al tramo de game_config y la racha de 5 empieza tras el empate
 do $$ begin
   if pg_temp.puntos('d1') <> 210 then raise exception 'FALLO 7a: puntos de d1 %', pg_temp.puntos('d1'); end if;
-  if pg_temp.logro_en('d1', 'online_bronce') is distinct from current_setting('test.w5')::uuid then
-    raise exception 'FALLO 7a: Bronce no llega con 150 puntos (w5) sino en %', pg_temp.logro_en('d1', 'online_bronce'); end if;
+  if pg_temp.logro_en('d1', 'online_bronce') is distinct from current_setting('test.w3')::uuid then
+    raise exception 'FALLO 7a: Bronce (tramo movido a 70) no llega con 90 puntos (w3) sino en %', pg_temp.logro_en('d1', 'online_bronce'); end if;
   if pg_temp.logro_en('d1', 'online_racha_5') is distinct from current_setting('test.w7')::uuid then raise exception 'FALLO 7a: racha de 5'; end if;
   if pg_temp.logro_en('d1', 'online_primera_victoria') is distinct from current_setting('test.w1')::uuid then raise exception 'FALLO 7a: primera victoria'; end if;
-  if not (pg_temp.premios(current_setting('test.w5')::uuid) -> pg_temp.uid('d1')::text -> 'logros') @> '[{"id":"online_bronce"}]'
-     or jsonb_array_length(pg_temp.premios(current_setting('test.w4')::uuid) -> pg_temp.uid('d1')::text -> 'logros') <> 0 then
-    raise exception 'FALLO 7a: premios de w4 o w5'; end if;
-  perform pg_temp.ok('7a Bronce con el tramo de game_config (150, no 100: llega en w5 y no en w4); 5 seguidas tras el empate; primera victoria');
+  if not (pg_temp.premios(current_setting('test.w3')::uuid) -> pg_temp.uid('d1')::text -> 'logros') @> '[{"id":"online_bronce"}]'
+     or jsonb_array_length(pg_temp.premios(current_setting('test.w2')::uuid) -> pg_temp.uid('d1')::text -> 'logros') <> 0 then
+    raise exception 'FALLO 7a: premios de w2 o w3'; end if;
+  perform pg_temp.ok('7a Bronce con el tramo de game_config (movido a 70: llega en w3 con 90 y no en w2 con 60, que con el tramo de 50 ya bastaría); 5 seguidas tras el empate; primera victoria');
 end $$;
 
 set local role authenticated;

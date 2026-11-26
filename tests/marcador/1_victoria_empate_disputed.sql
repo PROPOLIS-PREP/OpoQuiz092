@@ -88,8 +88,12 @@ do $$ declare m uuid := current_setting('test.m2')::uuid; begin
   if pg_temp.mon_partida(m, 'd1') <> 20 or pg_temp.mon_partida(m, 'd2') <> 20 then raise exception 'FALLO 2: monedas'; end if;
   if (select count(*) from public.score_changes where match_id = m and resultado = 'draw') <> 2 then raise exception 'FALLO 2: resultado draw'; end if;
   if (select valor from public.user_progress where user_id = pg_temp.uid('d1') and metrica = 'racha_online') <> 0 then raise exception 'FALLO 2: el empate no corta la racha'; end if;
-  if pg_temp.logros('d2') <> '' then raise exception 'FALLO 2: el empate dio un logro: %', pg_temp.logros('d2'); end if;
-  perform pg_temp.ok('2 empate: +30 para los dos, 20 monedas cada uno, sin ganador ni logros; corta la racha');
+  if pg_temp.logros('d2') <> '' then raise exception 'FALLO 2: d2 (30 puntos) tiene logros: %', pg_temp.logros('d2'); end if;
+  -- Bronce empieza en 50: d1 llega a 60 con el empate y consigue «Llegar a Bronce» (+20 monedas)
+  if pg_temp.logro_en('d1', 'online_bronce') is distinct from m or pg_temp.monedas('d1') <> 110
+     or not (pg_temp.premios(m) -> pg_temp.uid('d1')::text -> 'logros') @> '[{"id":"online_bronce"}]' then
+    raise exception 'FALLO 2: Bronce con 60 puntos (tramo de 50): % · % monedas', pg_temp.logro_en('d1', 'online_bronce'), pg_temp.monedas('d1'); end if;
+  perform pg_temp.ok('2 empate: +30 para los dos, 20 monedas cada uno, sin ganador; corta la racha; d1 llega a 60 y consigue Bronce (tramo de 50, +20 monedas)');
 end $$;
 set local role authenticated;
 
@@ -99,7 +103,7 @@ reset role;
 do $$ declare m uuid := current_setting('test.m3')::uuid; begin
   if (select finish_reason from public.matches where id = m) <> 'disputed' then raise exception 'FALLO 3: no es disputed'; end if;
   if exists (select 1 from public.score_changes where match_id = m) or exists (select 1 from public.coin_movements where match_id = m)
-     or pg_temp.puntos('d1') <> 60 or pg_temp.puntos('d2') <> 30 or pg_temp.monedas('d1') <> 90 or pg_temp.monedas('d2') <> 40 then
+     or pg_temp.puntos('d1') <> 60 or pg_temp.puntos('d2') <> 30 or pg_temp.monedas('d1') <> 110 or pg_temp.monedas('d2') <> 40 then
     raise exception 'FALLO 3: disputed cambió algo'; end if;
   if pg_temp.premios(m) <> '{}'::jsonb then raise exception 'FALLO 3: premios %', pg_temp.premios(m); end if;
   if (select valor from public.user_progress where user_id = pg_temp.uid('d1') and metrica = 'partidas_online') <> 2 then raise exception 'FALLO 3: disputed cuenta como partida'; end if;
