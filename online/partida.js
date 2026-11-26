@@ -393,6 +393,7 @@
   // al caducar, «La revancha ha caducado» y el botón vuelve). Si la revancha se crea, los dos entran en ella.
   // Nunca va al modo local por sí sola: para eso está «Jugar en local».
   const REV = { esperando: false, sondeo: null, caduca: null, entrando: false, lineaRival: false };
+  const textoErr = e => (e && e.message) ? e.message.replace(/\.?$/, ".") : "No hay conexión con el servidor.";
   function lineaRevancha(texto) {
     let el = document.getElementById("online-revancha");
     if (!el) {
@@ -435,12 +436,16 @@
   }
   async function pedirRevancha() {
     if (REV.esperando || REV.entrando) return;
-    if (!despedida) { toast("Espera a que el servidor confirme el resultado."); return; }
+    if (!despedida) {
+      if (actual) toast("Espera a que el servidor confirme el resultado.");
+      else lineaRevancha("Ya no se puede pedir la revancha de esta partida (han pasado más de 10 minutos o has salido).");
+      return;
+    }
     const p = despedida.puente;
     botonOtraListo(false); lineaRevancha("Esperando a tu rival…");
     let r;
     try { r = await p.pedirRevancha(); }
-    catch (e) { botonOtraListo(true); lineaRevancha((e && e.message) ? e.message.replace(/.?$/, ".") : "No hay conexión con el servidor."); return; }
+    catch (e) { botonOtraListo(true); lineaRevancha(textoErr(e)); return; }
     if (r && r.estado === "creada") { p.avisarRevancha({ tipo: "creada", match: r.match_id }); entrarEnRevancha(r.match_id); return; }
     // esperando: aviso al rival, sondeo por si el aviso se pierde y caducidad
     REV.esperando = true;
@@ -470,7 +475,8 @@
   }
   document.addEventListener("click", e => {
     const b = e.target && e.target.closest && e.target.closest('#s-fin [data-act="volver"], #s-fin [data-act="otra"], #s-fin #online-local');
-    if (!b || !(despedida || actual)) return;
+    // también después de cerrar el canal (10 min): en el final de una partida online, «Otra partida» nunca es local
+    if (!b || !(despedida || actual || (typeof estado !== "undefined" && estado.online))) return;
     if (b.dataset.act === "otra") {
       // «Otra partida» online es la revancha: el juego no arranca una partida local
       e.stopImmediatePropagation(); e.preventDefault();
@@ -585,5 +591,5 @@
     return false;
   }
 
-  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, despedirse, pedirRevancha, SEL_ACCION, _act: ACT, _necesitoActuar: necesitoActuar };
+  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, despedirse, pedirRevancha, SEL_ACCION, _rev: () => ({ despedida: !!despedida, esperando: REV.esperando, entrando: REV.entrando }), _act: ACT, _necesitoActuar: necesitoActuar };
 })();
