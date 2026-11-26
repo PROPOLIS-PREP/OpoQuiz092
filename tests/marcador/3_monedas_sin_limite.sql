@@ -1,5 +1,5 @@
 -- Prueba del marcador, las monedas online y los logros online (3d, migración 20261128120000_marcador.sql).
--- Parte 3 de 5: límite de 5 partidas con premio al día contra el mismo rival.
+-- Parte 3 de 5: sin límite diario (toda partida con premio contra el mismo rival da sus monedas).
 --
 -- Cómo ejecutarlo: SQL Editor de Supabase (rol postgres), todo el archivo de una vez.
 -- Si la migración 20261128120000_marcador.sql aún no está aplicada, pega su contenido en la línea marcada,
@@ -60,37 +60,30 @@ create function pg_temp.logros(u text) returns text language sql as
 create function pg_temp.logro_en(u text, l text) returns uuid language sql as
   $$ select match_id from public.user_achievements where user_id = pg_temp.uid(u) and achievement_id = l $$;
 
--- Partidas con premio de cada jugador contra el otro (las de 0 monedas no cuentan):
---   f1 d2 abandona: d1 1.ª (50), d2 0 (no cuenta)    g2–g5 d1 gana: d1 2.ª–5.ª (50), d2 1.ª–4.ª (20)
---   g6: d1 sin monedas, d2 5.ª (20)                   g7: los dos sin monedas         g8 contra d3: d1 vuelve a cobrar
+-- d1 gana 20 partidas seguidas a d2 el mismo día. No hay límite diario: d2 (pierde) cobra sus 20 monedas
+-- en todas y d1 (gana) sus 50, también la 6.ª, la 10.ª y la 20.ª.
 set local role authenticated;
-select set_config('test.f1', pg_temp.abandona('d1', 'd2')::text, true);
-select set_config('test.g2', pg_temp.jugar('d1', 'd2', 900, 400)::text, true);
-select set_config('test.g3', pg_temp.jugar('d1', 'd2', 900, 400)::text, true);
-select set_config('test.g4', pg_temp.jugar('d1', 'd2', 900, 400)::text, true);
-select set_config('test.g5', pg_temp.jugar('d1', 'd2', 900, 400)::text, true);
-select set_config('test.g6', pg_temp.jugar('d1', 'd2', 900, 400)::text, true);
-select set_config('test.g7', pg_temp.jugar('d1', 'd2', 900, 400)::text, true);
-select set_config('test.g8', pg_temp.jugar('d1', 'd3', 900, 400)::text, true);
+do $$ declare k int; begin
+  for k in 1..20 loop
+    perform set_config('test.g' || k, pg_temp.jugar('d1', 'd2', 900, 400)::text, true);
+  end loop;
+end $$;
 reset role;
 
--- ─────────────────────────────── 6. límite: 5 partidas con premio al día contra el mismo rival (los puntos cuentan siempre)
-do $$ declare k int; begin
-  for k in 2..5 loop
-    if pg_temp.mon_partida(current_setting('test.g' || k)::uuid, 'd1') <> 50 or pg_temp.mon_partida(current_setting('test.g' || k)::uuid, 'd2') <> 20 then
-      raise exception 'FALLO 6: g% debía pagar a los dos', k; end if;
+-- ─────────────────────────────── 6. sin límite diario: toda partida con premio contra el mismo rival da sus monedas
+do $$ declare k int; g uuid; begin
+  for k in 1..20 loop
+    g := current_setting('test.g' || k)::uuid;
+    if pg_temp.mon_partida(g, 'd2') <> 20 then raise exception 'FALLO 6: la partida % no dio 20 monedas a quien pierde (%)', k, pg_temp.mon_partida(g, 'd2'); end if;
+    if pg_temp.mon_partida(g, 'd1') <> 50 then raise exception 'FALLO 6: la partida % no dio 50 monedas a quien gana (%)', k, pg_temp.mon_partida(g, 'd1'); end if;
+    if (pg_temp.premios(g) -> pg_temp.uid('d2')::text ->> 'monedas')::int <> 20 then raise exception 'FALLO 6: premios de la partida %', k; end if;
   end loop;
-  if pg_temp.mon_partida(current_setting('test.f1')::uuid, 'd1') <> 50 or pg_temp.mon_partida(current_setting('test.f1')::uuid, 'd2') <> 0 then raise exception 'FALLO 6: f1'; end if;
-  if pg_temp.mon_partida(current_setting('test.g6')::uuid, 'd1') <> 0 then raise exception 'FALLO 6: d1 cobró una 6.ª partida contra d2'; end if;
-  if pg_temp.mon_partida(current_setting('test.g6')::uuid, 'd2') <> 20 then raise exception 'FALLO 6: la partida sin premio de d2 (abandono) contó para su límite'; end if;
-  if pg_temp.mon_partida(current_setting('test.g7')::uuid, 'd1') <> 0 or pg_temp.mon_partida(current_setting('test.g7')::uuid, 'd2') <> 0 then raise exception 'FALLO 6: g7'; end if;
-  if (pg_temp.premios(current_setting('test.g7')::uuid) -> pg_temp.uid('d1')::text ->> 'monedas')::int <> 0 then raise exception 'FALLO 6: premios de g7'; end if;
-  if pg_temp.delta(current_setting('test.g6')::uuid, 'd1') <> 30 or pg_temp.delta(current_setting('test.g7')::uuid, 'd1') <> 30 then
-    raise exception 'FALLO 6: sin monedas tampoco hubo puntos'; end if;
-  if pg_temp.mon_partida(current_setting('test.g8')::uuid, 'd1') <> 50 or pg_temp.mon_partida(current_setting('test.g8')::uuid, 'd3') <> 20 then
-    raise exception 'FALLO 6: con otro rival no se cobró'; end if;
-  if (select count(*) from public.coin_movements where user_id = pg_temp.uid('d1') and motivo = 'partida_online') <> 6 then raise exception 'FALLO 6: movimientos de d1'; end if;
-  perform pg_temp.ok('6 límite diario: 5 partidas con premio contra el mismo rival (las de 0 monedas no cuentan); la 6.ª y siguientes, 0 monedas y los puntos sí; otro rival cobra');
+  if pg_temp.mon_partida(current_setting('test.g6')::uuid, 'd2') <> 20 or pg_temp.mon_partida(current_setting('test.g10')::uuid, 'd2') <> 20
+     or pg_temp.mon_partida(current_setting('test.g20')::uuid, 'd2') <> 20 then raise exception 'FALLO 6: la 6.ª, la 10.ª o la 20.ª no dio 20 monedas'; end if;
+  if (select count(*) || '/' || sum(delta) from public.coin_movements where user_id = pg_temp.uid('d2') and motivo = 'partida_online') <> '20/400'
+     or (select count(*) || '/' || sum(delta) from public.coin_movements where user_id = pg_temp.uid('d1') and motivo = 'partida_online') <> '20/1000' then
+    raise exception 'FALLO 6: movimientos de partida (20 por jugador: 400 y 1000 monedas)'; end if;
+  perform pg_temp.ok('6 sin límite diario: 20 partidas el mismo día contra el mismo rival, todas con 20 monedas para quien pierde y 50 para quien gana (la 6.ª, la 10.ª y la 20.ª incluidas)');
 end $$;
 
 select replace(current_setting('test.informe'), ' | ', E'\n') as informe;
