@@ -5,14 +5,12 @@
 --
 -- · game_config: cantidades y límites (se cambian desde el panel, sin tocar código).
 --     puntos_1v1  {"ganador": 30, "perdedor": -5, "empate": 30}
---     monedas_1v1 {"jugar": 20, "ganar": 30, "abandonar": 0, "empate": 20, "max_diarias_mismo_rival": 5,
---                  "zona_horaria": "Europe/Madrid"}
+--     monedas_1v1 {"jugar": 20, "ganar": 30, "abandonar": 0, "empate": 20}
 --     ligas       tramos del marcador (para la 3e; aquí solo se guardan)
 -- · Puntos: empiezan en 0, sin temporadas; el saldo no baja de 0 (despues = greatest(0, antes + delta) y
 --   score_changes.delta guarda el cambio real). Ganador +30, perdedor −5, abandono = derrota, empate +30 para los dos.
--- · Monedas: 20 por jugar, +30 por ganar, 0 por abandonar, 20 por empate. Solo las 5 primeras partidas con premio
---   del día (hora de Madrid) contra el mismo rival dan monedas; los puntos cuentan siempre. Una partida se cobra
---   una sola vez (índice único por jugador, motivo y partida).
+-- · Monedas: 20 por jugar, +30 por ganar, 0 por abandonar, 20 por empate, en todas las partidas (sin límite diario).
+--   Una partida se cobra una sola vez (índice único por jugador, motivo y partida).
 -- · Logros online (20 monedas cada uno): primera victoria, 10 victorias, 5 victorias seguidas (un empate o una
 --   derrota cortan la racha) y llegar a Bronce. El umbral de Bronce no está en el logro: se lee del tramo «Bronce»
 --   de game_config.ligas (achievements.liga), así que cambiar el tramo cambia también el logro.
@@ -30,7 +28,7 @@ create table public.game_config (
 );
 insert into public.game_config (clave, valor) values
   ('puntos_1v1', '{"ganador": 30, "perdedor": -5, "empate": 30}'),
-  ('monedas_1v1', '{"jugar": 20, "ganar": 30, "abandonar": 0, "empate": 20, "max_diarias_mismo_rival": 5, "zona_horaria": "Europe/Madrid"}'),
+  ('monedas_1v1', '{"jugar": 20, "ganar": 30, "abandonar": 0, "empate": 20}'),
   ('ligas', '[{"nombre": "Sin liga", "desde": 0}, {"nombre": "Bronce", "desde": 100}, {"nombre": "Plata", "desde": 200}, {"nombre": "Oro", "desde": 300}]');
 
 create table public.scores (
@@ -176,22 +174,20 @@ $$;
 -- (disputed, partida que no es de 2, o ya repartida).
 create function private.apply_match_rewards(p_match uuid, p_winner uuid, p_reason text) returns jsonb
 language plpgsql volatile security definer set search_path = '' as $$
-declare pc jsonb; mc jsonb; lc jsonb; j record; a record; v_rival uuid; v_res text; v_delta integer; v_antes integer;
-        v_despues integer; v_mon integer; v_premiadas integer; v_racha integer; v_desde timestamptz;
+declare pc jsonb; mc jsonb; lc jsonb; j record; a record; v_res text; v_delta integer; v_antes integer;
+        v_despues integer; v_mon integer; v_racha integer;
         v_logros jsonb; v_out jsonb := '{}'::jsonb;
 begin
   if p_reason not in ('completed', 'forfeit') then return v_out; end if;      -- disputed: sin cambios
   if (select count(*) from public.match_players where match_id = p_match) <> 2 then return v_out; end if;   -- solo 1 contra 1
   if exists (select 1 from public.score_changes where match_id = p_match) then return v_out; end if;        -- ya repartida
   pc := private.cfg('puntos_1v1'); mc := private.cfg('monedas_1v1'); lc := private.cfg('ligas');
-  v_desde := date_trunc('day', now() at time zone (mc ->> 'zona_horaria')) at time zone (mc ->> 'zona_horaria');
   -- en orden de user_id: dos partidas que terminan a la vez bloquean las filas en el mismo orden
   for j in select mp.user_id, mp.forfeited from public.match_players mp where mp.match_id = p_match order by mp.user_id loop
     insert into public.scores (user_id) values (j.user_id) on conflict (user_id) do nothing;
     perform 1 from public.scores where user_id = j.user_id for update;
   end loop;
   for j in select mp.user_id, mp.forfeited from public.match_players mp where mp.match_id = p_match order by mp.seat loop
-    select mp.user_id into v_rival from public.match_players mp where mp.match_id = p_match and mp.user_id <> j.user_id;
     v_res := case when p_winner is null and p_reason = 'completed' then 'draw'
                   when j.user_id = p_winner then 'win' else 'loss' end;
     -- puntos (con el suelo de 0)
@@ -205,17 +201,11 @@ begin
      where user_id = j.user_id;
     insert into public.score_changes (match_id, user_id, antes, despues, delta, resultado)
     values (p_match, j.user_id, v_antes, v_despues, v_despues - v_antes, v_res);
-    -- monedas (con el límite diario contra el mismo rival)
+    -- monedas (todas las partidas, sin límite diario)
     v_mon := case when v_res = 'win' then (mc ->> 'jugar')::integer + (mc ->> 'ganar')::integer
                   when v_res = 'draw' then (mc ->> 'empate')::integer
                   when j.forfeited then (mc ->> 'abandonar')::integer
                   else (mc ->> 'jugar')::integer end;
-    if v_mon > 0 then
-      select count(*) into v_premiadas
-        from public.coin_movements c join public.match_players r on r.match_id = c.match_id and r.user_id = v_rival
-       where c.user_id = j.user_id and c.motivo = 'partida_online' and c.delta > 0 and c.created_at >= v_desde;
-      if v_premiadas >= (mc ->> 'max_diarias_mismo_rival')::integer then v_mon := 0; end if;
-    end if;
     if v_mon > 0 then
       insert into public.coin_movements (user_id, delta, motivo, match_id) values (j.user_id, v_mon, 'partida_online', p_match);
       perform private.add_coins(j.user_id, v_mon);

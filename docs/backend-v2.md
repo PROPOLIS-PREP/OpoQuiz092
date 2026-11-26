@@ -296,7 +296,7 @@ El modo local no cambia: sus monedas, trofeos, retos y liga simulada siguen en e
 
 ## Modelo de la 3d y la 3e (propuesta, sin migraciones)
 
-**3d implementada en la rama, migración `20261128120000_marcador.sql` preparada y SIN APLICAR** (solo 1 contra 1): `game_config` con `puntos_1v1` {ganador 30, perdedor −5, empate 30} y `monedas_1v1` {jugar 20, ganar 30, abandonar 0, empate 20 (pendiente de confirmar), 5 partidas con premio al día contra el mismo rival, hora de Madrid}; marcador con suelo de 0; monedas con cobro único (índice por jugador, motivo y partida); cuatro logros online de 20 monedas (primera victoria, 10 victorias, 5 seguidas, Bronce, cuyo umbral se lee del tramo «Bronce» de game_config.ligas). Lo reparte `private.apply_match_rewards` desde `private.finish_match`, una sola vez; `disputed` no cambia nada. La jugada «fin» lleva `premios` por jugador (resultado, puntos, total, monedas y logros nuevos) y los dos móviles los enseñan igual; en `disputed`, «Resultado en revisión». Pruebas: `tests/marcador/` (cinco partes, ver su README) y el bloque final de `tests/partida-online.sql`. Decisiones tomadas al implementar: el límite diario solo afecta a las monedas (los puntos cuentan siempre); un empate o una derrota cortan la racha; las monedas de los logros no cuentan para el límite; el rival ve en la pantalla final las monedas y los logros que has ganado en esa partida (no tu saldo).
+**3d implementada en la rama, migración `20261128120000_marcador.sql` preparada y SIN APLICAR** (solo 1 contra 1): `game_config` con `puntos_1v1` {ganador 30, perdedor −5, empate 30} y `monedas_1v1` {jugar 20, ganar 30, abandonar 0, empate 20 (pendiente de confirmar), sin límite diario}; marcador con suelo de 0; monedas con cobro único (índice por jugador, motivo y partida); cuatro logros online de 20 monedas (primera victoria, 10 victorias, 5 seguidas, Bronce, cuyo umbral se lee del tramo «Bronce» de game_config.ligas). Lo reparte `private.apply_match_rewards` desde `private.finish_match`, una sola vez; `disputed` no cambia nada. La jugada «fin» lleva `premios` por jugador (resultado, puntos, total, monedas y logros nuevos) y los dos móviles los enseñan igual; en `disputed`, «Resultado en revisión». Pruebas: `tests/marcador/` (cinco partes, ver su README) y el bloque final de `tests/partida-online.sql`. Decisiones tomadas al implementar: un empate o una derrota cortan la racha; el rival ve en la pantalla final las monedas y los logros que has ganado en esa partida (no tu saldo).
 
 Todas las tablas llevan RLS. El cliente solo lee; escriben únicamente funciones `security definer` del servidor.
 
@@ -336,7 +336,7 @@ Una sola cuenta de monedas por usuario, en el servidor. Se ganan jugando en loca
   - Además, un índice único `(user_id)` cuando `motivo = 'traspaso_local'` impide un segundo traspaso aunque se llame dos veces a la vez.
   - En el móvil, el perfil local guarda `traspasoCuenta = <user_id>` para no volver a ofrecerlo y deja de mostrar el saldo local como propio.
   - Si el usuario entra desde un segundo móvil, ese móvil ya no puede traspasar: el servidor lo rechaza porque la cuenta ya tiene traspaso.
-- **Cantidades y límites: pendientes.** Las columnas y los motivos quedan previstos, sin valores: cuánto da una partida online, cuánto una local, tope del traspaso y límite diario.
+- **Cantidades:** la partida online ya está decidida (3d: 20 por jugar, +30 por ganar, 0 por abandonar, 20 por empate, sin límite diario). Pendientes: cuánto da una partida local y el tope del traspaso.
 
 ### Logros (3e)
 

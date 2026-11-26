@@ -36,7 +36,7 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
   }
   // premios (20261128120000_marcador.sql, para una partida con los dos jugadores empezando de 0):
   // victoria +30 y 20+30 monedas, derrota −5 (suelo 0) y 20, abandono −5 y 0, empate +30 y 20; disputed nada;
-  // logro «Primera victoria online» (+20 monedas) al ganar. El límite diario no entra: es una sola partida.
+  // logro «Primera victoria online» (+20 monedas) al ganar.
   function premios(w, motivo) {
     if (motivo !== "completed" && motivo !== "forfeit") return {};
     const out = {};
