@@ -10199,9 +10199,11 @@ $("#selector-ascenso").addEventListener("keydown",e=>{
    así el juego local funciona igual sin conexión y sin cuenta.
    ===================================================================== */
 let promesaOnline=null;
+const VERSION_ONLINE="online11";            /* súbela (y la de sw.js) cada vez que cambie online/*.js */
 function cargarOnline(){
   if(promesaOnline)return promesaOnline;
-  const uno=src=>new Promise((ok,ko)=>{const t=document.createElement("script");t.src=src;t.onload=ok;t.onerror=()=>ko(new Error(src));document.head.appendChild(t)});
+  /* ?v=: cada versión pide sus scripts de nuevo (sin esto, la caché del navegador podía servir un partida.js viejo) */
+  const uno=src=>new Promise((ok,ko)=>{const t=document.createElement("script");t.src=src+"?v="+VERSION_ONLINE;t.onload=ok;t.onerror=()=>ko(new Error(src));document.head.appendChild(t)});
   promesaOnline=uno("lib/supabase.min.js").then(()=>uno("online/config.js")).then(()=>uno("online/amigos.js")).then(()=>uno("online/partidas.js")).then(()=>uno("online/partida.js")).then(()=>uno("online/cuenta.js")).then(()=>CuentaOnline.listo)
     .catch(e=>{promesaOnline=null;throw e});
   return promesaOnline;
