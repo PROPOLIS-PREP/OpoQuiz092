@@ -102,9 +102,12 @@ function crearPersona(E, srv, semilla, op = {}) {
   };
 }
 
-async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true, sinToques = false, personas = {} }) {
+async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true, sinToques = false, personas = {}, tableroB = null }) {
   const { reloj, A, B, srv } = montar(semilla, turnos, semillaServidor, conInactividad);
   const ina = { aviso5: false, oculto: false, cancelado: false, reclamado: false, botonA: false };
+  // tableroB: en su turno, B deja de pulsar botones y solo mueve el tablero (arrastrar, ampliar, tocar zonas vacías);
+  // con clicA (ms) pulsa un botón de acción a ese tiempo; con despertarA (ms) vuelve a jugar con normalidad
+  const tb = tableroB ? { ini: null, ultimo: 0, gestos: 0, clic: false, despierto: false, aviso: false, avisoEn: null, perdioEn: null } : null;
   await A.ctx.PartidaOnline.entrar(srv.cliente(UA), "M1", UA);
   await B.ctx.PartidaOnline.entrar(srv.cliente(UB), "M1", UB);
   // mismo ajuste en los dos motores antes de la primera jugada (para probar despliegue, comisaría y sirena)
@@ -145,6 +148,36 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
     }
     if (desconectaB != null && personaB.dormida && !reclamado && /online-reclamar/.test(A.porIdGet("online-barra").innerHTML)) {
       reclamado = true; A.porIdGet("online-reclamar").onclick(); continue;
+    }
+    if (tb && !tb.despierto) {
+      const P = B.ctx.PartidaOnline;
+      if (tb.ini == null && srv.S.status === "in_progress" && srv.S.log.length >= tableroB.desde && P.actual() && P._necesitoActuar()) {
+        tb.ini = reloj.ahora; tb.ultimo = reloj.ahora; personaB.dormida = true; P._act.autoPerder = true;
+      }
+      if (tb.ini != null) {
+        const pasado = reloj.ahora - tb.ini, nada = { closest: () => null };
+        if (reloj.ahora - tb.ultimo >= 2000) {               // arrastra, amplía y toca el tablero cada 2 s
+          tb.ultimo = reloj.ahora; tb.gestos++;
+          for (const t of ["pointerdown", "touchstart", "wheel"]) B.ctx.document.disparar(t, { target: nada });
+          B.ctx.document.disparar("click", { target: nada });   // toque en una zona vacía
+        }
+        const av = B.porIdGet("online-inactivo");
+        if (!tb.aviso && av && !av.classList.contains("oculto") && /Vas a perder por inactividad/.test(av.innerHTML)) { tb.aviso = true; tb.avisoEn = pasado; }
+        if (tb.perdioEn == null && srv.S.log.some(a => a.kind === "abandono" && a.payload.player === UB)) tb.perdioEn = pasado;
+        if (tableroB.clicA != null && !tb.clic && pasado >= tableroB.clicA) {
+          // pulsa el botón de acción que tenga delante (el principal o el de la carta), como en el navegador:
+          // primero el clic (lo oye el documento) y después la acción del botón
+          tb.clic = true;
+          const ba = B.porIdGet("btn-accion"), pie = B.porIdGet("carta-pie").children.find(x => !x.disabled && x.onclick);
+          const el = !ba.disabled && ba.onclick ? ba : pie;
+          if (el) {
+            const sel = el === ba ? "#btn-accion" : "#carta-pie button";
+            B.ctx.document.disparar("click", { target: { closest: q => q.includes(sel) ? el : null } });
+            tb.boton = el.textContent; el.onclick();
+          }
+        }
+        if (tableroB.despertarA != null && pasado >= tableroB.despertarA) { tb.despierto = true; personaB.dormida = false; }
+      }
     }
     // una persona de verdad pulsa aunque haya animaciones en marcha: si su pantalla lleva más de 3 s esperándola, actúa
     let actuo = false;
@@ -188,7 +221,7 @@ async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = nul
   }
   const perfilIntacto = leer(A, PERFIL) === perfilAntes.A && leer(B, PERFIL) === perfilAntes.B;
   return { A, B, srv, pasos, reclamado, ina, reloj, rotoA: roto(A), rotoB: roto(B), perfilIntacto,
-    vistas: vistas.size, vistasIdx: [...vistas], preguntas: Object.keys(srv.S.qs).length, malVista, respuestasAjenas: srv.S.respuestasAjenas || 0 };
+    tb, vistas: vistas.size, vistasIdx: [...vistas], preguntas: Object.keys(srv.S.qs).length, malVista, respuestasAjenas: srv.S.respuestasAjenas || 0 };
 }
 
 if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; return; }
@@ -377,6 +410,22 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
     // un toque real sin nada pendiente (caso 3 + toque): solo un toque puede llevar p_actividad true sin el rival pendiente
     ok(toques.length > 0, `4) un toque real lleva p_actividad true aunque no haya nada pendiente (${toques.length} toques así)`);
   }
+
+  // ── 9. Inactividad: solo cuentan los botones de acción
+  console.log("── 9. Inactividad: mover el tablero no cuenta, pulsar un botón sí");
+  const t1 = await jugar({ semilla: 515, turnos: 5, tableroB: { desde: 12 } });
+  const marcasT1 = t1.srv.S.marcas.filter(m => m.u === UB && t1.tb.ini != null && m.t >= EPOCA + t1.tb.ini + 1 && (t1.tb.perdioEn == null || m.t <= EPOCA + t1.tb.ini + t1.tb.perdioEn));
+  ok(t1.tb.ini != null && t1.tb.gestos >= 25, `B mueve el tablero sin pulsar ningún botón (${t1.tb.gestos} gestos de arrastrar, ampliar y tocar zonas vacías)`);
+  ok(t1.tb.aviso && t1.tb.avisoEn >= 60000 && t1.tb.avisoEn < 62000, `a los 60 s sale «Vas a perder por inactividad en 5…» (a los ${Math.round((t1.tb.avisoEn || 0) / 100) / 10} s)`);
+  ok(t1.srv.S.status === "finished" && t1.srv.S.motivo === "forfeit" && t1.srv.S.ganador === UA && t1.tb.perdioEn >= 65000,
+    `B pierde por inactividad (${t1.srv.S.motivo}, gana ${t1.srv.S.ganador === UA ? "A" : t1.srv.S.ganador}, a los ${Math.round((t1.tb.perdioEn || 0) / 1000)} s)`);
+  ok(marcasT1.length > 0 && marcasT1.every(m => m.p_actividad === false), `mientras mueve el tablero, mark_activity lleva siempre p_actividad false (${marcasT1.length} envíos, ${marcasT1.filter(m => m.p_actividad).length} con true)`);
+  const t2 = await jugar({ semilla: 515, turnos: 5, tableroB: { desde: 12, clicA: 30000, despertarA: 80000 } });
+  const marcasT2 = t2.srv.S.marcas.filter(m => m.u === UB && m.t >= EPOCA + t2.tb.ini + 29000 && m.t <= EPOCA + t2.tb.ini + 31000);
+  ok(t2.tb.clic && t2.tb.boton, `B mueve el tablero y a los 30 s pulsa «${t2.tb.boton}»`);
+  ok(marcasT2.some(m => m.p_actividad === true), "ese botón envía mark_activity con p_actividad true");
+  ok(!t2.tb.aviso || t2.tb.avisoEn > 30000 + 60000, `no sale la cuenta atrás a los 60 s del inicio${t2.tb.aviso ? " (sale a los " + Math.round(t2.tb.avisoEn / 1000) + " s, ya en otra espera)" : ""}`);
+  ok(t2.tb.perdioEn == null && t2.srv.S.motivo === "completed", `B no pierde y la partida termina con normalidad (${t2.srv.S.motivo})`);
 
   // ── 7. aviso cuando el rival se va de la pantalla final (una vez por partida, sin tapar los puntos)
   console.log("── 7. Aviso de salida del rival");

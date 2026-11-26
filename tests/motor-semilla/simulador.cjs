@@ -54,7 +54,10 @@ function crearDOM() {
     body, head, documentElement: html, readyState: "complete", hidden: false, visibilityState: "visible",
     getElementById: porIdGet, querySelector: consulta, querySelectorAll: () => [], createElement: t => Elemento(t), createElementNS: (_, t) => Elemento(t),
     createTextNode: t => ({ textContent: t }), createDocumentFragment: () => Elemento("fragment"),
-    addEventListener: noop, removeEventListener: noop, fonts: { ready: Promise.resolve(), load: () => Promise.resolve() },
+    // los oyentes del documento se guardan para poder simular toques y clics (disparar)
+    _oyentes: [], addEventListener(t, fn) { this._oyentes.push([t, fn]); }, removeEventListener(t, fn) { this._oyentes = this._oyentes.filter(o => o[0] !== t || o[1] !== fn); },
+    disparar(t, ev) { for (const [k, fn] of this._oyentes.slice()) if (k === t) fn(ev); },
+    fonts: { ready: Promise.resolve(), load: () => Promise.resolve() },
   };
   return { document, porIdGet };
 }

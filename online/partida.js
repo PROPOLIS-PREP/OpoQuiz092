@@ -38,7 +38,7 @@
     const st = {
       log: new Map(), ultimo: -1, aplicado: 1, espera: null, cola: Promise.resolve(),
       cache: {}, terminado: false, ultimaRival: R.ahora(), turnoRival: false, roto: false,
-      ultimaMarca: -Infinity, sinMarcar: false,   // sinMarcar: el servidor aún no tiene mark_activity (migración pendiente)
+      ultimaMarca: -Infinity, ultimoToque: -Infinity, sinMarcar: false,   // sinMarcar: el servidor aún no tiene mark_activity (migración pendiente)
       esperando: true,                             // la pantalla no espera nada de este jugador (lo actualiza marcarEspera)
     };
     const rpc = async (f, args) => { const r = await sb.rpc(f, args); if (r.error) throw r.error; return r.data; };
@@ -113,6 +113,7 @@
       // y las pausas de cortesía (revisión, cartas del rival) se acortan para no perderse su pregunta.
       atrasado() { return !st.terminado && !st.roto && pendientes(); },
       enviar(kind, payload) {
+        cfg.alAccion && cfg.alAccion();               // siempre sale de un botón de acción de esta persona
         if (pendientes() || st.terminado) return;    // al repasar el registro, la jugada ya está anotada
         enFila(async () => {
           for (let i = 0; i < 4; i++) {
@@ -135,8 +136,9 @@
       },
       // la pregunta del rival en solo lectura: enunciado, opciones y descartadas, nunca la opción correcta
       ver(i) { return precargar(i); },
-      comodin(i, kind) { enFila(async () => { await rpc("use_lifeline", { p_match: M, p_index: i, p_kind: kind }); await leerNuevas(); }); },
+      comodin(i, kind) { cfg.alAccion && cfg.alAccion(); enFila(async () => { await rpc("use_lifeline", { p_match: M, p_index: i, p_kind: kind }); await leerNuevas(); }); },
       responder(i, op) {
+        cfg.alAccion && cfg.alAccion();
         // submit_answer devuelve la respuesta correcta, pero no se usa: llega con get_question_result (resultado)
         enFila(async () => { try { await rpc("submit_answer", { p_match: M, p_index: i, p_option: op }); } catch (e) { /* cerrada por tiempo: llegará «resultado» */ } await leerNuevas(); });
       },
@@ -151,13 +153,22 @@
       terminar(puntos) { enFila(async () => { await rpc("report_result", { p_match: M, p_scores: puntos }); await leerNuevas(); }); },
       abandonar() { enFila(async () => { await rpc("leave_match", { p_match: M }); await leerNuevas(); }); },
       reclamar(uid) { return enFila(async () => { await rpc("claim_forfeit", { p_match: M, p_user: uid }); await leerNuevas(); }); },
-      // actividad de la persona (toque, clic o tecla): mark_activity como mucho cada 10 s; forzar, sin esperar.
+      // actividad de la persona: solo los botones de acción (responder, tirar, continuar, aceptar o rechazar,
+      // elegir, comprar, salir de servicio…). mark_activity con p_actividad true como mucho cada 10 s; forzar, sin esperar.
       // Lleva siempre p_pendiente: si la pantalla espera algo de este jugador.
       actividad(forzar) {
         const t = R.ahora();
         if (st.sinMarcar || st.terminado || (!forzar && t - st.ultimaMarca < MARCA_MS)) return;
         st.ultimaMarca = t;
         marcar({ p_pendiente: !st.esperando, p_actividad: true });
+      },
+      // cualquier otra interacción (arrastrar o ampliar el tablero, desplazarse, tocar una zona vacía, abrir una
+      // ficha…): se informa con p_actividad false, como mucho cada 10 s y nunca justo después de una acción
+      toque() {
+        const t = R.ahora();
+        if (st.sinMarcar || st.terminado || t - st.ultimoToque < MARCA_MS || t - st.ultimaMarca < MARCA_MS) return;
+        st.ultimoToque = t;
+        marcar({ p_pendiente: !st.esperando, p_actividad: false });
       },
       reclamarInactividad(uid) { return enFila(async () => { await rpc("claim_inactivity", { p_match: M, p_user: uid }); await leerNuevas(); }); },
       error,
@@ -393,6 +404,7 @@
       alAviso: t => toast(t),
       alEstado: info => pintarBarra(info),
       alSalida: alSalidaRival,
+      alAccion: () => window.PartidaOnline.actividad(),   // la exportada (las pruebas pueden sustituirla)
     });
     try { await puente.arrancar(); }
     catch (e) { puente.parar(); throw e; }   // si el arranque falla, no quedan abiertos el canal de Realtime ni los intervalos
@@ -431,20 +443,30 @@
     }, 250);
   }
 
-  // ───────────────────────────── Actividad: cualquier toque, clic o tecla (también «Continuar» en una ventana)
+  // ───────────────────────────── Actividad: solo los botones de acción
+  // Cuentan: el botón principal (Responder, Tirar dado, Terminar despliegue), «Continuar» de la revisión y los botones
+  // de las cartas (continuar, aceptar, rechazar, me presento, salir de servicio…). Las jugadas que se anotan
+  // (responder, comodín, comprar, elegir objetivo, desplegar…) cuentan además desde el puente (alAccion).
+  // No cuentan: arrastrar o ampliar el tablero, desplazarse, tocar una zona vacía, abrir fichas o listas.
+  const SEL_ACCION = "#btn-accion, #preg-seguir, #carta-pie button";
   const ACT = { local: 0, inicioTurno: 0, eraMio: false, perdido: false, autoPerder: true };
   function actividad() {
     ACT.local = Date.now();
     ocultarAviso();
     if (actual) actual.puente.actividad();
   }
-  ["pointerdown", "keydown", "touchstart", "wheel"].forEach(t => document.addEventListener(t, actividad, { capture: true, passive: true }));
+  function toque() { if (actual) actual.puente.toque(); }
+  document.addEventListener("click", e => {
+    const b = e.target && e.target.closest && e.target.closest(SEL_ACCION);
+    if (b && !b.disabled) actividad();
+  }, { capture: true });
+  ["pointerdown", "keydown", "touchstart", "wheel"].forEach(t => document.addEventListener(t, toque, { capture: true, passive: true }));
   function avisoInactividad(n) {
     barra();                                                     // crea también los estilos
     let a = document.getElementById("online-inactivo");
     if (!a) { a = document.createElement("div"); a.id = "online-inactivo"; a.setAttribute("role", "alert"); document.body.appendChild(a); }
     a.classList.remove("oculto");
-    a.innerHTML = `Vas a perder por inactividad en ${n}…<small>Toca la pantalla para seguir jugando</small>`;
+    a.innerHTML = `Vas a perder por inactividad en ${n}…<small>Pulsa un botón de la partida para seguir jugando</small>`;
   }
   function ocultarAviso() { const a = document.getElementById("online-inactivo"); if (a) a.classList.add("oculto"); }
   // ¿la pantalla espera algo de este jugador? (botón de acción activo, carta propia con botones o lista, su pregunta, su despliegue)
@@ -463,5 +485,5 @@
     return false;
   }
 
-  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, despedirse, _act: ACT, _necesitoActuar: necesitoActuar };
+  window.PartidaOnline = { entrar, crearPuente, actual: () => actual, actividad, despedirse, SEL_ACCION, _act: ACT, _necesitoActuar: necesitoActuar };
 })();

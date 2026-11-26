@@ -14,6 +14,7 @@ Cada móvil tiene una «persona» que decide con su propio azar y solo cuando le
 5. **Modo local**: sin partida online, `estado.online` es `null` y `jugYo()` es el jugador 0.
 6. **Arranque que falla**: `entrar()` devuelve el error real y cierra el canal de Realtime.
 7. **Inactividad**: a los 60 s sin actividad cuando la pantalla espera al jugador, «Vas a perder por inactividad en 5…»; a 0 pierde; un toque la cancela; el rival puede reclamar con `claim_inactivity` (con algo pendiente, 60 s; sin nada, 180 s); sin la migración, la derrota funciona igual y el rival no ve el botón. Comprueba además que `mark_activity` lleva `p_pendiente` tanto con una acción pendiente (sin renovar la actividad) como esperando al rival.
+9. **Solo los botones de acción cuentan**: B, en su turno, solo arrastra, amplía y toca zonas vacías del tablero durante 60 s: sale la cuenta atrás a los 60 s, pierde a los 65 s y todo lo que envía lleva `p_actividad = false`. Con la misma partida, B pulsa un botón de acción a los 30 s: se envía `p_actividad = true`, no sale la cuenta atrás y la partida termina con normalidad.
 8. **Aviso de salida**: «Volver al cuartel» u «Otra partida» avisan al rival una sola vez (broadcast), sin tapar los puntos.
 
 ## Cómo se ejecuta
