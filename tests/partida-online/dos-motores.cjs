@@ -102,8 +102,10 @@ function crearPersona(E, srv, semilla, op = {}) {
   };
 }
 
-async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true, sinToques = false, personas = {}, tableroB = null }) {
+async function jugar({ semilla, turnos = 5, semillaServidor = 7, abandonaB = null, desconectaB = null, limite = 400000, preparar = null, trampaB = null, inactivoB = null, conInactividad = true, sinToques = false, personas = {}, tableroB = null, disputa = false }) {
   const { reloj, A, B, srv } = montar(semilla, turnos, semillaServidor, conInactividad);
+  // disputa: el móvil B informa un resultado distinto (el servidor cierra como disputed)
+  if (disputa) { const o = srv.RPC.report_result; srv.RPC.report_result = (u, a) => o(u, u === UB ? { ...a, p_scores: { ...a.p_scores, [UB]: (a.p_scores[UB] || 0) + 1 } } : a); }
   const ina = { aviso5: false, oculto: false, cancelado: false, reclamado: false, botonA: false };
   // tableroB: en su turno, B deja de pulsar botones y solo mueve el tablero (arrastrar, ampliar, tocar zonas vacías);
   // con clicA (ms) pulsa un botón de acción a ese tiempo; con despertarA (ms) vuelve a jugar con normalidad
@@ -445,6 +447,35 @@ if (require.main !== module) { module.exports = { jugar, estadoFinal, leer }; re
     ok(av().classList.contains("oculto") && av().innerHTML === html, "el aviso sale una sola vez");
     ok(r.srv.S.enviados.filter(e => e.startsWith(UA.slice(-1) + ":salida:" + tipo)).length >= 1 && !r.srv.S.enviados.some(e => e.startsWith(UB.slice(-1) + ":")),
       "solo avisa quien se va");
+  }
+
+  // ── 11. pantalla final (3d): los dos móviles enseñan los mismos premios del servidor
+  console.log("── 11. Pantalla final: puntos, monedas y logros");
+  const prem = E => E.porIdGet("premios").innerHTML.replace(/<div style="--i:3" id="online-cierre"><\/div>$/, "");
+  {
+    const r = await jugar({ semilla: 91, turnos: 5, semillaServidor: 91 });
+    const w = r.srv.S.ganador, pa = prem(r.A), pb = prem(r.B);
+    ok(r.srv.S.motivo === "completed" && pa === pb && pa.length > 0, `partida completed: el bloque de premios es idéntico en los dos móviles`);
+    if (w) {
+      const nw = "agente_" + w.slice(-4), nl = "agente_" + (w === UA ? UB : UA).slice(-4);
+      ok(new RegExp(`<b>${nw}</b>: \\+30 puntos \\(total 30\\) · \\+50 monedas · 🏅 Primera victoria online \\(\\+20 monedas\\)`).test(pa),
+        `ganador: «+30 puntos (total 30) · +50 monedas · 🏅 Primera victoria online (+20 monedas)»`);
+      ok(new RegExp(`<b>${nl}</b>: 0 puntos \\(total 0\\) · \\+20 monedas<`).test(pa), "perdedor: «0 puntos (total 0) · +20 monedas» (suelo de 0)");
+    } else ok(/\+30 puntos \(total 30\) · \+20 monedas/.test(pa), "empate: +30 puntos y 20 monedas cada uno");
+  }
+  {
+    const r = await jugar({ semilla: 92, turnos: 5, semillaServidor: 92, disputa: true });
+    ok(r.srv.S.motivo === "disputed", `resultados distintos: el servidor cierra como ${r.srv.S.motivo}`);
+    ok(r.A.porIdGet("ganador").textContent === "Resultado en revisión" && r.B.porIdGet("ganador").textContent === "Resultado en revisión"
+      && prem(r.A) === prem(r.B) && /Resultado en revisión/.test(prem(r.A)) && !/monedas ·|puntos \(total/.test(prem(r.A)),
+      "disputed: «Resultado en revisión» en los dos, sin puntos ni monedas");
+  }
+  {
+    const r = await jugar({ semilla: 93, turnos: 5, abandonaB: 25 });
+    const pa = prem(r.A), pb = prem(r.B);
+    ok(r.srv.S.motivo === "forfeit" && pa === pb, "abandono: el bloque de premios es idéntico en los dos móviles");
+    ok(/<b>agente_00a1<\/b>: \+30 puntos \(total 30\) · \+50 monedas/.test(pa) && /<b>agente_00b2<\/b>: 0 puntos \(total 0\) · \+0 monedas/.test(pa),
+      "quien gana por abandono +30 y 50 monedas; quien abandona, 0 monedas");
   }
 
   // ── 10. revancha: «Otra partida» llama a request_rematch (nunca va al modo local por sí sola)

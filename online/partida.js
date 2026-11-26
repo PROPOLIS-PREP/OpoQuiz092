@@ -86,7 +86,9 @@
         if (!w.tipos.includes(a.kind)) { error(`Se esperaba «${w.tipos.join(" / ")}» y llegó «${a.kind}» (jugada ${a.seq}).`); return; }
         st.espera = null;
         if (!w.mirar) st.aplicado++;
-        R.setTimeout(() => w.fn(a), 0);         // fuera de esta pila: el motor registrará la siguiente espera
+        // fuera de esta pila: el motor registrará la siguiente espera. Después se vuelve a mirar la cola: si detrás
+        // vienen jugadas globales (abandono, fin), se aplican aunque el motor se quede esperando un botón propio
+        R.setTimeout(() => { w.fn(a); bombear(); }, 0);
         return;
       }
     }

@@ -17,6 +17,7 @@ Cada móvil tiene una «persona» que decide con su propio azar y solo cuando le
 9. **Solo los botones de acción cuentan**: B, en su turno, solo arrastra, amplía y toca zonas vacías del tablero durante 60 s: sale la cuenta atrás a los 60 s, pierde a los 65 s y todo lo que envía lleva `p_actividad = false`. Con la misma partida, B pulsa un botón de acción a los 30 s: se envía `p_actividad = true`, no sale la cuenta atrás y la partida termina con normalidad.
 8. **Aviso de salida**: «Volver al cuartel» u «Otra partida» avisan al rival una sola vez (broadcast), sin tapar los puntos.
 10. **Revancha** (servidor falso con las reglas de `request_rematch`): A pulsa «Otra partida» y espera («Esperando a tu rival…», el botón desactivado); B ve «Tu rival quiere la revancha»; cuando B pulsa se crea una sola partida y los dos entran en ella, sin arrancar el modo local. Si B se va a «Jugar en local», A ve «Tu rival ha decidido jugar en modo local» y el botón vuelve. A los 2 minutos sin respuesta, «La revancha ha caducado». Con 3 partidas activas, «Ya tienes 3 partidas a la vez…».
+11. **Pantalla final (3d)**: con los premios que el servidor (falso, con las reglas de `20261128120000_marcador.sql`) pone en la jugada «fin», los dos móviles enseñan el mismo bloque de puntos, monedas y logros: en una victoria, en un abandono y, en una partida `disputed`, «Resultado en revisión» sin puntos ni monedas.
 
 ## Cómo se ejecuta
 

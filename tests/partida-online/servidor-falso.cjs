@@ -34,11 +34,27 @@ function crearServidor({ reloj, banco, jugadores, turnos, semilla, semillaServid
   function avanzar() {
     if (S.status === "in_progress" && S.current != null) { const q = S.qs[S.current]; if (q && !q.closed && q.cierra <= ahora()) cerrar(S.current, "timeout", null); }
   }
+  // premios (20261128120000_marcador.sql, para una partida con los dos jugadores empezando de 0):
+  // victoria +30 y 20+30 monedas, derrota −5 (suelo 0) y 20, abandono −5 y 0, empate +30 y 20; disputed nada;
+  // logro «Primera victoria online» (+20 monedas) al ganar. El límite diario no entra: es una sola partida.
+  function premios(w, motivo) {
+    if (motivo !== "completed" && motivo !== "forfeit") return {};
+    const out = {};
+    for (const u of jugadores) {
+      const res = w == null && motivo === "completed" ? "draw" : u === w ? "win" : "loss";
+      const total = Math.max(0, (res === "loss" ? -5 : 30));
+      const monedas = res === "win" ? 50 : res === "draw" ? 20 : S.fuera.has(u) ? 0 : 20;
+      const logros = res === "win" ? [{ id: "online_primera_victoria", nombre: "Primera victoria online", monedas: 20 }] : [];
+      out[u] = { resultado: res, puntos: total, total, monedas, logros };
+    }
+    return out;
+  }
   function terminar(w, motivo) {
     if (S.status === "finished") return;
     if (S.current != null) cerrar(S.current, "timeout", null);
     S.status = "finished"; S.ganador = w; S.motivo = motivo;
-    anotar(null, "fin", { winner: w, reason: motivo });
+    S.premios = premios(w, motivo);
+    anotar(null, "fin", { winner: w, reason: motivo, premios: S.premios });
   }
   function abandono(u) {
     if (S.status !== "in_progress" || S.fuera.has(u)) return;
