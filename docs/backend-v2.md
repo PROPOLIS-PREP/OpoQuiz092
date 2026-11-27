@@ -245,11 +245,15 @@ El backend está listo para el modelo lockstep, pero el juego todavía no lo usa
 
 ## Puesta en marcha
 
-1. **Aplicar la migración.** Pega `supabase/migrations/20261124100000_v2_online_base.sql` en el *SQL Editor* de `patrullan2-dev` y ejecútalo, o deja que Claude la aplique.
-2. **Cargar el banco.** Copia la clave secreta en `SUPABASE_SECRET_KEY` de `.env.local` y ejecuta `node tools/cargar-preguntas.mjs`. Carga 6254 preguntas activas; las marcadas `revisar` se quedan fuera. Es idempotente: repítelo cuando cambie el banco.
-3. **Desplegar `delete_account`.**
-4. **Revisar los advisors** de seguridad y rendimiento.
-5. **Generar los tipos** en `src/lib/supabase-types.ts`.
+Hecho en `patrullan2-dev`: migraciones aplicadas (ver «Estado»), banco cargado (6.254 preguntas activas) y advisors revisados el 2026-11-27. Para volver a cargar el banco cuando cambie: clave secreta en `SUPABASE_SECRET_KEY` de `.env.local` y `node tools/cargar-preguntas.mjs` (es idempotente; las preguntas marcadas `revisar` se quedan fuera).
+
+Pendiente:
+
+1. **Desplegar `delete_account`.** No hay ninguna Edge Function desplegada.
+2. **Regenerar los tipos** en `src/lib/supabase-types.ts`: los actuales son de la migración base y no incluyen inactividad, revancha ni marcador.
+3. **Activar la protección de contraseñas filtradas** en *Authentication* (aviso de seguridad de los advisors).
+4. **Opcional: índices para las 3 claves foráneas sin índice** del marcador (`coin_movements.match_id`, `user_achievements.achievement_id` y `user_achievements.match_id`), con una migración nueva.
+5. **Historial de migraciones:** la base, la revancha y el marcador se aplicaron a mano y no figuran en él. Si se sincroniza (por ejemplo con `supabase migration repair --status applied`), se marcan como aplicadas; nunca se vuelven a ejecutar.
 
 ## Cómo probar
 
