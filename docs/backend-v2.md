@@ -16,12 +16,12 @@ La v1.0.0, local y publicada en Google Play, no usa nada de esto.
 |---|---|
 | Proyecto `patrullan2-dev` | Creado |
 | Migraciones | Aplicadas en `patrullan2-dev`: `20261124100000_v2_online_base`, `20261124110000_fijar_search_path_config`, `20261125120000_resultado_segundos_restantes`, `20261126120000_inactividad`, `20261127120000_revancha` y `20261128120000_marcador`. Las dos últimas, aplicadas a mano desde el SQL Editor, así que no aparecen en el historial de migraciones de Supabase: no volver a aplicarlas |
-| Banco de preguntas | Sin cargar: necesita la migración y la clave secreta en `.env.local` |
+| Banco de preguntas | Cargado en `patrullan2-dev`: 6.254 preguntas activas (las 110 marcadas `revisar` no se cargan) |
 | Edge Function `delete_account` | Escrita, sin desplegar |
-| Tipos TypeScript | Sin generar: se generan cuando exista el esquema |
-| Avisos de seguridad (advisors) | Sin revisar: dependen del esquema |
-| Autenticación | Valores por defecto del proyecto nuevo (ver «Autenticación») |
-| Cliente online (motor con semilla y capa de red) | Sin empezar (ver «Lo que falta en el cliente») |
+| Tipos TypeScript | Generados el 2026-11-24 en `src/lib/supabase-types.ts` a partir de la migración base. No incluyen lo de las migraciones posteriores (inactividad, revancha, marcador): hay que regenerarlos |
+| Avisos de seguridad (advisors) | Revisados tras la migración base (de ahí `20261124110000_fijar_search_path_config`). Sin revisar tras las migraciones posteriores |
+| Autenticación | Correo y contraseña con confirmación de correo: plantilla propia (`supabase/email-templates/`) y vuelta a `online/confirmado.html`. Google, pendiente de credenciales (ver «Autenticación») |
+| Cliente online (motor con semilla y capa de red) | En la rama `v2-online`: cuenta, amigos, lobby, partida 1 contra 1 completa (3c), revancha (3c), marcador y logros (3d). Probadas en dos ventanas la inactividad y la revancha; el marcador, pendiente de esa prueba |
 
 ## Cómo funciona una partida online
 
