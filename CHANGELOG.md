@@ -1,5 +1,12 @@
 # Cambios
 
+## v2 en desarrollo · revancha y 3d · 2026-11-27
+
+- Revancha: «Otra partida» en el final de una partida online pide la revancha (`request_rematch`). Si el rival aún no la ha pedido, «Esperando a tu rival…» (la petición vale 2 minutos; al caducar, «La revancha ha caducado»); cuando la piden los dos, empieza una partida nueva entre ellos. «Jugar en local» para irse al modo local (el rival ve el aviso de siempre). Máximo de 3 partidas activas.
+- 3d (solo 1 contra 1): marcador de puntos (ganador +30, perdedor −5, abandono = derrota, empate +30 para los dos, sin bajar de 0), monedas online (20 por jugar, +30 por ganar, 0 por abandonar, 20 por empate, sin límite diario, cobro único por partida) y cuatro logros online de 20 monedas (primera victoria, 10 victorias, 5 seguidas y llegar a Bronce). Ligas: sin liga 0–49, Bronce 50–99, Plata 100–199, Oro desde 200. Lo reparte el servidor al terminar la partida; `disputed` no cambia nada. La pantalla final enseña lo mismo en los dos móviles (o «Resultado en revisión»).
+- Migraciones `20261127120000_revancha.sql` y `20261128120000_marcador.sql` aplicadas a mano desde el SQL Editor, así que no aparecen en el historial de migraciones de Supabase: no volver a aplicarlas.
+- Partida online: el que mira ve también las preguntas de casilla (su móvil se pone al día si va por detrás); solo los botones de acción cuentan para la inactividad; el final llega aunque el motor espere un botón propio. Service worker `v14.16-online14`.
+
 ## v2 en desarrollo · 3c, correcciones tras la prueba con dos cuentas · 2026-11-26
 
 - Arreglo: «Entrar» en la partida fallaba con «Illegal invocation» (temporizadores llamados sobre otro objeto). Diagnóstico temporal de errores (`diagnostico: true`, quitar antes de la beta).
